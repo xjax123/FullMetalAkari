@@ -16,12 +16,13 @@ namespace FullMetalAkari
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(1920, 1080),
+                WindowState = WindowState.Maximized,
                 Title = "Full Metal Akari",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
             };
 
-            // To create a new window, create a class that extends GameWindow, then call Run() on it.
+            //Create The Game Window
             using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings))
             {
                 window.Run();

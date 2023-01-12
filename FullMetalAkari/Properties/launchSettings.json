@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FullMetalAkari": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
