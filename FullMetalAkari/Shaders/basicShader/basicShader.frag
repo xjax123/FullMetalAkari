@@ -1,4 +1,6 @@
-﻿out vec4 outputColor;
+﻿#Version 1
+
+out vec4 outputColor;
 
 in vec2 texCoord;
 
