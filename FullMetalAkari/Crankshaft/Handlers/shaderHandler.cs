@@ -83,7 +83,7 @@ namespace FullMetalAkari.Shaders
             GL.UseProgram(Handle);
         }
 
-        //???
+        //This Does Something, Im not exactly sure what.
         public int GetAttribLocation(string attribName)
         {
             return GL.GetAttribLocation(Handle, attribName);
