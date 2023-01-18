@@ -6,5 +6,8 @@ namespace FullMetalAkari.Crankshaft.Interfaces
 {
     interface IObject
     {
+        public void onLoad();
+        public void onDestroy();
+        public void onClick();
     }
 }
