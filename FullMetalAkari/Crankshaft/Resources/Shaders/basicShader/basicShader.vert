@@ -1,4 +1,5 @@
-﻿#Version 1
+﻿#version 330 core
+//Shader Version v0.1
 
 layout(location = 0) in vec3 aPosition;
 
