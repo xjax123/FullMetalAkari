@@ -8,15 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Shaders\basicShader.frag" />
-    <None Remove="Shaders\basicShader.vert" />
+    <None Remove="Game\Shaders\basicShader.frag" />
+    <None Remove="Game\Shaders\basicShader.vert" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Shaders\basicShader\basicShader.frag">
+    <Content Include="Game\Shaders\basicShader\basicShader.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\basicShader\basicShader.vert">
+    <Content Include="Game\Shaders\basicShader\basicShader.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Objects\" />
-    <Folder Include="Resources\" />
+    <Folder Include="Game\Objects\" />
+    <Folder Include="Game\Resources\" />
   </ItemGroup>
 
 </Project>

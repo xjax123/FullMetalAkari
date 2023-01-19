@@ -11,7 +11,6 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
 using FullMetalAkari.Shaders;
-using FullMetalAkari.Crankshaft.Overridables;
 
 namespace FullMetalAkari
 {
@@ -75,10 +74,24 @@ namespace FullMetalAkari
         protected override void OnLoad()
         {
             base.OnLoad();
-            onLoad loader = new onLoad();
-
-            loader.standardLoader(_vertexBufferObject, _vertexArrayObject, _vertices, _elementBufferObject, _indices, shader);
+            standardLoader(_vertexBufferObject, _vertexArrayObject, _vertices, _elementBufferObject, _indices);
             
+        }
+
+        public virtual void standardLoader(int vertexBufferObject, int vertexArrayObject, float[] vertices, int elementBufferObject, uint[] indices)
+        {
+            vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+            vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(vertexArrayObject);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+            elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            shader = new shaderHandler("Game/Shaders/basicShader/basicShader.vert", "Game/Shaders/basicShader/basicShader.frag");
+            shader.Use();
         }
 
         protected override void OnUnload()
