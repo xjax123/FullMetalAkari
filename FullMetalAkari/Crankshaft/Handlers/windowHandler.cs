@@ -21,7 +21,8 @@ namespace FullMetalAkari
         //TODO: Remove This
         //Storing of this data should be handled by the object, not in windowHandler.
         private gameObject gameObj;
-
+        private Matrix4 view;
+        private Matrix4 projection;
         //Generic Constructor
         public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {}
 
@@ -38,10 +39,11 @@ namespace FullMetalAkari
                 Close();
             }
         }
-
+        private double _time;
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
+            _time += args.Time;
             textureHandler texture = gameObj.getTexture();
             shaderHandler shader = gameObj.GetShader();
 
@@ -51,8 +53,9 @@ namespace FullMetalAkari
 
             texture.Use(TextureUnit.Texture0);
             shader.Use();
-            shader.SetMatrix4("projection", shader.makeProjectionMatrix((float)Size.X / (float)Size.Y));
-            shader.SetMatrix4("view", Matrix4.LookAt(Vector3.UnitZ*3, Vector3.UnitZ * 3 + -Vector3.UnitZ, Vector3.UnitY));
+            shader.SetMatrix4("translation", Matrix4.Identity * Matrix4.CreateTranslation(0.0f, 0.0f, (float)-_time * 1.0f));
+            shader.SetMatrix4("projection", projection);
+            shader.SetMatrix4("view", view);
 
             GL.DrawElements(PrimitiveType.Triangles, gameObj.getIndices().Length, DrawElementsType.UnsignedInt, 0);
 
@@ -65,6 +68,10 @@ namespace FullMetalAkari
 
             GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f,0.6f,0.6f,1.0f);
+            GL.Enable(EnableCap.DepthTest);
+
+            view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
 
             gameObj = new gameObject(1);
         }

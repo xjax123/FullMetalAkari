@@ -59,6 +59,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
             shader.Use();
 
             shader.SetMatrix4("translation", Matrix4.CreateScale(1));
+            shader.SetMatrix4("translation", Matrix4.CreateTranslation(0.0f,0.0f,-2.0f));
 
             var vertexLoc = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLoc);
