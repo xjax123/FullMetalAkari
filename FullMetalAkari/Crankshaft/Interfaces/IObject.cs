@@ -6,7 +6,5 @@ namespace FullMetalAkari.Crankshaft.Interfaces
 {
     interface IObject
     {
-        void onCreate();
-        void onDestroy();
     }
 }
