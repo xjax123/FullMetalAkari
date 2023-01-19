@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace FullMetalAkari.Shaders
+namespace FullMetalAkari.Crankshaft.Handlers
 {
     public class shaderHandler
     {
@@ -109,6 +109,11 @@ namespace FullMetalAkari.Shaders
         {
             GL.UseProgram(Handle);
             GL.Uniform3(uniformLocations[name], data);
+        }
+
+        public Matrix4 makeProjectionMatrix(float aspectRatio)
+        {
+            return Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver2, aspectRatio, 0.1f , 100f);
         }
     }
 }

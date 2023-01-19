@@ -39,5 +39,4 @@
     <Folder Include="Resources\Shaders\" />
     <Folder Include="Resources\Texture\" />
   </ItemGroup>
-
 </Project>

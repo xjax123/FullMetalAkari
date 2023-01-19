@@ -10,8 +10,8 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
-using FullMetalAkari.Shaders;
 using FullMetalAkari.Crankshaft.Handlers;
+using FullMetalAkari.Crankshaft.Primitives;
 
 namespace FullMetalAkari
 {
@@ -19,30 +19,8 @@ namespace FullMetalAkari
     {
         //Temporary Verts & Indecies.
         //TODO: Remove This
-        private readonly float[] _vertices =
-        {
-           //Position           Texture coordinates
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
-        };
-        private readonly uint[] _indices =
-        {
-            0, 1, 3,
-            1, 2, 3 
-        };
-
-
-        private int _vertexBufferObject;
-
-        private int _vertexArrayObject;
-
-        private shaderHandler shader;
-
-        private textureHandler texture;
-
-        private int _elementBufferObject;
+        //Storing of this data should be handled by the object, not in windowHandler.
+        private gameObject gameObj;
 
         //Generic Constructor
         public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {}
@@ -64,15 +42,19 @@ namespace FullMetalAkari
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
+            textureHandler texture = gameObj.getTexture();
+            shaderHandler shader = gameObj.GetShader();
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.BindVertexArray(_vertexArrayObject);
+            GL.BindVertexArray(gameObj.getVertexArrayObject());
 
             texture.Use(TextureUnit.Texture0);
             shader.Use();
+            shader.SetMatrix4("projection", shader.makeProjectionMatrix((float)Size.X / (float)Size.Y));
+            shader.SetMatrix4("view", Matrix4.LookAt(Vector3.UnitZ*3, Vector3.UnitZ * 3 + -Vector3.UnitZ, Vector3.UnitY));
 
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, gameObj.getIndices().Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
         }
@@ -80,32 +62,11 @@ namespace FullMetalAkari
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f,0.6f,0.6f,1.0f);
 
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-
-            _vertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
-
-            _elementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-
-            shader = new shaderHandler("Crankshaft/Resources/Shaders/basicShader/basicShader.vert", "Crankshaft/Resources/Shaders/basicShader/basicShader.frag");
-            shader.Use();
-
-            var vertexLoc = shader.GetAttribLocation("aPosition");
-            GL.EnableVertexAttribArray(vertexLoc);
-            GL.VertexAttribPointer(vertexLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float),0 );
-
-            var texCoordLoc = shader.GetAttribLocation("aTexCoord");
-            GL.EnableVertexAttribArray(texCoordLoc);
-            GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
-            texture = textureHandler.LoadFromFile("Crankshaft/Resources/Textures/error_texture.png");
-            texture.Use(TextureUnit.Texture0);
+            gameObj = new gameObject(1);
         }
 
         protected override void OnUnload()
@@ -115,10 +76,11 @@ namespace FullMetalAkari
             GL.UseProgram(0);
 
             // Delete all the resources.
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteVertexArray(_vertexArrayObject);
+            GL.DeleteBuffer(gameObj.getVertexBufferObject());
+            GL.DeleteVertexArray(gameObj.getVertexArrayObject());
 
-            GL.DeleteProgram(shader.Handle);
+            GL.DeleteProgram(gameObj.GetShader().Handle);
+            GL.DeleteProgram(gameObj.getTexture().Handle);
 
             base.OnUnload();
         }

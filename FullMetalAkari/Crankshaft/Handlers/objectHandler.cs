@@ -6,5 +6,6 @@ namespace FullMetalAkari.Crankshaft.Handlers
 {
     class objectHandler
     {
+
     }
 }
