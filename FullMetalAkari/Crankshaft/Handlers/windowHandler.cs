@@ -11,7 +11,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
 using FullMetalAkari.Shaders;
-using FullMetalAkari.Crankshaft.Overridables;
+using FullMetalAkari.Crankshaft.Handlers;
 
 namespace FullMetalAkari
 {
@@ -21,10 +21,11 @@ namespace FullMetalAkari
         //TODO: Remove This
         private readonly float[] _vertices =
         {
-             0.5f,  0.5f, 0.0f, // top right
-             0.5f, -0.5f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, // top left
+           //Position           Texture coordinates
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
         };
         private readonly uint[] _indices =
         {
@@ -38,6 +39,8 @@ namespace FullMetalAkari
         private int _vertexArrayObject;
 
         private shaderHandler shader;
+
+        private textureHandler texture;
 
         private int _elementBufferObject;
 
@@ -62,11 +65,13 @@ namespace FullMetalAkari
         {
             base.OnRenderFrame(args);
 
-            //TODO: Replace this with non-Copy/Pasted code
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            shader.Use();
 
             GL.BindVertexArray(_vertexArrayObject);
+
+            texture.Use(TextureUnit.Texture0);
+            shader.Use();
+
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
@@ -75,10 +80,32 @@ namespace FullMetalAkari
         protected override void OnLoad()
         {
             base.OnLoad();
-            onLoad loader = new onLoad();
+            GL.ClearColor(0.6f,0.6f,0.6f,1.0f);
 
-            loader.standardLoader(_vertexBufferObject, _vertexArrayObject, _vertices, _elementBufferObject, _indices, shader);
-            
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
+
+            shader = new shaderHandler("Crankshaft/Resources/Shaders/basicShader/basicShader.vert", "Crankshaft/Resources/Shaders/basicShader/basicShader.frag");
+            shader.Use();
+
+            var vertexLoc = shader.GetAttribLocation("aPosition");
+            GL.EnableVertexAttribArray(vertexLoc);
+            GL.VertexAttribPointer(vertexLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float),0 );
+
+            var texCoordLoc = shader.GetAttribLocation("aTexCoord");
+            GL.EnableVertexAttribArray(texCoordLoc);
+            GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+            texture = textureHandler.LoadFromFile("Crankshaft/Resources/Textures/error_texture.png");
+            texture.Use(TextureUnit.Texture0);
         }
 
         protected override void OnUnload()

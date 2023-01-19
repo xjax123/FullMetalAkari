@@ -8,27 +8,36 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Shaders\basicShader.frag" />
-    <None Remove="Shaders\basicShader.vert" />
+    <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.frag" />
+    <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.vert" />
+    <None Remove="Crankshaft\Resources\Textures\error_texture.png" />
+    <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
+    <None Remove="Resources\Shaders\basicShader.frag" />
+    <None Remove="Resources\Shaders\basicShader.vert" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Shaders\basicShader\basicShader.frag">
+    <Content Include="Crankshaft\Resources\Shaders\basicShader\basicShader.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\basicShader\basicShader.vert">
+    <Content Include="Crankshaft\Resources\Shaders\basicShader\basicShader.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Crankshaft\Resources\Textures\error_texture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="OpenTK" Version="4.7.5" />
+    <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Objects\" />
-    <Folder Include="Resources\" />
+    <Folder Include="Resources\Shaders\" />
+    <Folder Include="Resources\Texture\" />
   </ItemGroup>
 
 </Project>
