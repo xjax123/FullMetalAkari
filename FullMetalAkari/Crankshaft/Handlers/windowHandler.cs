@@ -18,7 +18,10 @@ namespace FullMetalAkari
 {
     public class windowHandler : GameWindow
     {        
+        //temp objects
         private gameObject gameObj;
+        private gameObject tempObj;
+
         private mouseHandler _mouse = new mouseHandler(); //Not sure why this needs to be a new object, it doesnt store any data, but it casues NullReferences otherwise.
         private Matrix4 view;
         private Matrix4 inv_view;
@@ -50,9 +53,8 @@ namespace FullMetalAkari
             
             Vector3 worldspaceMouse = _mouse.ConvertScreenToWorldSpace(MouseState.X,MouseState.Y, (float)Size.X, (float)Size.Y,inv_projection,inv_view);
             gameObj.translateObject(new Vector3(worldspaceMouse.X, worldspaceMouse.Y , 0.0f));
-            gameObj.scaleObject(2f);
 
-
+            tempObj.onRenderFrame();
             gameObj.onRenderFrame();
             SwapBuffers();
         }
@@ -72,7 +74,8 @@ namespace FullMetalAkari
             projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             inv_projection = Matrix4.Invert(projection);
 
-            gameObj = new gameObject(1, projection, view, new Vector3(0.0f,0.0f,-2.0f), 1f);
+            gameObj = new gameObject(1, projection, view, new Vector3(0.0f,0.0f,-2.0f), 1.0f);
+            tempObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -3.0f), 0.5f);
         }
 
         protected override void OnUnload()

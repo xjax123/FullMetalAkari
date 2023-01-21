@@ -17,6 +17,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
         private int instanceID;
         private String name = "Unknown Object";
         private float scale;
+        private Matrix4 curScale;
 
         private shaderHandler shader;
         private readonly String shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
@@ -54,6 +55,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
             this.projectionMat = projectionMat;
             this.viewMat = viewMat;
             this.scale = startingScale;
+            this.curScale = Matrix4.CreateScale(startingScale);
 
             render.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath, startingPos, startingScale);
         }
@@ -82,7 +84,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
         {
             GL.BindVertexArray(vertexArrayObject);
             shader.Use();
-            shader.SetMatrix4("translation", currentTranslation);
+            shader.SetMatrix4("translation", currentTranslation * curScale);
             shader.SetMatrix4("projection", projectionMat);
             shader.SetMatrix4("view", viewMat);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
@@ -98,7 +100,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
         public virtual void scaleObject(float scale)
         {
             this.scale = scale;
-            currentTranslation *= Matrix4.CreateScale(scale);
+            this.curScale = Matrix4.CreateScale(scale);
         }
 
         public virtual string getObjID()
