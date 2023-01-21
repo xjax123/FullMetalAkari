@@ -7,36 +7,31 @@ namespace FullMetalAkari.Crankshaft.Handlers
 {
     public class mouseHandler
     {
+        //TODO: Optimize (Low Priority)
+        //Relatively efficient now, the only per-call Operations are 4 multiplication, 2 divison, still room for improvment.
+        //Not sure what performance impact creating new vectors has, but in theory shouldnt increase the performance impact by more than a factor of 4.
+
         //A method to convert screen space into world space
         //for some arcane reason you need to tripple it if you are trying to clamp an object to your mouse
         //not sure why, but it is perfectly accurate once trippled, so im not complinaing.
-        public Vector3 ConvertMouseToWorldSpace(float x, float y, float width, float height, Matrix4 projection_matrix, Matrix4 view_matrix)
+        public Vector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
         {
-            //TODO: make this translation less shitty.
+            //Version 3
+
             //Translating to 3D Normalized Device Coordinates
-            Vector3 NDCposition;
-            NDCposition.X = (2.0f * x) / width - 1.0f;
-            NDCposition.Y = 1.0f - (2.0f * y) / height;
-            NDCposition.Z = 1f;
+            //Translating to 4D Homogeneous Clip Coordinates
+            Vector4 HCCposition = new Vector4((2.0f * x) / width - 1.0f, 1.0f - (2.0f * y) / height,-1.0f,1.0f);
 
-            //Translating to 4d Homogeneous Clip Coordinates
-            Vector4 HCCposition;
-            HCCposition.X = NDCposition.X;
-            HCCposition.Y = NDCposition.Y;
-            HCCposition.Z = -1.0f;
-            HCCposition.W = 1.0f;
+            //Translating to 4D Camera Coordinates
+            Vector4 CCposition = inv_projection_matrix * HCCposition;
+            CCposition.Zw = new Vector2(-1.0f,0.0f);
 
-            //Translating to 4d Camera Coordinates
-            Vector4 CCposition;
-            CCposition = Matrix4.Invert(projection_matrix) * HCCposition;
-            CCposition.Z = -1.0f;
-            CCposition.W = 0.0f;
+            //Translating to 4D World Coordinates
+            Vector3 WCposition = (inv_view_matrix * CCposition).Xyz;
 
-            //Translating to 4d World Coordinates
-            Vector3 WCposition;
-            WCposition = (Matrix4.Invert(view_matrix) * CCposition).Xyz;
-
-            return WCposition;
+            //Returning in 3D World Coordinates
+            //needs to be trippled to clamp default scale objects to the mouse.
+            return WCposition*3;
         }
     }
 }

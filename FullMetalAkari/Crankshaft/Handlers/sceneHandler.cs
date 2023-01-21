@@ -4,7 +4,8 @@ using System.Text;
 
 namespace FullMetalAkari.Crankshaft.Handlers
 {
-    class sceneHandler
+    public class sceneHandler
     {
+
     }
 }

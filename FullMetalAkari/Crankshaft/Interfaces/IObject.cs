@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenTK.Mathematics;
 using FullMetalAkari.Crankshaft.Handlers;
 
 namespace FullMetalAkari.Crankshaft.Interfaces
@@ -18,7 +19,19 @@ namespace FullMetalAkari.Crankshaft.Interfaces
         
         //Define what happens when the object is clicked.
         public void onClick();
-        
+
+        //Define base behavior the object should do on each update frame
+        public void onUpdateFrame();
+
+        //Define base behavior that the object should do on each render frame
+        public void onRenderFrame();
+
+        //handles translation on XYZ
+        public void translateObject(Vector3 translation);
+
+        //handles scaling
+        public void scaleObject(float scale);
+
         //Object ID's are an inherent proprety to define the object should never be changed after runtime.
         public String getObjID();
 
@@ -32,9 +45,11 @@ namespace FullMetalAkari.Crankshaft.Interfaces
 
         //DOCUMENTATION UNFINISED
         public textureHandler getTexture();
+        public void setTexture(textureHandler texture);
 
         //DOCUMENTATION UNFINISED
-        public shaderHandler GetShader();
+        public shaderHandler getShader();
+        public void setShader(shaderHandler shader);
 
         //DOCUMENTATION UNFINISED
         public float[] getVerts();
@@ -53,6 +68,15 @@ namespace FullMetalAkari.Crankshaft.Interfaces
         //DOCUMENTATION UNFINISED
         public int getElementBufferObject();
         public void setElementBufferObject(int v);
+
+        //DOCUMENTATION UNFINISED
+        public Matrix4 getProjectionMatrix();
+        public void setProjectionMatrix(Matrix4 projection);
+
+        //DOCUMENTATION UNFINISED
+        public Matrix4 getViewMatrix();
+        public void setViewMatrix(Matrix4 view);
+
 
         //there probably should be more here.
     }

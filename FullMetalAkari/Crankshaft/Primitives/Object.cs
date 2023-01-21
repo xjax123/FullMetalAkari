@@ -12,16 +12,21 @@ namespace FullMetalAkari.Crankshaft.Primitives
     class gameObject : IObject
     {
         //stored data
-        private String objectID = "base";
+        readonly renderingHandler render = new renderingHandler();
+        private readonly String objectID = "base";
         private int instanceID;
         private String name = "Unknown Object";
+        private float scale;
 
         private shaderHandler shader;
-        private String shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
-        private String shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+        private readonly String shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
+        private readonly String shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+
+        private Matrix4 projectionMat;
+        private Matrix4 viewMat;
 
         private textureHandler texture;
-        private String texPath = "Crankshaft/Resources/Textures/error_texture.png";
+        private readonly String texPath = "Crankshaft/Resources/Textures/error_texture.png";
         private readonly float[] vertices =
         {
            //Position           Texture coordinates
@@ -41,36 +46,16 @@ namespace FullMetalAkari.Crankshaft.Primitives
 
         private int elementBufferObject;
 
-        public gameObject(int instanceID)
+        private Matrix4 currentTranslation = Matrix4.Identity;
+
+        public gameObject(int instanceID, Matrix4 projectionMat, Matrix4 viewMat, Vector3 startingPos, float startingScale)
         {
             this.instanceID = instanceID;
-            vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(vertexArrayObject);
+            this.projectionMat = projectionMat;
+            this.viewMat = viewMat;
+            this.scale = startingScale;
 
-            vertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-            elementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-
-            shader = new shaderHandler(shaderVert, shaderFrag);
-            shader.Use();
-
-            shader.SetMatrix4("translation", Matrix4.CreateScale(1));
-            shader.SetMatrix4("translation", Matrix4.CreateTranslation(0.0f,0.0f,-2.0f));
-
-            var vertexLoc = shader.GetAttribLocation("aPosition");
-            GL.EnableVertexAttribArray(vertexLoc);
-            GL.VertexAttribPointer(vertexLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-
-            var texCoordLoc = shader.GetAttribLocation("aTexCoord");
-            GL.EnableVertexAttribArray(texCoordLoc);
-            GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
-            texture = textureHandler.LoadFromFile(texPath);
-            texture.Use(TextureUnit.Texture0);
+            render.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath, startingPos, startingScale);
         }
 
         public virtual void onClick()
@@ -86,6 +71,34 @@ namespace FullMetalAkari.Crankshaft.Primitives
         public virtual void onLoad()
         {
             throw new NotImplementedException();
+        }
+
+        public virtual void onUpdateFrame()
+        {
+            return;
+        }
+
+        public virtual void onRenderFrame()
+        {
+            GL.BindVertexArray(vertexArrayObject);
+            shader.Use();
+            shader.SetMatrix4("translation", currentTranslation);
+            shader.SetMatrix4("projection", projectionMat);
+            shader.SetMatrix4("view", viewMat);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+
+            currentTranslation = Matrix4.Identity;
+        }
+
+        public virtual void translateObject(Vector3 translation)
+        {
+            currentTranslation *= Matrix4.CreateTranslation(translation*(1/scale));
+        }
+
+        public virtual void scaleObject(float scale)
+        {
+            this.scale = scale;
+            currentTranslation *= Matrix4.CreateScale(scale);
         }
 
         public virtual string getObjID()
@@ -117,15 +130,23 @@ namespace FullMetalAkari.Crankshaft.Primitives
         {
             return texture;
         }
+        public virtual void setTexture(textureHandler texture)
+        {
+            this.texture = texture;
+        }
 
         public virtual float[] getVerts()
         {
             return vertices;
         }
 
-        public virtual shaderHandler GetShader()
+        public virtual shaderHandler getShader()
         {
             return shader;
+        }
+        public virtual void setShader(shaderHandler shader)
+        {
+            this.shader = shader;
         }
 
         public virtual uint[] getIndices()
@@ -161,6 +182,26 @@ namespace FullMetalAkari.Crankshaft.Primitives
         public virtual void setElementBufferObject(int v)
         {
             elementBufferObject = v;
+        }
+
+        public virtual Matrix4 getProjectionMatrix()
+        {
+            return projectionMat;
+        }
+
+        public virtual void setProjectionMatrix(Matrix4 projection)
+        {
+            projectionMat = projection;
+        }
+
+        public virtual Matrix4 getViewMatrix()
+        {
+            return viewMat;
+        }
+
+        public virtual void setViewMatrix(Matrix4 view)
+        {
+            viewMat = view;
         }
     }
 }
