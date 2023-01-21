@@ -8,7 +8,7 @@ namespace FullMetalAkari.Crankshaft.Interfaces
     {
         /*
         TODO: Improve this interface
-        This interface should provide basic instructions for the and constraints that all IObject implimentations should follow.
+        This interface should provide basic instructions for the rules and constraints that all IObject implimentations should follow.
         */
 
         //Define what special behaviour occurs on object creation
@@ -19,6 +19,9 @@ namespace FullMetalAkari.Crankshaft.Interfaces
         
         //Define what happens when the object is clicked.
         public void onClick();
+
+        //Define what happens when the object is hovered over
+        public void onHover();
 
         //Define base behavior the object should do on each update frame
         public void onUpdateFrame();
@@ -31,6 +34,9 @@ namespace FullMetalAkari.Crankshaft.Interfaces
 
         //handles scaling
         public void scaleObject(float scale);
+
+        //handles rotating
+        public void rotateObject(float rotation);
 
         //Object ID's are an inherent proprety to define the object should never be changed after runtime.
         public String getObjID();

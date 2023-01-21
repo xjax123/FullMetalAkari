@@ -6,9 +6,9 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace FullMetalAkari.Crankshaft.Handlers
 {
-    public class renderingHandler
+    public static class renderingHandler
     {
-        public void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, String shaderVert, String shaderFrag, ref textureHandler texture, String texPath, Vector3 startingPos, float startingScale)
+        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, String shaderVert, String shaderFrag, ref textureHandler texture, String texPath)
         {
             vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(vertexArrayObject);
@@ -23,9 +23,6 @@ namespace FullMetalAkari.Crankshaft.Handlers
 
             shader = new shaderHandler(shaderVert, shaderFrag);
             shader.Use();
-
-            shader.SetMatrix4("translation", Matrix4.CreateScale(startingScale));
-            shader.SetMatrix4("translation", Matrix4.CreateTranslation(startingPos));
 
             var vertexLoc = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLoc);

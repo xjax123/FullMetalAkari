@@ -9,24 +9,13 @@ using FullMetalAkari.Crankshaft.Handlers;
 
 namespace FullMetalAkari.Crankshaft.Primitives
 {
-    class gameObject : IObject
+    public class gameObject : IObject
     {
-        //stored data
-        readonly renderingHandler render = new renderingHandler();
-        private readonly String objectID = "base";
-        private int instanceID;
-        private String name = "Unknown Object";
-        private float scale;
-        private Matrix4 curScale;
-
-        private shaderHandler shader;
+        //Overwrite/Hide this Data as needed, preferably in the constructor.
+        private readonly String objectID = "empty";
+        private String name = "Empty Game Object";
         private readonly String shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
         private readonly String shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
-
-        private Matrix4 projectionMat;
-        private Matrix4 viewMat;
-
-        private textureHandler texture;
         private readonly String texPath = "Crankshaft/Resources/Textures/error_texture.png";
         private readonly float[] vertices =
         {
@@ -41,66 +30,111 @@ namespace FullMetalAkari.Crankshaft.Primitives
             0, 1, 3,
             1, 2, 3
         };
+
+        //Built in the Constructor, no need to Overwrite/Hide, Remember to set these in the constructor.
+        private int instanceID;
+
+        private Matrix4 projectionMat;
+        private Matrix4 viewMat;
+
+        private Matrix4 curTranslation = Matrix4.Identity;
+        private Matrix4 trueTranslation;
+
+        private float scale;
+        private Matrix4 curScale;
+
+        private float rotation;
+        private Matrix4 curRot = Matrix4.Identity;
+        private Matrix4 trueRot;
+
+        //Empties
+        private textureHandler texture;
+        private shaderHandler shader;
+
         private int vertexBufferObject;
-
         private int vertexArrayObject;
-
         private int elementBufferObject;
 
-        private Matrix4 currentTranslation = Matrix4.Identity;
-
-        public gameObject(int instanceID, Matrix4 projectionMat, Matrix4 viewMat, Vector3 startingPos, float startingScale)
+        public gameObject(int instanceID, Matrix4 projectionMat, Matrix4 viewMat, Vector3 startingPos, float startingScale, float startingRot)
         {
             this.instanceID = instanceID;
             this.projectionMat = projectionMat;
             this.viewMat = viewMat;
             this.scale = startingScale;
             this.curScale = Matrix4.CreateScale(startingScale);
-
-            render.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath, startingPos, startingScale);
+            this.trueTranslation = Matrix4.CreateTranslation(startingPos);
+            this.rotation = startingRot;
+            this.trueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(startingRot));
+        }
+        ~gameObject()
+        {
+            onDestroy();
         }
 
         public virtual void onClick()
         {
-            throw new NotImplementedException();
+        }
+        public virtual void onHover()
+        {
         }
 
         public virtual void onDestroy()
         {
-            throw new NotImplementedException();
+            GL.DeleteBuffer(getVertexBufferObject());
+            GL.DeleteVertexArray(getVertexArrayObject());
+            GL.DeleteProgram(getShader().Handle);
+            GL.DeleteProgram(getTexture().Handle);
         }
 
         public virtual void onLoad()
         {
-            throw new NotImplementedException();
+            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
         }
 
         public virtual void onUpdateFrame()
         {
-            return;
         }
 
         public virtual void onRenderFrame()
         {
             GL.BindVertexArray(vertexArrayObject);
+            if (curTranslation != Matrix4.Identity)
+            {
+                trueTranslation = curTranslation;
+            }
+            if (curRot != Matrix4.Identity)
+            {
+                trueRot = curRot;
+            }
             shader.Use();
-            shader.SetMatrix4("translation", currentTranslation * curScale);
+            shader.SetMatrix4("translation", trueTranslation * curScale * trueRot);
             shader.SetMatrix4("projection", projectionMat);
             shader.SetMatrix4("view", viewMat);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            currentTranslation = Matrix4.Identity;
+            curTranslation = Matrix4.Identity;
+            curRot = Matrix4.Identity;
         }
 
         public virtual void translateObject(Vector3 translation)
         {
-            currentTranslation *= Matrix4.CreateTranslation(translation*(1/scale));
+            Vector3 rotTranslation = translation;
+
+            rotTranslation.Xy *= Matrix2.Invert(Matrix2.CreateRotation(MathHelper.DegreesToRadians(rotation)));
+
+            curTranslation *= Matrix4.CreateTranslation(rotTranslation*(1/scale));
         }
 
         public virtual void scaleObject(float scale)
         {
             this.scale = scale;
             this.curScale = Matrix4.CreateScale(scale);
+        }
+
+        public virtual void rotateObject(float rotation)
+        {
+            this.rotation = rotation;
+            Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
         }
 
         public virtual string getObjID()

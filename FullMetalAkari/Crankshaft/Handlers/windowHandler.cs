@@ -17,12 +17,20 @@ using FullMetalAkari.Crankshaft.Primitives;
 namespace FullMetalAkari
 {
     public class windowHandler : GameWindow
-    {        
+    {
+        private readonly float[] _vertices =
+        {
+           //Position           Texture coordinates
+             0.5f,  1.0f, 0.0f, 1.0f, 1.0f, // top right
+             0.5f, -1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+            -0.5f, -1,0f, 0.0f, 0.0f, 0.0f, // bottom left
+            -0.5f,  1.0f, 0.0f, 0.0f, 1.0f  // top left
+        };
+
         //temp objects
         private gameObject gameObj;
         private gameObject tempObj;
 
-        private mouseHandler _mouse = new mouseHandler(); //Not sure why this needs to be a new object, it doesnt store any data, but it casues NullReferences otherwise.
         private Matrix4 view;
         private Matrix4 inv_view;
         private Matrix4 projection;
@@ -51,11 +59,12 @@ namespace FullMetalAkari
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
-            Vector3 worldspaceMouse = _mouse.ConvertScreenToWorldSpace(MouseState.X,MouseState.Y, (float)Size.X, (float)Size.Y,inv_projection,inv_view);
-            gameObj.translateObject(new Vector3(worldspaceMouse.X, worldspaceMouse.Y , 0.0f));
+            Vector3 worldspaceMouse = mouseHandler.ConvertScreenToWorldSpace(MouseState.X,MouseState.Y, (float)Size.X, (float)Size.Y,inv_projection,inv_view);
+            gameObj.translateObject(new Vector3(worldspaceMouse.X*3, worldspaceMouse.Y*3, 0.0f));
 
-            tempObj.onRenderFrame();
             gameObj.onRenderFrame();
+            tempObj.onRenderFrame();
+
             SwapBuffers();
         }
 
@@ -67,15 +76,18 @@ namespace FullMetalAkari
             GL.ClearColor(0.6f,0.6f,0.6f,1.0f);
             GL.Enable(EnableCap.DepthTest);
 
-            CursorState = CursorState.Hidden;
+            //CursorState = CursorState.Hidden;
 
             view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             inv_view = Matrix4.Invert(view);
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), (float)Size.X / (float)Size.Y, 0.1f, 100.0f);
             inv_projection = Matrix4.Invert(projection);
 
-            gameObj = new gameObject(1, projection, view, new Vector3(0.0f,0.0f,-2.0f), 1.0f);
-            tempObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -3.0f), 0.5f);
+            gameObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -5.0f), 1.0f, 0f);
+
+            tempObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
+            gameObj.onLoad();
+            tempObj.onLoad();
         }
 
         protected override void OnUnload()
@@ -83,13 +95,6 @@ namespace FullMetalAkari
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
             GL.UseProgram(0);
-
-            // Delete all the resources.
-            GL.DeleteBuffer(gameObj.getVertexBufferObject());
-            GL.DeleteVertexArray(gameObj.getVertexArrayObject());
-
-            GL.DeleteProgram(gameObj.getShader().Handle);
-            GL.DeleteProgram(gameObj.getTexture().Handle);
 
             base.OnUnload();
         }
