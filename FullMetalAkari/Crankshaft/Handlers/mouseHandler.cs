@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using OpenTK.Mathematics;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     public static class mouseHandler
     {
@@ -20,11 +20,11 @@ namespace FullMetalAkari.Crankshaft.Handlers
 
             //Translating to 3D Normalized Device Coordinates
             //Translating to 4D Homogeneous Clip Coordinates
-            Vector4 HCCposition = new Vector4((2.0f * x) / width - 1.0f, 1.0f - (2.0f * y) / height,-1.0f,1.0f);
+            Vector4 HCCposition = new Vector4(2.0f * x / width - 1.0f, 1.0f - 2.0f * y / height, -1.0f, 1.0f);
 
             //Translating to 4D Camera Coordinates
             Vector4 CCposition = inv_projection_matrix * HCCposition;
-            CCposition.Zw = new Vector2(-1.0f,0.0f);
+            CCposition.Zw = new Vector2(-1.0f, 0.0f);
 
             //Translating to 4D World Coordinates
             Vector3 WCposition = (inv_view_matrix * CCposition).Xyz;

@@ -4,19 +4,19 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using FullMetalAkari.Crankshaft.Interfaces;
-using FullMetalAkari.Crankshaft.Handlers;
+using Crankshaft.Interfaces;
+using Crankshaft.Handlers;
 
-namespace FullMetalAkari.Crankshaft.Primitives
+namespace Crankshaft.Primitives
 {
     public class gameObject : IObject
     {
         //Overwrite/Hide this Data as needed, preferably in the constructor.
-        private readonly String objectID = "empty";
-        private String name = "Empty Game Object";
-        private readonly String shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
-        private readonly String shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
-        private readonly String texPath = "Crankshaft/Resources/Textures/error_texture.png";
+        private readonly string objectID = "empty";
+        private string name = "Empty Game Object";
+        private readonly string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
+        private readonly string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+        private readonly string texPath = "Crankshaft/Resources/Textures/error_texture.png";
         private readonly float[] vertices =
         {
            //Position           Texture coordinates
@@ -60,11 +60,11 @@ namespace FullMetalAkari.Crankshaft.Primitives
             this.instanceID = instanceID;
             this.projectionMat = projectionMat;
             this.viewMat = viewMat;
-            this.scale = startingScale;
-            this.curScale = Matrix4.CreateScale(startingScale);
-            this.trueTranslation = Matrix4.CreateTranslation(startingPos);
-            this.rotation = startingRot;
-            this.trueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(startingRot));
+            scale = startingScale;
+            curScale = Matrix4.CreateScale(startingScale);
+            trueTranslation = Matrix4.CreateTranslation(startingPos);
+            rotation = startingRot;
+            trueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(startingRot));
         }
         ~gameObject()
         {
@@ -122,13 +122,13 @@ namespace FullMetalAkari.Crankshaft.Primitives
 
             rotTranslation.Xy *= Matrix2.Invert(Matrix2.CreateRotation(MathHelper.DegreesToRadians(rotation)));
 
-            curTranslation *= Matrix4.CreateTranslation(rotTranslation*(1/scale));
+            curTranslation *= Matrix4.CreateTranslation(rotTranslation * (1 / scale));
         }
 
         public virtual void scaleObject(float scale)
         {
             this.scale = scale;
-            this.curScale = Matrix4.CreateScale(scale);
+            curScale = Matrix4.CreateScale(scale);
         }
 
         public virtual void rotateObject(float rotation)
@@ -157,7 +157,7 @@ namespace FullMetalAkari.Crankshaft.Primitives
             return name;
         }
 
-        public virtual void setName(String v)
+        public virtual void setName(string v)
         {
             name = v;
         }

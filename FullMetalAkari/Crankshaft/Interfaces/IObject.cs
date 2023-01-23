@@ -1,8 +1,8 @@
 ﻿using System;
 using OpenTK.Mathematics;
-using FullMetalAkari.Crankshaft.Handlers;
+using Crankshaft.Handlers;
 
-namespace FullMetalAkari.Crankshaft.Interfaces
+namespace Crankshaft.Interfaces
 {
     interface IObject
     {
@@ -13,10 +13,10 @@ namespace FullMetalAkari.Crankshaft.Interfaces
 
         //Define what special behaviour occurs on object creation
         public void onLoad();
-        
+
         //Define what special behavior occurs on object destruction
         public void onDestroy();
-        
+
         //Define what happens when the object is clicked.
         public void onClick();
 
@@ -39,15 +39,15 @@ namespace FullMetalAkari.Crankshaft.Interfaces
         public void rotateObject(float rotation);
 
         //Object ID's are an inherent proprety to define the object should never be changed after runtime.
-        public String getObjID();
+        public string getObjID();
 
         //Generally Instance ID's should be set on creation of the object, but theyre not an inherent property.
         public int getInstID();
         public void setInstID(int v);
 
         //Generally Names should be an inherent propery, but some situations may benefit from allowing a setter.
-        public String getName();
-        public void setName(String v);
+        public string getName();
+        public void setName(string v);
 
         //DOCUMENTATION UNFINISED
         public textureHandler getTexture();

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     //
     public class shaderHandler
@@ -18,7 +18,7 @@ namespace FullMetalAkari.Crankshaft.Handlers
 
         private readonly Dictionary<string, int> uniformLocations;
 
-        public shaderHandler (string vert, string frag)
+        public shaderHandler(string vert, string frag)
         {
             // Load & Compile Vertex Shader
             var sSource = File.ReadAllText(vert);
@@ -67,9 +67,9 @@ namespace FullMetalAkari.Crankshaft.Handlers
         }
 
         //Compiler w/ Error Reporting
-        private static void Compile (int shader)
+        private static void Compile(int shader)
         {
-           GL.CompileShader(shader);
+            GL.CompileShader(shader);
             GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
             if (code != (int)All.True)
             {

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FullMetalAkari.Crankshaft.Primitives;
+using Crankshaft.Handlers;
+using Crankshaft.Primitives;
+using Crankshaft.Exceptions;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     public static class sceneHandler
     {
         private static Dictionary<string, scene> sceneLibrary;
-        
+
         public static scene buildScene()
         {
             throw new NotImplementedException();
@@ -16,7 +18,16 @@ namespace FullMetalAkari.Crankshaft.Handlers
 
         public static scene loadScene(string id)
         {
-            throw new NotImplementedException();
+            scene localScene;
+            if (sceneLibrary.ContainsKey(id))
+            {
+                sceneLibrary.TryGetValue(id, out localScene);
+                return localScene;
+            }
+            else
+            {
+                throw new SceneNotFoundException();
+            }
         }
 
         public static void compileScenes(string filePath)

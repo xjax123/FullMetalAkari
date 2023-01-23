@@ -6,6 +6,8 @@ using System.Windows;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+//Internal
+using Crankshaft.Handlers;
 
 namespace FullMetalAkari
 {
@@ -23,7 +25,7 @@ namespace FullMetalAkari
             };
 
             //Create The Game Window
-            using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings))
+            using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings, "", ""))
             {
                 window.Run();
             }

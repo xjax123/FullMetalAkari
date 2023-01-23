@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FullMetalAkari.Crankshaft.Primitives;
+using Crankshaft.Primitives;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     public static class objectHandler
     {

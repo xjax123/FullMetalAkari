@@ -3,7 +3,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using StbImageSharp;
 using System.IO;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     public class textureHandler
     {

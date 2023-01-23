@@ -11,21 +11,18 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
-using FullMetalAkari.Crankshaft.Handlers;
-using FullMetalAkari.Crankshaft.Primitives;
+using Crankshaft.Primitives;
 
-namespace FullMetalAkari
+namespace Crankshaft.Handlers
 {
     public class windowHandler : GameWindow
     {
-        private readonly float[] _vertices =
-        {
-           //Position           Texture coordinates
-             0.5f,  1.0f, 0.0f, 1.0f, 1.0f, // top right
-             0.5f, -1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-            -0.5f, -1,0f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  1.0f, 0.0f, 0.0f, 1.0f  // top left
-        };
+        //constructor passthroughs
+        private GameWindowSettings gameWindowSettings;
+        private NativeWindowSettings nativeWindowSettings;
+        private string scenesFilePath;
+        private string intialScene;
+
 
         //temp objects
         private gameObject gameObj;
@@ -35,8 +32,27 @@ namespace FullMetalAkari
         private Matrix4 inv_view;
         private Matrix4 projection;
         private Matrix4 inv_projection;
-        //Generic Constructor
-        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {}
+
+        //
+        // Summary:
+        //     The base class to produce a functioning Gamewindow.
+        //
+        // Parameters:
+        //   gameWindowSettings:
+        //     The event arguments for this frame.
+        //   nativeWindowSettings:
+        //     native
+        //   sceneFilePath:
+        //     
+        //   intialScene:
+        //     
+        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialScene) : base(gameWindowSettings, nativeWindowSettings)
+        {
+            this.gameWindowSettings = gameWindowSettings;
+            this.nativeWindowSettings = nativeWindowSettings;
+            this.scenesFilePath = scenesFilePath;
+            this.intialScene = intialScene;
+        }
 
 
         //Runs Every Frame
@@ -58,9 +74,9 @@ namespace FullMetalAkari
             _time += args.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            
-            Vector3 worldspaceMouse = mouseHandler.ConvertScreenToWorldSpace(MouseState.X,MouseState.Y, (float)Size.X, (float)Size.Y,inv_projection,inv_view);
-            gameObj.translateObject(new Vector3(worldspaceMouse.X*3, worldspaceMouse.Y*3, 0.0f));
+
+            Vector3 worldspaceMouse = mouseHandler.ConvertScreenToWorldSpace(MouseState.X, MouseState.Y, Size.X, Size.Y, inv_projection, inv_view);
+            gameObj.translateObject(new Vector3(worldspaceMouse.X * 3, worldspaceMouse.Y * 3, 0.0f));
 
             gameObj.onRenderFrame();
             tempObj.onRenderFrame();
@@ -73,18 +89,21 @@ namespace FullMetalAkari
             base.OnLoad();
 
             GL.Viewport(0, 0, Size.X, Size.Y);
-            GL.ClearColor(0.6f,0.6f,0.6f,1.0f);
+            GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
 
             //CursorState = CursorState.Hidden;
 
+            //Compile user-defined scenes in the directory given by the user.
+            sceneHandler.compileScenes(scenesFilePath);
+            sceneHandler.loadScene(intialScene);
+
             view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             inv_view = Matrix4.Invert(view);
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), (float)Size.X / (float)Size.Y, 0.1f, 100.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             inv_projection = Matrix4.Invert(projection);
 
             gameObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -5.0f), 1.0f, 0f);
-
             tempObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
             gameObj.onLoad();
             tempObj.onLoad();

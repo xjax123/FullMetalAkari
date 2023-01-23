@@ -4,11 +4,11 @@ using System.Text;
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 
-namespace FullMetalAkari.Crankshaft.Handlers
+namespace Crankshaft.Handlers
 {
     public static class renderingHandler
     {
-        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, String shaderVert, String shaderFrag, ref textureHandler texture, String texPath)
+        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {
             vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(vertexArrayObject);
