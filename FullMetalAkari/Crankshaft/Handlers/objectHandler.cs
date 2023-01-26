@@ -7,7 +7,7 @@ namespace Crankshaft.Handlers
 {
     public static class objectHandler
     {
-        private static Dictionary<string, gameObject> sceneLibrary;
+        private static Dictionary<string, gameObject> objectLibrary;
         public static gameObject buildObject()
         {
             throw new NotImplementedException();

@@ -9,15 +9,15 @@ using Crankshaft.Handlers;
 
 namespace Crankshaft.Primitives
 {
-    public class gameObject : IObject
+    public class gameObject : IObject, IDisposable
     {
         //Overwrite/Hide this Data as needed, preferably in the constructor.
-        private readonly string objectID = "empty";
-        private string name = "Empty Game Object";
-        private readonly string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
-        private readonly string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
-        private readonly string texPath = "Crankshaft/Resources/Textures/error_texture.png";
-        private readonly float[] vertices =
+        protected readonly string objectID = "empty";
+        protected string name = "Empty Game Object";
+        protected readonly string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
+        protected readonly string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+        protected readonly string texPath = "Crankshaft/Resources/Textures/error_texture.png";
+        protected readonly float[] vertices =
         {
            //Position           Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -25,50 +25,46 @@ namespace Crankshaft.Primitives
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
         };
-        private readonly uint[] indices =
+        protected readonly uint[] indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
         //Built in the Constructor, no need to Overwrite/Hide, Remember to set these in the constructor.
-        private int instanceID;
+        protected int instanceID;
 
-        private Matrix4 projectionMat;
-        private Matrix4 viewMat;
+        protected Matrix4 curTranslation = Matrix4.Identity;
+        protected Matrix4 trueTranslation;
 
-        private Matrix4 curTranslation = Matrix4.Identity;
-        private Matrix4 trueTranslation;
+        protected float scale;
+        protected Matrix4 curScale;
 
-        private float scale;
-        private Matrix4 curScale;
-
-        private float rotation;
-        private Matrix4 curRot = Matrix4.Identity;
-        private Matrix4 trueRot;
+        protected float rotation;
+        protected Matrix4 curRot = Matrix4.Identity;
+        protected Matrix4 trueRot;
 
         //Empties
-        private textureHandler texture;
-        private shaderHandler shader;
+        protected textureHandler texture;
+        protected shaderHandler shader;
 
-        private int vertexBufferObject;
-        private int vertexArrayObject;
-        private int elementBufferObject;
+        protected int vertexBufferObject;
+        protected int vertexArrayObject;
+        protected int elementBufferObject;
 
-        public gameObject(int instanceID, Matrix4 projectionMat, Matrix4 viewMat, Vector3 startingPos, float startingScale, float startingRot)
+        public gameObject(int instanceID, Vector3 startingPos, float startingScale, float startingRot)
         {
             this.instanceID = instanceID;
-            this.projectionMat = projectionMat;
-            this.viewMat = viewMat;
             scale = startingScale;
             curScale = Matrix4.CreateScale(startingScale);
             trueTranslation = Matrix4.CreateTranslation(startingPos);
             rotation = startingRot;
             trueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(startingRot));
+            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
         }
         ~gameObject()
         {
-            onDestroy();
+            Dispose();
         }
 
         public virtual void onClick()
@@ -78,17 +74,17 @@ namespace Crankshaft.Primitives
         {
         }
 
-        public virtual void onDestroy()
+        public void Dispose()
         {
             GL.DeleteBuffer(getVertexBufferObject());
             GL.DeleteVertexArray(getVertexArrayObject());
             GL.DeleteProgram(getShader().Handle);
             GL.DeleteProgram(getTexture().Handle);
+            Console.WriteLine("Disposed");
         }
 
         public virtual void onLoad()
         {
-            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
         }
 
         public virtual void onUpdateFrame()
@@ -108,8 +104,8 @@ namespace Crankshaft.Primitives
             }
             shader.Use();
             shader.SetMatrix4("translation", trueTranslation * curScale * trueRot);
-            shader.SetMatrix4("projection", projectionMat);
-            shader.SetMatrix4("view", viewMat);
+            shader.SetMatrix4("projection", renderingHandler.ProjectionMatrix);
+            shader.SetMatrix4("view", renderingHandler.ViewMatrix);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             curTranslation = Matrix4.Identity;
@@ -218,26 +214,6 @@ namespace Crankshaft.Primitives
         public virtual void setElementBufferObject(int v)
         {
             elementBufferObject = v;
-        }
-
-        public virtual Matrix4 getProjectionMatrix()
-        {
-            return projectionMat;
-        }
-
-        public virtual void setProjectionMatrix(Matrix4 projection)
-        {
-            projectionMat = projection;
-        }
-
-        public virtual Matrix4 getViewMatrix()
-        {
-            return viewMat;
-        }
-
-        public virtual void setViewMatrix(Matrix4 view)
-        {
-            viewMat = view;
         }
     }
 }

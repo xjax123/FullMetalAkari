@@ -8,6 +8,19 @@ namespace Crankshaft.Handlers
 {
     public static class renderingHandler
     {
+        //Projection matrixes are stored here.
+        //They used to be stored locally where needed, but in generaly the whole game should only have 1 view and projection matrix due to only having 1 camera.
+        //Passing them around where they were needed became a pain in the ass, so i moved them here.
+        private static Matrix4 projectionMatrix;
+        private static Matrix4 invertedProjection;
+        private static Matrix4 viewMatrix;
+        private static Matrix4 invertedView;
+
+        public static Matrix4 ProjectionMatrix { get => projectionMatrix; set => projectionMatrix = value; }
+        public static Matrix4 ViewMatrix { get => viewMatrix; set => viewMatrix = value; }
+        public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
+        public static Matrix4 InvertedView { get => invertedView; set => invertedView = value; }
+
         public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {
             vertexArrayObject = GL.GenVertexArray();
@@ -35,5 +48,7 @@ namespace Crankshaft.Handlers
             texture = textureHandler.LoadFromFile(texPath);
             texture.Use(TextureUnit.Texture0);
         }
+
+
     }
 }

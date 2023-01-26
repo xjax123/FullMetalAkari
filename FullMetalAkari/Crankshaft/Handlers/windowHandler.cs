@@ -12,6 +12,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
 using Crankshaft.Primitives;
+using FullMetalAkari.Game.Objects.UI;
 
 namespace Crankshaft.Handlers
 {
@@ -27,11 +28,6 @@ namespace Crankshaft.Handlers
         //temp objects
         private gameObject gameObj;
         private gameObject tempObj;
-
-        private Matrix4 view;
-        private Matrix4 inv_view;
-        private Matrix4 projection;
-        private Matrix4 inv_projection;
 
         //
         // Summary:
@@ -66,6 +62,10 @@ namespace Crankshaft.Handlers
             {
                 Close();
             }
+            if (input.IsKeyDown(Keys.Enter)) {
+                tempObj.Dispose();
+                GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            }
         }
         private double _time;
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -74,9 +74,6 @@ namespace Crankshaft.Handlers
             _time += args.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            Vector3 worldspaceMouse = mouseHandler.ConvertScreenToWorldSpace(MouseState.X, MouseState.Y, Size.X, Size.Y, inv_projection, inv_view);
-            gameObj.translateObject(new Vector3(worldspaceMouse.X * 3, worldspaceMouse.Y * 3, 0.0f));
 
             gameObj.onRenderFrame();
             tempObj.onRenderFrame();
@@ -95,16 +92,16 @@ namespace Crankshaft.Handlers
             //CursorState = CursorState.Hidden;
 
             //Compile user-defined scenes in the directory given by the user.
-            sceneHandler.compileScenes(scenesFilePath);
-            sceneHandler.loadScene(intialScene);
+            //sceneHandler.compileScenes(scenesFilePath);
+            //sceneHandler.loadScene(intialScene);
 
-            view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
-            inv_view = Matrix4.Invert(view);
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
-            inv_projection = Matrix4.Invert(projection);
+            renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+            renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
+            renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
+            renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
-            gameObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -5.0f), 1.0f, 0f);
-            tempObj = new gameObject(1, projection, view, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
+            gameObj = new sniperCrosshair(1, new Vector3(0.0f, 0.0f, 0.0f), 1.0f, 0f, MouseState, this);
+            tempObj = new gameObject(1, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
             gameObj.onLoad();
             tempObj.onLoad();
         }
@@ -122,6 +119,8 @@ namespace Crankshaft.Handlers
         {
             base.OnResize(e);
             GL.Viewport(0, 0, Size.X, Size.Y);
+            renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
+            renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
         }
     }
 }

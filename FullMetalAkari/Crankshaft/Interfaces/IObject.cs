@@ -14,9 +14,6 @@ namespace Crankshaft.Interfaces
         //Define what special behaviour occurs on object creation
         public void onLoad();
 
-        //Define what special behavior occurs on object destruction
-        public void onDestroy();
-
         //Define what happens when the object is clicked.
         public void onClick();
 
@@ -74,14 +71,6 @@ namespace Crankshaft.Interfaces
         //DOCUMENTATION UNFINISED
         public int getElementBufferObject();
         public void setElementBufferObject(int v);
-
-        //DOCUMENTATION UNFINISED
-        public Matrix4 getProjectionMatrix();
-        public void setProjectionMatrix(Matrix4 projection);
-
-        //DOCUMENTATION UNFINISED
-        public Matrix4 getViewMatrix();
-        public void setViewMatrix(Matrix4 view);
 
 
         //there probably should be more here.

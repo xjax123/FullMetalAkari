@@ -36,7 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Game\Objects\" />
+    <Folder Include="Crankshaft\Factories\" />
+    <Folder Include="Game\Objects\Game\" />
     <Folder Include="Game\Scenes\" />
     <Folder Include="Game\Resources\Shaders\" />
     <Folder Include="Game\Resources\Texture\" />
