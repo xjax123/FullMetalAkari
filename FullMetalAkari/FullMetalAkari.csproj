@@ -30,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BulletSharp" Version="0.11.1">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="OpenTK" Version="4.7.5" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
@@ -41,5 +44,11 @@
     <Folder Include="Game\Scenes\" />
     <Folder Include="Game\Resources\Shaders\" />
     <Folder Include="Game\Resources\Texture\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BulletSharp">
+      <HintPath>References\BulletSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

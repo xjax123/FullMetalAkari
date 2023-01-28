@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Crankshaft.Handlers;
+using Crankshaft.Physics;
 using Crankshaft.Primitives;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -18,7 +18,7 @@ namespace FullMetalAkari.Game.Objects.UI
         public override void onRenderFrame()
         {
             //Clamps the 
-            Vector3 worldspaceMouse = Vector3.Normalize(mouseHandler.ConvertScreenToWorldSpace(mouseState.X, mouseState.Y, window.Size.X, window.Size.Y, renderingHandler.InvertedProjection, renderingHandler.InvertedView));
+            Vector3 worldspaceMouse = OpenTK.Mathematics.Vector3.Normalize(physicsHandler.ConvertScreenToWorldSpace(mouseState.X, mouseState.Y, window.Size.X, window.Size.Y, renderingHandler.InvertedProjection, renderingHandler.InvertedView));
             translateObject(new Vector3(worldspaceMouse.X * 3, worldspaceMouse.Y * 2, 0.0f));
             base.onRenderFrame();
         }

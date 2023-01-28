@@ -52,7 +52,7 @@ namespace Crankshaft.Primitives
         protected int vertexArrayObject;
         protected int elementBufferObject;
 
-        public gameObject(int instanceID, Vector3 startingPos, float startingScale, float startingRot)
+        public gameObject(int instanceID, Crankshaft.Physics.Vector3 startingPos, float startingScale, float startingRot)
         {
             this.instanceID = instanceID;
             scale = startingScale;

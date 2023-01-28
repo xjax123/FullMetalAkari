@@ -16,6 +16,7 @@ using FullMetalAkari.Game.Objects.UI;
 
 namespace Crankshaft.Handlers
 {
+    //TODO: make a static buffer system for currently loaded objects so that other classes can interact with loaded objects.
     public class windowHandler : GameWindow
     {
         //constructor passthroughs
@@ -77,7 +78,7 @@ namespace Crankshaft.Handlers
 
             gameObj.onRenderFrame();
             tempObj.onRenderFrame();
-
+            
             SwapBuffers();
         }
 

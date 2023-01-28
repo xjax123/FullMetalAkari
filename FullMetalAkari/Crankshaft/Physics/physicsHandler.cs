@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using OpenTK.Mathematics;
 
-namespace Crankshaft.Handlers
+namespace Crankshaft.Physics
 {
-    public static class mouseHandler
+    public static class physicsHandler
     {
         //TODO: Optimize (Low Priority)
         //Relatively efficient now, the only per-call Operations are 4 multiplication, 2 divison, still room for improvment.
@@ -14,7 +14,7 @@ namespace Crankshaft.Handlers
         //A method to convert screen space into world space
         //for some arcane reason you need to tripple it if you are trying to clamp an object to your mouse
         //not sure why, but it is perfectly accurate once trippled, so im not complinaing.
-        public static Vector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
+        public static Crankshaft.Physics.Vector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
         {
             //Version 3
 
