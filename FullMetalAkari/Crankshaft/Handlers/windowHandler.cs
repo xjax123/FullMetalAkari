@@ -12,6 +12,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 //Internal
 using Crankshaft.Primitives;
+using Crankshaft.Physics;
 using FullMetalAkari.Game.Objects.UI;
 
 namespace Crankshaft.Handlers
@@ -101,7 +102,7 @@ namespace Crankshaft.Handlers
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
-            gameObj = new sniperCrosshair(1, new Vector3(0.0f, 0.0f, 0.0f), 1.0f, 0f, MouseState, this);
+            gameObj = new sniperCrosshair(1, new UniVector3(0.0f, 0.0f, 0.0f), 1.0f, 0f, MouseState, this);
             tempObj = new gameObject(1, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
             gameObj.onLoad();
             tempObj.onLoad();

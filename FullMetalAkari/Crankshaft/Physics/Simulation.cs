@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using BulletSharp;
+using OpenTK.Mathematics;
 
 namespace Crankshaft.Physics
 {
@@ -12,9 +13,6 @@ namespace Crankshaft.Physics
         const float StartPosX = -5.0f;
         const float StartPosY = -5.0f;
         const float StartPosZ = -0.1f;
-
-
-        OpenTK.Mathematics.Matrix4 temp = new OpenTK.Mathematics.Matrix4();
 
         public DiscreteDynamicsWorld World { get; set; }
         CollisionDispatcher dispatcher;
@@ -31,12 +29,12 @@ namespace Crankshaft.Physics
 
             broadphase = new DbvtBroadphase();
             World = new DiscreteDynamicsWorld(dispatcher, broadphase, null, collisionConf);
-            World.Gravity = new Vector3(0, -10, 0);
+            World.Gravity = new UniVector3(0, -10, 0);
 
             // create the ground
             CollisionShape groundShape = new BoxShape(50, 50, 50);
             collisionShapes.Add(groundShape);
-            CollisionObject ground = LocalCreateRigidBody(0, OpenTK.Mathematics.Matrix4.CreateTranslation(0, -50, 0), groundShape);
+            CollisionObject ground = LocalCreateRigidBody(0, Matrix4.CreateTranslation(0, -50, 0), groundShape);
             ground.UserObject = "Ground";
 
             // create a few dynamic rigidbodies
@@ -44,7 +42,7 @@ namespace Crankshaft.Physics
 
             CollisionShape colShape = new BoxShape(1);
             collisionShapes.Add(colShape);
-            Vector3 localInertia = colShape.CalculateLocalInertia(mass);
+            UniVector3 localInertia = colShape.CalculateLocalInertia(mass);
 
             var rbInfo = new RigidBodyConstructionInfo(mass, null, colShape, localInertia);
 
@@ -59,7 +57,7 @@ namespace Crankshaft.Physics
                 {
                     for (j = 0; j < ArraySizeZ; j++)
                     {
-                        Matrix4 startTransform = OpenTK.Mathematics.Matrix4.CreateTranslation(
+                        UniMatrix startTransform = Matrix4.CreateTranslation(
                             new Vector3(
                                 2 * i + start_x,
                                 2 * k + start_y,
@@ -74,7 +72,7 @@ namespace Crankshaft.Physics
                         RigidBody body = new RigidBody(rbInfo);
 
                         // make it drop from a height
-                        body.Translate(new Vector3(0, 20, 0));
+                        body.Translate(new UniVector3(0, 20, 0));
 
                         World.AddRigidBody(body);
                     }
@@ -127,11 +125,11 @@ namespace Crankshaft.Physics
             collisionConf.Dispose();
         }
 
-        public RigidBody LocalCreateRigidBody(float mass, Matrix4 startTransform, CollisionShape shape)
+        public RigidBody LocalCreateRigidBody(float mass, UniMatrix startTransform, CollisionShape shape)
         {
             bool isDynamic = mass != 0.0f;
 
-            BulletSharp.Math.Vector3 localInertia = Vector3.Zero;
+            BulletSharp.Math.Vector3 localInertia = UniVector3.Zero;
             if (isDynamic)
                 shape.CalculateLocalInertia(mass, out localInertia);
 

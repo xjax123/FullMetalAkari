@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using OpenTK.Mathematics;
+using Crankshaft.Physics;
 
 namespace Crankshaft.Physics
 {
@@ -14,7 +15,7 @@ namespace Crankshaft.Physics
         //A method to convert screen space into world space
         //for some arcane reason you need to tripple it if you are trying to clamp an object to your mouse
         //not sure why, but it is perfectly accurate once trippled, so im not complinaing.
-        public static Crankshaft.Physics.Vector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
+        public static UniVector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
         {
             //Version 3
 

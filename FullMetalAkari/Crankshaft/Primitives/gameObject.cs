@@ -6,6 +6,8 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using Crankshaft.Interfaces;
 using Crankshaft.Handlers;
+using Crankshaft.Physics;
+using BulletSharp;
 
 namespace Crankshaft.Primitives
 {
@@ -34,25 +36,26 @@ namespace Crankshaft.Primitives
         //Built in the Constructor, no need to Overwrite/Hide, Remember to set these in the constructor.
         protected int instanceID;
 
-        protected Matrix4 curTranslation = Matrix4.Identity;
-        protected Matrix4 trueTranslation;
+        protected UniMatrix curTranslation = Matrix4.Identity;
+        protected UniMatrix trueTranslation;
 
         protected float scale;
-        protected Matrix4 curScale;
+        protected UniMatrix curScale;
 
         protected float rotation;
-        protected Matrix4 curRot = Matrix4.Identity;
-        protected Matrix4 trueRot;
+        protected UniMatrix curRot = Matrix4.Identity;
+        protected UniMatrix trueRot;
 
         //Empties
         protected textureHandler texture;
         protected shaderHandler shader;
+        protected RigidBody rigid;
 
         protected int vertexBufferObject;
         protected int vertexArrayObject;
         protected int elementBufferObject;
 
-        public gameObject(int instanceID, Crankshaft.Physics.Vector3 startingPos, float startingScale, float startingRot)
+        public gameObject(int instanceID, Physics.UniVector3 startingPos, float startingScale, float startingRot)
         {
             this.instanceID = instanceID;
             scale = startingScale;
