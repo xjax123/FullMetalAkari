@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FullMetalAkari.Crankshaft.Data
+namespace Crankshaft.Data
 {
-    class objectData
+    public class objectData
     {
+        public int InstanceID { get; set; }
+        public string type { get; set; }
+        public positionData position { get; set; }
     }
 }

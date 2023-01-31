@@ -25,7 +25,7 @@ namespace FullMetalAkari
             };
 
             //Create The Game Window
-            using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings, "", ""))
+            using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings, "/Game/Scenes", "demo"))
             {
                 window.Run();
             }

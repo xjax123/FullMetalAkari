@@ -32,12 +32,16 @@ namespace Crankshaft.Physics
         public float Y { get; set; }
         public float Z { get; set; }
 
+        public Vector2 Xy { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
+        public Vector2 XZ { get { return new Vector2(X, Z); } set { X = value.X; Z = value.Y; } }
+        public Vector2 YZ { get { return new Vector2(Y, Z); } set { Y = value.X; Z = value.Y; } }
+
         public override string ToString()
         {
             return $"[{X},{Y},{Z}]";
         }
 
-        //various conversions needed to put a path job on the lack of internal compatability between OpenTK and BulletSharp
+        //Implicit Type Conversions
         public static implicit operator OpenTK.Mathematics.Vector3(UniVector3 v)
         {
             return new OpenTK.Mathematics.Vector3(v.X, v.Y, v.Z);
@@ -56,6 +60,40 @@ namespace Crankshaft.Physics
         public static implicit operator UniVector3(BulletSharp.Math.Vector3 v)
         {
             return new UniVector3(v);
+        }
+
+        //Math Operations
+        //Scalar-Vector Operations
+        public static UniVector3 operator +(UniVector3 v, float s)
+        {
+            return new UniVector3(v.X + s, v.Y + s, v.Z + s);
+        }
+        public static UniVector3 operator -(UniVector3 v, float s)
+        {
+            return new UniVector3(v.X - s, v.Y - s, v.Z - s);
+        }
+        public static UniVector3 operator *(UniVector3 v, float s)
+        {
+            return new UniVector3(v.X*s,v.Y*s,v.Z*s);
+        }
+        public static UniVector3 operator /(UniVector3 v, float s)
+        {
+            float n = 1 / s;
+            return new UniVector3(v.X * n, v.Y * n, v.Z * n);
+        }
+
+        //Vector-Vector Operations
+        public static UniVector3 operator +(UniVector3 v, UniVector3 s)
+        {
+            return new UniVector3(v.X + s.X, v.Y + s.Y, v.Z + s.Z);
+        }
+        public static UniVector3 operator -(UniVector3 v, UniVector3 s)
+        {
+            return new UniVector3(v.X - s.X, v.Y - s.Y, v.Z - s.Z);
+        }
+        public static UniVector3 operator *(UniVector3 v, UniVector3 s)
+        {
+            return new UniVector3(v.X * s.X, v.Y * s.Y, v.Z * s.Z);
         }
     }
 
@@ -178,7 +216,7 @@ namespace Crankshaft.Physics
 
         public float Trace { get { return M11 + M22 + M33 + M44; } }
         public Vector4 Diagonal { get { return new Vector4(M11,M22,M33,M44); } }
-        public UniMatrix Identity { get { return new UniMatrix(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1); } }
+        public static UniMatrix Identity { get { return new UniMatrix(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1); } }
 
         //Implicit Type Conversions
         public static implicit operator OpenTK.Mathematics.Matrix4(UniMatrix v)
@@ -424,7 +462,55 @@ namespace Crankshaft.Physics
                 m.M14 * n.M41 + m.M24 * n.M42 + m.M34 * n.M43 + m.M44 * n.M44
                 );
         }
+        public static UniMatrix operator *(Matrix4 m, UniMatrix n)
+        {
+            return new UniMatrix(
+                m.M11 * n.M11 + m.M21 * n.M12 + m.M31 * n.M13 + m.M41 * n.M14,
+                m.M12 * n.M11 + m.M22 * n.M12 + m.M32 * n.M13 + m.M42 * n.M14,
+                m.M13 * n.M11 + m.M23 * n.M12 + m.M33 * n.M13 + m.M43 * n.M14,
+                m.M14 * n.M11 + m.M24 * n.M12 + m.M34 * n.M13 + m.M44 * n.M14,
+
+                m.M11 * n.M21 + m.M21 * n.M22 + m.M31 * n.M23 + m.M41 * n.M24,
+                m.M12 * n.M21 + m.M22 * n.M22 + m.M32 * n.M23 + m.M42 * n.M24,
+                m.M13 * n.M21 + m.M23 * n.M22 + m.M33 * n.M23 + m.M43 * n.M24,
+                m.M14 * n.M21 + m.M24 * n.M22 + m.M34 * n.M23 + m.M44 * n.M24,
+
+                m.M11 * n.M31 + m.M21 * n.M32 + m.M31 * n.M33 + m.M41 * n.M34,
+                m.M12 * n.M31 + m.M22 * n.M32 + m.M32 * n.M33 + m.M42 * n.M34,
+                m.M13 * n.M31 + m.M23 * n.M32 + m.M33 * n.M33 + m.M43 * n.M34,
+                m.M14 * n.M31 + m.M24 * n.M32 + m.M34 * n.M33 + m.M44 * n.M34,
+
+                m.M11 * n.M41 + m.M21 * n.M42 + m.M31 * n.M43 + m.M41 * n.M44,
+                m.M12 * n.M41 + m.M22 * n.M42 + m.M32 * n.M43 + m.M42 * n.M44,
+                m.M13 * n.M41 + m.M23 * n.M42 + m.M33 * n.M43 + m.M43 * n.M44,
+                m.M14 * n.M41 + m.M24 * n.M42 + m.M34 * n.M43 + m.M44 * n.M44
+                );
+        }
         public static UniMatrix operator *(UniMatrix m, BulletSharp.Math.Matrix n)
+        {
+            return new UniMatrix(
+                m.M11 * n.M11 + m.M21 * n.M12 + m.M31 * n.M13 + m.M41 * n.M14,
+                m.M12 * n.M11 + m.M22 * n.M12 + m.M32 * n.M13 + m.M42 * n.M14,
+                m.M13 * n.M11 + m.M23 * n.M12 + m.M33 * n.M13 + m.M43 * n.M14,
+                m.M14 * n.M11 + m.M24 * n.M12 + m.M34 * n.M13 + m.M44 * n.M14,
+
+                m.M11 * n.M21 + m.M21 * n.M22 + m.M31 * n.M23 + m.M41 * n.M24,
+                m.M12 * n.M21 + m.M22 * n.M22 + m.M32 * n.M23 + m.M42 * n.M24,
+                m.M13 * n.M21 + m.M23 * n.M22 + m.M33 * n.M23 + m.M43 * n.M24,
+                m.M14 * n.M21 + m.M24 * n.M22 + m.M34 * n.M23 + m.M44 * n.M24,
+
+                m.M11 * n.M31 + m.M21 * n.M32 + m.M31 * n.M33 + m.M41 * n.M34,
+                m.M12 * n.M31 + m.M22 * n.M32 + m.M32 * n.M33 + m.M42 * n.M34,
+                m.M13 * n.M31 + m.M23 * n.M32 + m.M33 * n.M33 + m.M43 * n.M34,
+                m.M14 * n.M31 + m.M24 * n.M32 + m.M34 * n.M33 + m.M44 * n.M34,
+
+                m.M11 * n.M41 + m.M21 * n.M42 + m.M31 * n.M43 + m.M41 * n.M44,
+                m.M12 * n.M41 + m.M22 * n.M42 + m.M32 * n.M43 + m.M42 * n.M44,
+                m.M13 * n.M41 + m.M23 * n.M42 + m.M33 * n.M43 + m.M43 * n.M44,
+                m.M14 * n.M41 + m.M24 * n.M42 + m.M34 * n.M43 + m.M44 * n.M44
+                );
+        }
+        public static UniMatrix operator *(BulletSharp.Math.Matrix m, UniMatrix n)
         {
             return new UniMatrix(
                 m.M11 * n.M11 + m.M21 * n.M12 + m.M31 * n.M13 + m.M41 * n.M14,

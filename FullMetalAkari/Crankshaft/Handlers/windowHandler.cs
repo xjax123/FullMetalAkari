@@ -14,6 +14,7 @@ using OpenTK.Mathematics;
 using Crankshaft.Primitives;
 using Crankshaft.Physics;
 using FullMetalAkari.Game.Objects.UI;
+using Crankshaft.Data;
 
 namespace Crankshaft.Handlers
 {
@@ -26,10 +27,12 @@ namespace Crankshaft.Handlers
         private string scenesFilePath;
         private string intialScene;
 
-
-        //temp objects
-        private gameObject gameObj;
-        private gameObject tempObj;
+        //Static Accessors
+        public static NativeWindow ActiveWindow { get; private set; }
+        public static MouseState ActiveMouse { get; private set; }
+        public static Scene ActiveScene { get; set; }
+        public static Simulation ActiveSim { get; set; }
+        public static bool Debug { get; set; }
 
         //
         // Summary:
@@ -44,12 +47,12 @@ namespace Crankshaft.Handlers
         //     
         //   intialScene:
         //     
-        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialScene) : base(gameWindowSettings, nativeWindowSettings)
+        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID) : base(gameWindowSettings, nativeWindowSettings)
         {
             this.gameWindowSettings = gameWindowSettings;
             this.nativeWindowSettings = nativeWindowSettings;
             this.scenesFilePath = scenesFilePath;
-            this.intialScene = intialScene;
+            this.intialScene = intialSceneID;
         }
 
 
@@ -64,9 +67,27 @@ namespace Crankshaft.Handlers
             {
                 Close();
             }
-            if (input.IsKeyDown(Keys.Enter)) {
-                tempObj.Dispose();
-                GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            if (input.IsKeyPressed(Keys.Enter))
+            {
+
+            }
+            if (ActiveMouse.IsButtonPressed(MouseButton.Left))
+            {
+                System.Diagnostics.Debug.WriteLine("Click Registered");
+
+                gameObject temp = physicsHandler.CheckClicked();
+                if (temp != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Not Null");
+                    temp.onClick();
+                }
+            }
+
+            ActiveSim.onUpdate();
+
+            foreach (gameObject g in ActiveScene.objects)
+            {
+                g.onUpdateFrame();
             }
         }
         private double _time;
@@ -74,18 +95,23 @@ namespace Crankshaft.Handlers
         {
             base.OnRenderFrame(args);
             _time += args.Time;
-
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            gameObj.onRenderFrame();
-            tempObj.onRenderFrame();
             
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            foreach (gameObject g in ActiveScene.objects)
+            {
+                g.onRenderFrame();
+            }
             SwapBuffers();
         }
 
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            //Set the Static Accessors
+            ActiveWindow = this;
+            ActiveMouse = this.MouseState;
+            ActiveSim = new Simulation();
 
             GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
@@ -94,18 +120,20 @@ namespace Crankshaft.Handlers
             //CursorState = CursorState.Hidden;
 
             //Compile user-defined scenes in the directory given by the user.
-            //sceneHandler.compileScenes(scenesFilePath);
-            //sceneHandler.loadScene(intialScene);
+            sceneHandler.compileScenes(scenesFilePath);
+            sceneHandler.loadScene(intialScene);
 
             renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
-            gameObj = new sniperCrosshair(1, new UniVector3(0.0f, 0.0f, 0.0f), 1.0f, 0f, MouseState, this);
-            tempObj = new gameObject(1, new Vector3(0.0f, 0.0f, -10.0f), 1.0f, 0f);
-            gameObj.onLoad();
-            tempObj.onLoad();
+            ActiveSim.onLoad();
+
+            foreach (gameObject g in ActiveScene.objects)
+            {
+                g.onLoad();
+            }
         }
 
         protected override void OnUnload()
@@ -113,6 +141,13 @@ namespace Crankshaft.Handlers
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
             GL.UseProgram(0);
+
+            ActiveSim.onUnload();
+
+            foreach (gameObject g in ActiveScene.objects)
+            {
+                g.Dispose();
+            }
 
             base.OnUnload();
         }

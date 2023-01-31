@@ -2,20 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using Crankshaft.Primitives;
+using Crankshaft.Data;
+using Crankshaft.Exceptions;
+using FullMetalAkari.Game.Objects.UI;
 
 namespace Crankshaft.Handlers
 {
     public static class objectHandler
     {
-        private static Dictionary<string, gameObject> objectLibrary;
-        public static gameObject buildObject()
+        public static gameObject buildObject(objectData o)
         {
-            throw new NotImplementedException();
-        }
-
-        public static void complileObjects()
-        {
-            throw new NotImplementedException();
+            gameObject intObject;
+            switch (o.type)
+            {
+                case "empty":
+                    intObject = new gameObject(o);
+                    break;
+                case "scope":
+                    intObject = new sniperCrosshair(o);
+                    break;
+                default:
+                    throw new ObjectNotFoundException();
+            }
+            return intObject;
         }
     }
 }

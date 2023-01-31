@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using OpenTK.Mathematics;
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL;
+using BulletSharp;
+using Crankshaft.Physics;
+using Crankshaft.Primitives;
 
 namespace Crankshaft.Handlers
 {
@@ -46,9 +50,8 @@ namespace Crankshaft.Handlers
             GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             texture = textureHandler.LoadFromFile(texPath);
-            texture.Use(TextureUnit.Texture0);
+            texture.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
         }
-
 
     }
 }

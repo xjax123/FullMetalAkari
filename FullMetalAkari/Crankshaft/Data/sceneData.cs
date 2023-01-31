@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Crankshaft.Primitives;
 
-namespace FullMetalAkari.Crankshaft.Data
+namespace Crankshaft.Data
 {
-    class sceneData
+    public class sceneData
     {
+        public string sceneID { get; set; }
+        public string nextScene { get; set; }
+        public string sceneName { get; set; }
+        public objectData[] objects { get; set; }
     }
 }

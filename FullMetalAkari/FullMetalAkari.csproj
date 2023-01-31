@@ -15,6 +15,7 @@
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
     <None Remove="Game\Resources\Shaders\basicShader.frag" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
+    <None Remove="Game\Scenes\demo.sdta" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,9 @@
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Scenes\demo.sdta">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +38,7 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="OpenTK" Version="4.7.5" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
@@ -41,7 +46,6 @@
   <ItemGroup>
     <Folder Include="Crankshaft\Factories\" />
     <Folder Include="Game\Objects\Game\" />
-    <Folder Include="Game\Scenes\" />
     <Folder Include="Game\Resources\Shaders\" />
     <Folder Include="Game\Resources\Texture\" />
   </ItemGroup>
