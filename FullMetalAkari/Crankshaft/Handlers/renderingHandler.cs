@@ -19,11 +19,13 @@ namespace Crankshaft.Handlers
         private static Matrix4 invertedProjection;
         private static Matrix4 viewMatrix;
         private static Matrix4 invertedView;
+        private static Matrix4 orthoProjection;
 
         public static Matrix4 ProjectionMatrix { get => projectionMatrix; set => projectionMatrix = value; }
         public static Matrix4 ViewMatrix { get => viewMatrix; set => viewMatrix = value; }
         public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
         public static Matrix4 InvertedView { get => invertedView; set => invertedView = value; }
+        public static Matrix4 OrthoProjection { get => orthoProjection; set => orthoProjection = value; }
 
         public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {

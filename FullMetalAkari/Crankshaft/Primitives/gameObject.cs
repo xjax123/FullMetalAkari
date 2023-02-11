@@ -87,8 +87,9 @@ namespace Crankshaft.Primitives
             Rotation = d.position.rotation;
             TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.position.rotation));
             UniMatrix comb = TrueTranslation * CurScale * TrueRot;
-            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/2,Scale/2,0.1f));
+            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/2,Scale/2,0.1f), this, d.mass);
             windowHandler.ActiveSim.addRigidToWorld(ref rigid);
+
             vertexArrayObject = GL.GenVertexArray();
             vertexBufferObject = GL.GenBuffer();
             elementBufferObject = GL.GenBuffer();
@@ -100,7 +101,7 @@ namespace Crankshaft.Primitives
 
         public virtual void onClick()
         {
-            GL.ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            Debug.WriteLine("Click Registered on: " + this.ToString());
         }
         public virtual void onHover()
         {

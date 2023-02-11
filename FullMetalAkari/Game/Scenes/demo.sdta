@@ -5,8 +5,9 @@
 	"objects": [{
 			"instanceID": "1",
 			"type": "empty",
+			"mass": 1,
 			"position": {
-				"X": "-1",
+				"X": "0",
 				"Y": "0",
 				"Z": "-5",
 				"scale": "1",
@@ -16,8 +17,9 @@
 		{
 			"instanceID": "2",
 			"type": "scope",
+			"mass": 0,
 			"position": {
-				"X": "1",
+				"X": "0",
 				"Y": "0",
 				"Z": "-5",
 				"scale": "1",

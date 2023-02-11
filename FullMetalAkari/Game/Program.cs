@@ -22,6 +22,8 @@ namespace FullMetalAkari
                 Title = "Full Metal Akari",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
+                //Multisampling
+                NumberOfSamples = 8
             };
 
             //Create The Game Window

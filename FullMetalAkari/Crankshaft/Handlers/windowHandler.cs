@@ -73,13 +73,18 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                System.Diagnostics.Debug.WriteLine("Click Registered");
-
-                gameObject temp = physicsHandler.CheckClicked();
-                if (temp != null)
+                int? indi = physicsHandler.CheckClicked();
+                if (indi != null)
                 {
                     System.Diagnostics.Debug.WriteLine("Not Null");
-                    temp.onClick();
+                    foreach (gameObject g in ActiveScene.objects)
+                    {
+                        if (g.InstanceID == indi)
+                        {
+                            g.onClick();
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -118,6 +123,8 @@ namespace Crankshaft.Handlers
             GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.Multisample);
+            GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             //CursorState = CursorState.Hidden;
@@ -125,6 +132,7 @@ namespace Crankshaft.Handlers
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
+            renderingHandler.OrthoProjection = Matrix4.CreateOrthographic(Size.X, Size.Y, 0.1f, 100f);
 
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);

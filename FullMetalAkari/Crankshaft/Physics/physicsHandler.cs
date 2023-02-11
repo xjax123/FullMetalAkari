@@ -6,40 +6,50 @@ using BulletSharp;
 using Crankshaft.Physics;
 using Crankshaft.Handlers;
 using Crankshaft.Primitives;
+using System.Diagnostics;
 
 namespace Crankshaft.Physics
 {
     public static class physicsHandler
     {
-
-        //TODO: Optimize (Low Priority)
-        //Relatively efficient now, the only per-call Operations are 4 multiplication, 2 divison, still room for improvment.
-        //Not sure what performance impact creating new vectors has, but in theory shouldnt increase the performance impact by more than a factor of 4.
-
-        //A method to convert screen space into world space
-        //for some arcane reason you need to tripple it if you are trying to clamp an object to your mouse
-        //not sure why, but it is perfectly accurate once trippled, so im not complinaing.
-        public static UniVector3 ConvertScreenToWorldSpace(float x, float y, float width, float height, Matrix4 inv_projection_matrix, Matrix4 inv_view_matrix)
+        public static UniVector3 ConvertScreenToWorldSpaceVec3(float x, float y, float z)
         {
-            //Version 3
-
             //Translating to 3D Normalized Device Coordinates
             //Translating to 4D Homogeneous Clip Coordinates
-            Vector4 HCCposition = new Vector4(2.0f * x / width - 1.0f, 1.0f - 2.0f * y / height, -1.0f, 1.0f);
+            Vector4 HCCposition = new Vector4(2.0f * x / windowHandler.ActiveWindow.Size.X - 1.0f, 1.0f - 2.0f * y / windowHandler.ActiveWindow.Size.Y, z, 1.0f);
 
             //Translating to 4D Camera Coordinates
-            Vector4 CCposition = inv_projection_matrix * HCCposition;
-            CCposition.Zw = new Vector2(-1.0f, 0.0f);
+            Vector4 CCposition = renderingHandler.InvertedProjection * HCCposition;
+            CCposition.Zw = new Vector2(z, 0.0f);
 
             //Translating to 4D World Coordinates
-            UniVector3 WCposition = (inv_view_matrix * CCposition).Xyz;
+            UniVector3 WCposition = (renderingHandler.InvertedView * CCposition).Xyz;
 
             //Returning in 3D World Coordinates
             //needs to be trippled to clamp default UI (scale 1, Z = 0) objects to the mouse.
             return WCposition;
         }
 
-        public static RigidBody createRigidBody(UniMatrix transform, CollisionShape shape, float mass = 0)
+        public static Vector4 ConvertScreenToWorldSpaceVec4(float x, float y, float z)
+        {
+            //Translating to 3D Normalized Device Coordinates
+            //Translating to 4D Homogeneous Clip Coordinates
+            Vector4 HCCposition = new Vector4(2.0f * x / windowHandler.ActiveWindow.Size.X - 1.0f, 1.0f - 2.0f * y / windowHandler.ActiveWindow.Size.Y, z, 1.0f);
+
+            //Translating to 4D Camera Coordinates
+            Vector4 CCposition = renderingHandler.InvertedProjection * HCCposition;
+            CCposition.Zw = new Vector2(z, 0.0f);
+
+            //Translating to 4D World Coordinates
+            Vector4 WCposition = renderingHandler.InvertedView * CCposition;
+            CCposition.Zw = new Vector2(z, 0.0f);
+
+            //Returning in 3D World Coordinates
+            //needs to be trippled to clamp default UI (scale 1, Z = 0) objects to the mouse.
+            return WCposition;
+        }
+
+        public static BoundRigidBody createRigidBody(UniMatrix transform, CollisionShape shape, gameObject obj, float mass = 0)
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
@@ -52,15 +62,31 @@ namespace Crankshaft.Physics
             DefaultMotionState myMotionState = new DefaultMotionState(transform);
 
             RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
-            RigidBody body = new RigidBody(rbInfo);
+            BoundRigidBody body = new BoundRigidBody(rbInfo, obj);
             rbInfo.Dispose();
             return body;
         }
 
 
         #nullable enable
-        public static gameObject? CheckClicked()
+        public static int? CheckClicked()
         {
+            Vector4 rayStart = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X,windowHandler.ActiveMouse.Y, -1.0f);
+            Vector4 rayEnd = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, 0.0f);
+            BulletSharp.Math.Vector3 rayDir = (UniVector3) Vector3.Normalize(new Vector3(rayStart - rayEnd));
+
+            BulletSharp.Math.Vector3 out_origin = new UniVector3(rayStart.Xyz);
+            BulletSharp.Math.Vector3 out_end = out_origin + rayDir*1000.0f;
+            ClosestRayResultCallback rayResult = new ClosestRayResultCallback(ref out_origin, ref out_end);
+
+            windowHandler.ActiveSim.World.RayTest(out_origin, out_end, rayResult);
+
+            if (rayResult.HasHit)
+            {
+                BoundRigidBody rigid = (BoundRigidBody) rayResult.CollisionObject;
+                return rigid.Obj.InstanceID;
+            }
+
             return null;
         }
     }
