@@ -113,27 +113,24 @@ namespace Crankshaft.Handlers
             ActiveMouse = this.MouseState;
             ActiveSim = new Simulation();
 
+            //Enabling a bunch of openGL nonsense
             GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             //CursorState = CursorState.Hidden;
-
-            //Compile user-defined scenes in the directory given by the user.
-            sceneHandler.compileScenes(scenesFilePath);
-            sceneHandler.loadScene(intialScene);
-
             renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
-            ActiveSim.onLoad();
+            //Compile user-defined scenes in the directory given by the user.
+            sceneHandler.compileScenes(scenesFilePath);
+            sceneHandler.loadScene(intialScene);
 
-            foreach (gameObject g in ActiveScene.objects)
-            {
-                g.onLoad();
-            }
+            ActiveSim.onLoad();
         }
 
         protected override void OnUnload()

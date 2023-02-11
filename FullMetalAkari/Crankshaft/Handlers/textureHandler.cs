@@ -9,11 +9,11 @@ namespace Crankshaft.Handlers
     {
         public readonly int Handle;
 
-        public static textureHandler LoadFromFile(string path)
+        public static textureHandler LoadFromFile(string path, TextureUnit tex)
         {
             int handle = GL.GenTexture();
 
-            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.ActiveTexture(tex);
             GL.BindTexture(TextureTarget.Texture2D, handle);
 
             StbImage.stbi_set_flip_vertically_on_load(1);

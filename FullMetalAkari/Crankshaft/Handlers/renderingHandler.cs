@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using OpenTK.Mathematics;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using BulletSharp;
 using Crankshaft.Physics;
 using Crankshaft.Primitives;
@@ -25,16 +25,13 @@ namespace Crankshaft.Handlers
         public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
         public static Matrix4 InvertedView { get => invertedView; set => invertedView = value; }
 
-        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
+        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath, TextureUnit tex)
         {
-            vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(vertexArrayObject);
 
-            vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-            elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
@@ -49,8 +46,8 @@ namespace Crankshaft.Handlers
             GL.EnableVertexAttribArray(texCoordLoc);
             GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            texture = textureHandler.LoadFromFile(texPath);
-            texture.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+            texture = textureHandler.LoadFromFile(texPath, tex);
+            texture.Use(tex);
         }
 
     }

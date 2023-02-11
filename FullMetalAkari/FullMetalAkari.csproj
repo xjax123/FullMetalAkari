@@ -15,6 +15,7 @@
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
     <None Remove="Game\Resources\Shaders\basicShader.frag" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
+    <None Remove="Game\Resources\Texture\Scope_Duplex.png" />
     <None Remove="Game\Scenes\demo.sdta" />
   </ItemGroup>
 
@@ -26,6 +27,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\Scope_Duplex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Scenes\demo.sdta">
@@ -47,7 +51,6 @@
     <Folder Include="Crankshaft\Factories\" />
     <Folder Include="Game\Objects\Game\" />
     <Folder Include="Game\Resources\Shaders\" />
-    <Folder Include="Game\Resources\Texture\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -15,12 +15,12 @@ namespace Crankshaft.Primitives
     public class gameObject : IDisposable
     {
         //Overwrite/Hide this Data as needed, preferably in the constructor.
-        protected static readonly string objectID = "empty";
-        protected static string name = "Empty Game Object";
-        protected static readonly string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
-        protected static readonly string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
-        protected static readonly string texPath = "Crankshaft/Resources/Textures/error_texture.png";
-        protected static readonly float[] vertices =
+        protected string objectID = "empty";
+        protected string name = "Empty Game Object";
+        protected string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
+        protected string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+        protected string texPath = "Crankshaft/Resources/Textures/error_texture.png";
+        protected  float[] vertices =
         {
            //Position           Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -52,6 +52,7 @@ namespace Crankshaft.Primitives
         //Empties
         protected textureHandler texture;
         protected shaderHandler shader;
+        protected TextureUnit tex;
         protected RigidBody rigid;
 
         protected int vertexBufferObject;
@@ -77,6 +78,7 @@ namespace Crankshaft.Primitives
 
         public gameObject(objectData d)
         {
+            Debug.WriteLine(d.ToString());
             this.InstanceID = d.InstanceID;
             Scale = d.position.scale;
             CurScale = Matrix4.CreateScale(d.position.scale);
@@ -84,10 +86,13 @@ namespace Crankshaft.Primitives
             TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.position.X,d.position.Y,d.position.Z));
             Rotation = d.position.rotation;
             TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.position.rotation));
-            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
             UniMatrix comb = TrueTranslation * CurScale * TrueRot;
             Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/2,Scale/2,0.1f));
             windowHandler.ActiveSim.addRigidToWorld(ref rigid);
+            vertexArrayObject = GL.GenVertexArray();
+            vertexBufferObject = GL.GenBuffer();
+            elementBufferObject = GL.GenBuffer();
+            tex = d.target;
         }
         ~gameObject()
         {
@@ -113,6 +118,8 @@ namespace Crankshaft.Primitives
 
         public virtual void onLoad()
         {
+            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath, tex);
+            Debug.WriteLine(texPath);
         }
 
         public virtual void onUpdateFrame()

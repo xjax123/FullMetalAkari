@@ -11,5 +11,10 @@ namespace Crankshaft.Data
         public float Z { get; set; }
         public float scale { get; set; }
         public float rotation { get; set; }
+
+        public override string ToString()
+        {
+            return "[ X:" + X + ", Y:" + Y + ", Z:" + Z + ", Scale:" + scale + ", Rotation:"+ rotation + "]";
+        }
     }
 }

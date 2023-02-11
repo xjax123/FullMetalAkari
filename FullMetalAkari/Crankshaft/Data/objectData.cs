@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using OpenTK.Graphics.OpenGL4;
 
 namespace Crankshaft.Data
 {
@@ -8,6 +6,12 @@ namespace Crankshaft.Data
     {
         public int InstanceID { get; set; }
         public string type { get; set; }
+        public TextureUnit target { get; set; }
         public positionData position { get; set; }
+
+        public override string ToString()
+        {
+            return "[ID:" + InstanceID + ", objType:" + type + ", textureTarget:" + target.ToString() + ", " + position.ToString() + "]";
+        }
     }
 }

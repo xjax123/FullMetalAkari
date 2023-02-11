@@ -37,6 +37,11 @@ namespace Crankshaft.Handlers
                 }
                 Scene compScene = new Scene(localScene, intList);
                 windowHandler.ActiveScene = compScene;
+
+                foreach (gameObject g in windowHandler.ActiveScene.objects)
+                {
+                    g.onLoad();
+                }
             }
             else
             {
