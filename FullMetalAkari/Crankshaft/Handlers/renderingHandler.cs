@@ -25,7 +25,7 @@ namespace Crankshaft.Handlers
         public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
         public static Matrix4 InvertedView { get => invertedView; set => invertedView = value; }
 
-        public static void basicRender(ref int vertexArrayObject, ref int vertexBufferObject, ref int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath, TextureUnit tex)
+        public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {
             GL.BindVertexArray(vertexArrayObject);
 
@@ -46,8 +46,8 @@ namespace Crankshaft.Handlers
             GL.EnableVertexAttribArray(texCoordLoc);
             GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            texture = textureHandler.LoadFromFile(texPath, tex);
-            texture.Use(tex);
+            texture = textureHandler.LoadFromFile(texPath, TextureUnit.Texture0);
+            texture.Use(TextureUnit.Texture0);
         }
 
     }

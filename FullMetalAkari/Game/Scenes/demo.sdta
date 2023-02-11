@@ -5,7 +5,6 @@
 	"objects": [{
 			"instanceID": "1",
 			"type": "empty",
-			"target":  0,	
 			"position": {
 				"X": "-1",
 				"Y": "0",
@@ -17,7 +16,6 @@
 		{
 			"instanceID": "2",
 			"type": "scope",
-			"target": 1,
 			"position": {
 				"X": "1",
 				"Y": "0",

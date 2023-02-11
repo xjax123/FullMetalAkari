@@ -11,7 +11,6 @@ using OpenTK.Mathematics;
 
 namespace Crankshaft.Handlers
 {
-    //
     public class shaderHandler
     {
         public readonly int Handle;

@@ -5,6 +5,8 @@ out vec4 outputColor;
 
 in vec2 texCoord;
 
+flat in int target;
+
 uniform sampler2D texture0;
 
 void main()

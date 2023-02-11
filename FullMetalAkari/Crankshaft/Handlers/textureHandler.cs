@@ -7,7 +7,10 @@ namespace Crankshaft.Handlers
 {
     public class textureHandler
     {
+        private static int activeHandle;
         public readonly int Handle;
+
+        public static int ActiveHandle { get => activeHandle; set => activeHandle = value; }
 
         public static textureHandler LoadFromFile(string path, TextureUnit tex)
         {
@@ -42,6 +45,7 @@ namespace Crankshaft.Handlers
 
         public void Use(TextureUnit unit)
         {
+            ActiveHandle = Handle;
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Handle);
         }

@@ -92,7 +92,6 @@ namespace Crankshaft.Primitives
             vertexArrayObject = GL.GenVertexArray();
             vertexBufferObject = GL.GenBuffer();
             elementBufferObject = GL.GenBuffer();
-            tex = d.target;
         }
         ~gameObject()
         {
@@ -118,7 +117,7 @@ namespace Crankshaft.Primitives
 
         public virtual void onLoad()
         {
-            renderingHandler.basicRender(ref vertexArrayObject, ref vertexBufferObject, ref elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath, tex);
+            renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
             Debug.WriteLine(texPath);
         }
 
@@ -128,7 +127,6 @@ namespace Crankshaft.Primitives
 
         public virtual void onRenderFrame()
         {
-            GL.BindVertexArray(VertexArrayObject);
             if (CurTranslation != Matrix4.Identity)
             {
                 TrueTranslation = CurTranslation;
@@ -142,6 +140,10 @@ namespace Crankshaft.Primitives
             Shader.SetMatrix4("translation", temp);
             Shader.SetMatrix4("projection", renderingHandler.ProjectionMatrix);
             Shader.SetMatrix4("view", renderingHandler.ViewMatrix);
+            if (textureHandler.ActiveHandle != texture.Handle)
+            {
+                texture.Use(TextureUnit.Texture0);
+            }
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             CurTranslation = Matrix4.Identity;
