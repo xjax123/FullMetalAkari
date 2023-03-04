@@ -20,7 +20,7 @@ namespace Crankshaft.Primitives
         protected string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
         protected string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
         protected string texPath = "Crankshaft/Resources/Textures/error_texture.png";
-        protected  float[] vertices =
+        protected float[] vertices =
         {
            //Position           Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -80,14 +80,14 @@ namespace Crankshaft.Primitives
         {
             Debug.WriteLine(d.ToString());
             this.InstanceID = d.InstanceID;
-            Scale = d.position.scale;
-            CurScale = Matrix4.CreateScale(d.position.scale);
-            Position = new UniVector3(d.position.X, d.position.Y, d.position.Z);
-            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.position.X,d.position.Y,d.position.Z));
-            Rotation = d.position.rotation;
-            TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.position.rotation));
+            Scale = d.Position.scale;
+            CurScale = Matrix4.CreateScale(d.Position.scale);
+            Position = new UniVector3(d.Position.X, d.Position.Y, d.Position.Z);
+            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X,d.Position.Y,d.Position.Z));
+            Rotation = d.Position.rotation;
+            TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.Position.rotation));
             UniMatrix comb = TrueTranslation * CurScale * TrueRot;
-            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/2,Scale/2,0.1f), this, d.mass);
+            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/2,Scale/2,0.1f), this, d.Mass);
             windowHandler.ActiveSim.addRigidToWorld(ref rigid);
 
             vertexArrayObject = GL.GenVertexArray();
