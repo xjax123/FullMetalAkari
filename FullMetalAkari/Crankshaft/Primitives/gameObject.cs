@@ -20,7 +20,7 @@ namespace Crankshaft.Primitives
         protected string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
         protected string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
         protected string texPath = "Crankshaft/Resources/Textures/error_texture.png";
-        protected  float[] vertices =
+        protected float[] vertices =
         {
            //Position           Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right

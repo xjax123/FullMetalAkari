@@ -15,7 +15,16 @@
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
     <None Remove="Game\Resources\Shaders\basicShader.frag" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
+    <None Remove="Game\Resources\Texture\barrel.png" />
+    <None Remove="Game\Resources\Texture\bottle1.png" />
+    <None Remove="Game\Resources\Texture\bottle2.png" />
+    <None Remove="Game\Resources\Texture\bottle3.png" />
+    <None Remove="Game\Resources\Texture\bottle4.png" />
+    <None Remove="Game\Resources\Texture\bullet hole.png" />
+    <None Remove="Game\Resources\Texture\bullet.png" />
     <None Remove="Game\Resources\Texture\Scope_Duplex.png" />
+    <None Remove="Game\Resources\Texture\target1.png" />
+    <None Remove="Game\Resources\Texture\target2.png" />
     <None Remove="Game\Scenes\demo.sdta" />
   </ItemGroup>
 
@@ -29,7 +38,34 @@
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Resources\Texture\barrel.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bottle1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bottle2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bottle3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bottle4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bullet hole.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\bullet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game\Resources\Texture\Scope_Duplex.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\target1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Texture\target2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Scenes\demo.sdta">
@@ -49,7 +85,6 @@
 
   <ItemGroup>
     <Folder Include="Crankshaft\Factories\" />
-    <Folder Include="Game\Objects\Game\" />
     <Folder Include="Game\Resources\Shaders\" />
   </ItemGroup>
 

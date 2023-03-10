@@ -29,6 +29,7 @@ namespace Crankshaft.Handlers
 
         public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {
+
             GL.BindVertexArray(vertexArrayObject);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
@@ -47,6 +48,13 @@ namespace Crankshaft.Handlers
             var texCoordLoc = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLoc);
             GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             texture = textureHandler.LoadFromFile(texPath, TextureUnit.Texture0);
             texture.Use(TextureUnit.Texture0);

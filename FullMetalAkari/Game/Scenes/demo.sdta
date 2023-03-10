@@ -2,14 +2,39 @@
 	"sceneID": "demo",
 	"nextScene": "demo",
 	"sceneName": "Full Metal Akari - Test",
-	"objects": [{
+	"objects": [
+		{
 			"instanceID": "1",
 			"type": "empty",
 			"mass": 1,
 			"position": {
-				"X": "0",
+				"X": "-1",
 				"Y": "0",
 				"Z": "-5",
+				"scale": "1",
+				"rotation": "0"
+			}
+		},
+		{
+			"instanceID": "2",
+			"type": "barrel",
+			"mass": 1,
+			"position": {
+				"X": "1",
+				"Y": "0",
+				"Z": "-5",
+				"scale": "1",
+				"rotation": "0"
+			}
+		},
+		{
+			"instanceID": "3",
+			"type": "scope",
+			"mass": 0,
+			"position": {
+				"X": "0",
+				"Y": "0",
+				"Z": "0",
 				"scale": "1",
 				"rotation": "0"
 			}
