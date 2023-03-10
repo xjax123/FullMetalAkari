@@ -71,12 +71,14 @@ namespace Crankshaft.Physics
         #nullable enable
         public static int? CheckClicked()
         {
-            Vector4 rayStart = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X,windowHandler.ActiveMouse.Y, -1.0f);
+            Vector4 rayStart = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X,windowHandler.ActiveMouse.Y, 3.0f);
             Vector4 rayEnd = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, 0.0f);
             BulletSharp.Math.Vector3 rayDir = (UniVector3) Vector3.Normalize(new Vector3(rayStart - rayEnd));
 
             BulletSharp.Math.Vector3 out_origin = new UniVector3(rayStart.Xyz);
-            BulletSharp.Math.Vector3 out_end = out_origin + rayDir*1000.0f;
+            Debug.WriteLine(out_origin);
+            BulletSharp.Math.Vector3 out_end = out_origin + rayDir*-1000.0f;
+            Debug.WriteLine(out_end);
             ClosestRayResultCallback rayResult = new ClosestRayResultCallback(ref out_origin, ref out_end);
 
             windowHandler.ActiveSim.World.RayTest(out_origin, out_end, rayResult);

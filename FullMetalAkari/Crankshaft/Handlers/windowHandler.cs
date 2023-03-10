@@ -32,7 +32,6 @@ namespace Crankshaft.Handlers
         public static MouseState ActiveMouse { get; private set; }
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
-        public static bool Debug { get; set; }
 
         //
         // Summary:
@@ -70,6 +69,22 @@ namespace Crankshaft.Handlers
             if (input.IsKeyPressed(Keys.Enter))
             {
 
+            }
+            if (input.IsKeyPressed(Keys.Right))
+            {
+                ActiveScene.objects[0].translateObject(new Vector3(1,0,0));
+            }
+            if (input.IsKeyPressed(Keys.Left))
+            {
+                ActiveScene.objects[0].translateObject(new Vector3(-1, 0, 0));
+            }
+            if (input.IsKeyPressed(Keys.Up))
+            {
+                ActiveScene.objects[0].translateObject(new Vector3(0, 1, 0));
+            }
+            if (input.IsKeyPressed(Keys.Down))
+            {
+                ActiveScene.objects[0].translateObject(new Vector3(0, -1, 0));
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
