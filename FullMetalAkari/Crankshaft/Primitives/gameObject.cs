@@ -79,15 +79,15 @@ namespace Crankshaft.Primitives
         public gameObject(objectData d)
         {
             this.InstanceID = d.InstanceID;
-            Scale = d.position.scale;
-            CurScale = Matrix4.CreateScale(d.position.scale);
-            Position = new UniVector3(d.position.X, d.position.Y, d.position.Z);
-            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.position.X,d.position.Y,d.position.Z));
-            Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(d.position.X/8, d.position.Y/8, d.position.Z));
-            Rotation = d.position.rotation;
-            TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.position.rotation));
+            Scale = d.Position.scale;
+            CurScale = Matrix4.CreateScale(d.Position.scale);
+            this.Position = new UniVector3(d.Position.X, d.Position.Y, d.Position.Z);
+            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X,d.Position.Y,d.Position.Z));
+            Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X/8, d.Position.Y/8, d.Position.Z));
+            Rotation = d.Position.rotation;
+            TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.Position.rotation));
             UniMatrix comb = RigidTranslation * CurScale * TrueRot;
-            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/16,Scale/16,0.1f), this, d.mass);
+            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/16,Scale/16,0.1f), this, d.Mass);
             windowHandler.ActiveSim.addRigidToWorld(ref rigid);
 
             vertexArrayObject = GL.GenVertexArray();
