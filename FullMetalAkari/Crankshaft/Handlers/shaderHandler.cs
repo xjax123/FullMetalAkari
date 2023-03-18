@@ -110,5 +110,18 @@ namespace Crankshaft.Handlers
             GL.UseProgram(Handle);
             GL.Uniform3(uniformLocations[name], data);
         }
+        public void SetBool(string name, bool data)
+        {
+            int fakeBool;
+            if (data == true)
+            {
+                fakeBool = 1;
+            } else
+            {
+                fakeBool = 0;
+            }
+            GL.UseProgram(Handle);
+            GL.Uniform1(uniformLocations[name], fakeBool);
+        }
     }
 }

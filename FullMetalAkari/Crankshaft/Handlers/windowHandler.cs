@@ -18,7 +18,6 @@ using Crankshaft.Data;
 
 namespace Crankshaft.Handlers
 {
-    //TODO: make a static buffer system for currently loaded objects so that other classes can interact with loaded objects.
     public class windowHandler : GameWindow
     {
         //constructor passthroughs
@@ -32,6 +31,7 @@ namespace Crankshaft.Handlers
         public static MouseState ActiveMouse { get; private set; }
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
+        public static bool DebugDraw { get; set; }
 
         //
         // Summary:
@@ -68,7 +68,13 @@ namespace Crankshaft.Handlers
             }
             if (input.IsKeyPressed(Keys.Enter))
             {
-
+                if (DebugDraw == false)
+                {
+                    DebugDraw = true;
+                } else
+                {
+                    DebugDraw = false;
+                }
             }
             if (input.IsKeyPressed(Keys.Right))
             {
@@ -88,18 +94,10 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                int? indi = physicsHandler.CheckClicked();
+                gameObject indi = physicsHandler.CheckClicked();
                 if (indi != null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Not Null");
-                    foreach (gameObject g in ActiveScene.objects)
-                    {
-                        if (g.InstanceID == indi)
-                        {
-                            g.onClick();
-                            break;
-                        }
-                    }
+                    indi.onClick();
                 }
             }
 
@@ -133,6 +131,9 @@ namespace Crankshaft.Handlers
             ActiveMouse = this.MouseState;
             ActiveSim = new Simulation();
 
+            //loading a debug texture
+            renderingHandler.debugHandle = new Error(new objectData()).Texture.Handle;
+
             //Enabling a bunch of openGL nonsense
             GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
@@ -147,7 +148,6 @@ namespace Crankshaft.Handlers
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
-            renderingHandler.OrthoProjection = Matrix4.CreateOrthographic(Size.X, Size.Y, 0.1f, 100f);
 
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);

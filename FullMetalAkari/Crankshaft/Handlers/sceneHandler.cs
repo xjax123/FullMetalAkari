@@ -13,7 +13,7 @@ namespace Crankshaft.Handlers
 {
     public static class sceneHandler
     {
-
+        private static Dictionary<string, sceneData> sceneLibrary = new Dictionary<string, sceneData>();
         public static Dictionary<string, sceneData> SceneLibrary { get => sceneLibrary; set => sceneLibrary = value; }
 
         /// <summary>

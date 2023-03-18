@@ -12,7 +12,7 @@ namespace Crankshaft.Physics
 {
     public static class physicsHandler
     {
-        public static UniVector3 ConvertScreenToWorldSpaceVec3(float x, float y, float z)
+        public static UniVector3 ConvertScreenToWorldSpaceVec3(float x, float y, float z = 0)
         {
             //Translating to 3D Normalized Device Coordinates
             //Translating to 4D Homogeneous Clip Coordinates
@@ -69,26 +69,33 @@ namespace Crankshaft.Physics
 
 
         #nullable enable
-        public static int? CheckClicked()
+        public static gameObject? CheckClicked()
         {
-            Vector4 rayStart = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X,windowHandler.ActiveMouse.Y, 3.0f);
-            Vector4 rayEnd = ConvertScreenToWorldSpaceVec4(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, 0.0f);
-            BulletSharp.Math.Vector3 rayDir = (UniVector3) Vector3.Normalize(new Vector3(rayStart - rayEnd));
-
-            BulletSharp.Math.Vector3 out_origin = new UniVector3(rayStart.Xyz);
-            Debug.WriteLine(out_origin);
-            BulletSharp.Math.Vector3 out_end = out_origin + rayDir*-1000.0f;
-            Debug.WriteLine(out_end);
-            ClosestRayResultCallback rayResult = new ClosestRayResultCallback(ref out_origin, ref out_end);
-
-            windowHandler.ActiveSim.World.RayTest(out_origin, out_end, rayResult);
-
-            if (rayResult.HasHit)
+            UniVector3 wsMouse = ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
+            float x = wsMouse.X;
+            float y = wsMouse.Y;
+            Debug.WriteLine($"Click Position: X:{x} Y:{y}");
+            for (int i = windowHandler.ActiveScene.objects.Count; i > 0; i--)
             {
-                BoundRigidBody rigid = (BoundRigidBody) rayResult.CollisionObject;
-                return rigid.Obj.InstanceID;
-            }
+                gameObject o = windowHandler.ActiveScene.objects[i-1];
+                if (o.Clickable == false)
+                {
+                    continue;
+                }
+                Debug.WriteLine($"{o.Name}:");
+                Debug.WriteLine($"Z:{o.Position.Z}");
+                Debug.WriteLine($"X: Max:{o.Aabbmax.X} Min:{o.Aabbmin.X}");
+                if(x >= o.Aabbmin.X && x <= o.Aabbmax.X)
+                {
 
+                    Debug.WriteLine($"Y: Max:{o.Aabbmax.Y} Min:{o.Aabbmin.Y}");
+                    if (y >= o.Aabbmin.Y && y <= o.Aabbmax.Y)
+                    {
+                        Debug.WriteLine("Clicked");
+                        return o;
+                    }
+                }
+            }
             return null;
         }
     }

@@ -8,8 +8,20 @@ in vec2 texCoord;
 flat in int target;
 
 uniform sampler2D texture0;
+uniform int debug;
 
 void main()
 {
-    outputColor = texture(texture0, texCoord);
+    vec4 texel = texture(texture0, texCoord);
+    if (texel.a == 0.0)
+        discard;
+
+    if (debug == 1)
+    {
+    outputColor = vec4(0.0f,0.0f,0.0f,1.0f);
+    }
+    else
+    {
+    outputColor = texel;
+    }
 }

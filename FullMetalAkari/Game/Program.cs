@@ -26,8 +26,13 @@ namespace FullMetalAkari
                 NumberOfSamples = 8
             };
 
+            var gameWindowSettings = new GameWindowSettings()
+            {
+                UpdateFrequency = 30
+            };
+
             //Create The Game Window
-            using (var window = new windowHandler(GameWindowSettings.Default, nativeWindowSettings, "/Game/Scenes", "demo"))
+            using (var window = new windowHandler(gameWindowSettings, nativeWindowSettings, "/Game/Scenes", "demo"))
             {
                 window.Run();
             }

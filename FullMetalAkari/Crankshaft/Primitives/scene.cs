@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Crankshaft.Data;
 
@@ -15,6 +16,7 @@ namespace Crankshaft.Primitives
             this.sceneID = d.sceneID;
             this.sceneName = d.sceneName;
             this.objects = objs;
+            objects.Sort();
         }
     }
 }

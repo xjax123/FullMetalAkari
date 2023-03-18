@@ -18,7 +18,7 @@ namespace Crankshaft.Physics
         }
         public void onUpdate()
         {
-
+            World.StepSimulation(1/30);
         }
 
         public void onLoad()

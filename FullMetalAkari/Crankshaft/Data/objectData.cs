@@ -17,6 +17,15 @@ namespace Crankshaft.Data
 
 
         //Functions
+
+        //empty constructor
+        public objectData ()
+        {
+            InstanceID = 0;
+            Type = "error";
+            Mass = 0;
+            Position = new positionData();
+        }
         public override string ToString()
         {
             return "[ID:" + InstanceID + ", objType:" + Type + ", " + Position.ToString() + "]";

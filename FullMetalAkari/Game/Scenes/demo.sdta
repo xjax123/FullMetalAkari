@@ -8,9 +8,9 @@
 			"type": "empty",
 			"mass": 1,
 			"position": {
-				"X": "-1",
+				"X": "-2",
 				"Y": "0",
-				"Z": "-5",
+				"Z": "-10",
 				"scale": "1",
 				"rotation": "0"
 			}
@@ -22,19 +22,19 @@
 			"position": {
 				"X": "1",
 				"Y": "0",
-				"Z": "-5",
+				"Z": "-10",
 				"scale": "1",
 				"rotation": "0"
 			}
 		},
 		{
-			"instanceID": "3",
+			"instanceID": "4",
 			"type": "scope",
 			"mass": 0,
 			"position": {
 				"X": "0",
 				"Y": "0",
-				"Z": "0",
+				"Z": "1",
 				"scale": "1",
 				"rotation": "0"
 			},

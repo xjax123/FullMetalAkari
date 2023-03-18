@@ -21,6 +21,8 @@ namespace Crankshaft.Handlers
         private static Matrix4 invertedView;
         private static Matrix4 orthoProjection;
 
+        public static int debugHandle;
+
         public static Matrix4 ProjectionMatrix { get => projectionMatrix; set => projectionMatrix = value; }
         public static Matrix4 ViewMatrix { get => viewMatrix; set => viewMatrix = value; }
         public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
@@ -60,5 +62,9 @@ namespace Crankshaft.Handlers
             texture.Use(TextureUnit.Texture0);
         }
 
+        internal static void basicRender()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
