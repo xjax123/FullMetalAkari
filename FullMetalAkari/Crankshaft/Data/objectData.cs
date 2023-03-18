@@ -13,6 +13,7 @@ namespace Crankshaft.Data
 
         //Optional Data
         public int? Variant { get; set; }
+        public bool Clickable { get; set; } = true;
 
 
         //Functions

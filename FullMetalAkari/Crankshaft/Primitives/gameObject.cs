@@ -87,8 +87,13 @@ namespace Crankshaft.Primitives
             Rotation = d.Position.rotation;
             TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.Position.rotation));
             UniMatrix comb = RigidTranslation * CurScale * TrueRot;
-            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/16,Scale/16,0.1f), this, d.Mass);
-            windowHandler.ActiveSim.addRigidToWorld(ref rigid);
+            if (d.Clickable != false) {
+                Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale / 16, Scale / 16, 0.1f), this, d.Mass);
+                windowHandler.ActiveSim.addRigidToWorld(ref rigid);
+            } else
+            {
+                Rigid = null;
+            }
 
             vertexArrayObject = GL.GenVertexArray();
             vertexBufferObject = GL.GenBuffer();
@@ -144,6 +149,13 @@ namespace Crankshaft.Primitives
             {
                 texture.Use(TextureUnit.Texture0);
             }
+            GL.BindVertexArray(vertexArrayObject);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             CurTranslation = Matrix4.Identity;
@@ -158,7 +170,10 @@ namespace Crankshaft.Primitives
             rotTranslation.Xy *= Matrix2.Invert(Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotation)));
 
             CurTranslation *= Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
-            Rigid.MotionState.WorldTransform *= CurTranslation;
+            if (rigid != null)
+            {
+                Rigid.MotionState.WorldTransform *= CurTranslation;
+            }
         }
         public virtual void setTranslation(Vector3 translation)
         {
@@ -170,7 +185,10 @@ namespace Crankshaft.Primitives
             curTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
             rotTranslation.Xy /= 16;
             Matrix4 rigidTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
-            Rigid.MotionState.WorldTransform = (UniMatrix) rigidTranslation;
+            if (rigid != null)
+            {
+                Rigid.MotionState.WorldTransform = (UniMatrix)rigidTranslation;
+            }
         }
 
         public virtual void scaleObject(float scale)
@@ -178,14 +196,20 @@ namespace Crankshaft.Primitives
             this.Scale = scale;
             CurScale = Matrix4.CreateScale(scale);
             Rigid.CollisionShape = new BoxShape(scale/16, scale/16, 0.1f);
-            Rigid.MotionState.WorldTransform *= CurScale;
+            if (rigid != null)
+            {
+                Rigid.MotionState.WorldTransform *= CurScale;
+            }
         }
 
         public virtual void rotateObject(float rotation)
         {
             this.Rotation = rotation;
             CurRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
-            Rigid.MotionState.WorldTransform *= CurRot;
+            if (rigid != null)
+            {
+                Rigid.MotionState.WorldTransform *= CurRot;
+            }
         }
     }
 }
