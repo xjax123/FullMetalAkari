@@ -37,7 +37,8 @@
 				"Z": "0",
 				"scale": "1",
 				"rotation": "0"
-			}
+			},
+			"clickable": false
 		}
 	]
 }
