@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace Crankshaft.Primitives
 {
-    public class gameObject : IDisposable
+    public class gameObject
     {
         //Overwrite/Hide this Data as needed, preferably in the constructor.
         protected string objectID = "empty";
@@ -82,12 +82,12 @@ namespace Crankshaft.Primitives
             Scale = d.Position.scale;
             CurScale = Matrix4.CreateScale(d.Position.scale);
             this.Position = new UniVector3(d.Position.X, d.Position.Y, d.Position.Z);
-            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X,d.Position.Y,d.Position.Z));
-            Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X/8, d.Position.Y/8, d.Position.Z));
+            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X, d.Position.Y, d.Position.Z));
+            Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X / 8, d.Position.Y / 8, d.Position.Z));
             Rotation = d.Position.rotation;
             TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.Position.rotation));
             UniMatrix comb = RigidTranslation * CurScale * TrueRot;
-            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale/16,Scale/16,0.1f), this, d.Mass);
+            Rigid = physicsHandler.createRigidBody(comb, new BoxShape(Scale / 16, Scale / 16, 0.1f), this, d.Mass);
             windowHandler.ActiveSim.addRigidToWorld(ref rigid);
 
             vertexArrayObject = GL.GenVertexArray();
@@ -153,7 +153,7 @@ namespace Crankshaft.Primitives
         public virtual void translateObject(Vector3 translation)
         {
             Position += (UniVector3)translation;
-            UniVector3 rotTranslation = Position - (UniVector3) translation;
+            UniVector3 rotTranslation = Position - (UniVector3)translation;
 
             rotTranslation.Xy *= Matrix2.Invert(Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotation)));
 
@@ -170,14 +170,14 @@ namespace Crankshaft.Primitives
             curTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
             rotTranslation.Xy /= 16;
             Matrix4 rigidTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
-            Rigid.MotionState.WorldTransform = (UniMatrix) rigidTranslation;
+            Rigid.MotionState.WorldTransform = (UniMatrix)rigidTranslation;
         }
 
         public virtual void scaleObject(float scale)
         {
             this.Scale = scale;
             CurScale = Matrix4.CreateScale(scale);
-            Rigid.CollisionShape = new BoxShape(scale/16, scale/16, 0.1f);
+            Rigid.CollisionShape = new BoxShape(scale / 16, scale / 16, 0.1f);
             Rigid.MotionState.WorldTransform *= CurScale;
         }
 

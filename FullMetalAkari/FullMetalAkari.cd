@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="NameAndType">
+  <Class Name="FullMetalAkari.Program" Collapsed="true">
+    <Position X="9.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FullMetalAkari.Game.Objects.Game.Barrel" Collapsed="true">
+    <Position X="11.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\Objects\Game\Barrel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FullMetalAkari.Game.Objects.UI.sniperCrosshair" Collapsed="true">
+    <Position X="13" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Game\Objects\UI\sniperCrosshair.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Data.objectData" Collapsed="true">
+    <Position X="13.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAkAAAAAAAAAACAAAAAAQAAAACAAAA=</HashCode>
+      <FileName>Crankshaft\Data\objectData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Position" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Crankshaft.Data.positionData" Collapsed="true">
+    <Position X="13.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAACAAAACAAAAAAAAAAAAAAAAYAE=</HashCode>
+      <FileName>Crankshaft\Data\positionData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Data.sceneData" Collapsed="true">
+    <Position X="15.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACCAAAAAAAAAAAAQAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Data\sceneData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Exceptions.ObjectNotFoundException" Collapsed="true">
+    <Position X="3.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Exceptions\ObjectNotFoundException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Exceptions.SceneNotFoundException" Collapsed="true">
+    <Position X="5.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Exceptions\SceneNotFoundException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Handlers.objectHandler" Collapsed="true">
+    <Position X="11" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Handlers\objectHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Handlers.renderingHandler" Collapsed="true">
+    <Position X="12.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAgAACAAAAAAAAEAAgAAAAIAAAABAAgAAAgAAAA=</HashCode>
+      <FileName>Crankshaft\Handlers\renderingHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Handlers.sceneHandler" Collapsed="true">
+    <Position X="15.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAIIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Handlers\sceneHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SceneLibrary" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Crankshaft.Handlers.shaderHandler" Collapsed="true">
+    <Position X="7.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAgAIAAAAAAAAAAAEAAICIAAAQAEAAEA=</HashCode>
+      <FileName>Crankshaft\Handlers\shaderHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Handlers.textureHandler" Collapsed="true">
+    <Position X="7.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAEAAIAAAAAAABAEAA=</HashCode>
+      <FileName>Crankshaft\Handlers\textureHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Handlers.windowHandler" Collapsed="true">
+    <Position X="11.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAABAAAQEAAgAYAAQAAAAAACAAAgACAAAACgAAAQAAA=</HashCode>
+      <FileName>Crankshaft\Handlers\windowHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ActiveScene" />
+      <Property Name="ActiveSim" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Crankshaft.Logging.Logger" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Logging\Logger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Physics.BoundRigidBody" Collapsed="true">
+    <Position X="6" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Physics\BoundRigidBody.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Obj" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Crankshaft.Physics.physicsHandler" Collapsed="true">
+    <Position X="9.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAIAAAAAIAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Physics\physicsHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Physics.Simulation" Collapsed="true">
+    <Position X="15.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IRgAAAAAABAAAAAAAAIAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Physics\Simulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crankshaft.Primitives.gameObject" Collapsed="true">
+    <Position X="11.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QABAQICgASCAgICgAIKAoMACAADUAngAAAIkIUAGwCA=</HashCode>
+      <FileName>Crankshaft\Primitives\gameObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Shader" />
+      <Property Name="Texture" />
+      <Property Name="CurTranslation" />
+      <Property Name="Position" />
+      <Property Name="Rigid" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Crankshaft.Primitives.Scene" Collapsed="true">
+    <Position X="11.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACCAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Primitives\Scene.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="objects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Crankshaft.Primitives.uiObject" Collapsed="true">
+    <Position X="13" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Crankshaft\Primitives\uiObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BulletSharp.RigidBody" Collapsed="true">
+    <Position X="7.5" Y="7" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="Crankshaft.Physics.UniVector3" Collapsed="true">
+    <Position X="9.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAEYIcACAAAAQAAAAAAAAAAAIAAYAE=</HashCode>
+      <FileName>Crankshaft\Physics\internalMathTypes.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Crankshaft.Physics.UniMatrix" Collapsed="true">
+    <Position X="9.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAQAAAAYEVAACAAAAA4BBAAAkAAAAgAAAA=</HashCode>
+      <FileName>Crankshaft\Physics\internalMathTypes.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
