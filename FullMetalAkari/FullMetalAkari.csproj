@@ -13,8 +13,9 @@
     <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.vert" />
     <None Remove="Crankshaft\Resources\Textures\error_texture.png" />
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
-    <None Remove="Game\Resources\Shaders\basicShader.frag" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
+    <None Remove="Game\Resources\Shaders\invertedShader.frag" />
+    <None Remove="Game\Resources\Shaders\invertedShader.vert" />
     <None Remove="Game\Resources\Texture\barrel.png" />
     <None Remove="Game\Resources\Texture\bottle1.png" />
     <None Remove="Game\Resources\Texture\bottle2.png" />
@@ -37,6 +38,12 @@
     </Content>
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Shaders\invertedShader.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Shaders\invertedShader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\Texture\barrel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -85,7 +92,6 @@
 
   <ItemGroup>
     <Folder Include="Crankshaft\Factories\" />
-    <Folder Include="Game\Resources\Shaders\" />
   </ItemGroup>
 
   <ItemGroup>

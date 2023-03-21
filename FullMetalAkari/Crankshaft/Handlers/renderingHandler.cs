@@ -62,9 +62,17 @@ namespace Crankshaft.Handlers
             texture.Use(TextureUnit.Texture0);
         }
 
-        internal static void basicRender()
+
+        public static void DrawScene(int vao, int vbo, int ebo, float[] verts, uint[] indices, PrimitiveType type)
         {
-            throw new NotImplementedException();
+            GL.BindVertexArray(vao);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, verts.Length * sizeof(float), verts, BufferUsageHint.StaticDraw);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.DrawElements(PrimitiveType.LineLoop, indices.Length, DrawElementsType.UnsignedInt, 0);
         }
     }
 }

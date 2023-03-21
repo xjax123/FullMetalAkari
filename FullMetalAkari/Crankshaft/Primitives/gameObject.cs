@@ -144,7 +144,7 @@ namespace Crankshaft.Primitives
 
             if (Clickable != false)
             {
-                Rigid = physicsHandler.createRigidBody(comb, new BoxShape(coliderX/(6 + -(2 * position.Z)), coliderY/(6 + -(2 * position.Z)), 0.0f), this, Mass);
+                Rigid = physicsHandler.createRigidBody(comb, new BoxShape(coliderX/((3 - position.Z)*2), coliderY/((3 - position.Z)*2), 0.0f), this, Mass);
                 windowHandler.ActiveSim.addRigidToWorld(ref rigid);
             }
             else
@@ -156,8 +156,7 @@ namespace Crankshaft.Primitives
             {
                 Rigid.CollisionShape.GetAabb(comb, out aabbmin, out aabbmax);
                 UniVector3 rposition = Rigid.CenterOfMassPosition * (3 - position.Z);
-                Debug.WriteLine($"{name} {instanceID} Max: {Aabbmax.X * (3 - position.Z)} {Aabbmax.Y * (3 - position.Z)} Min: {Aabbmin.X * (3 - position.Z)} {Aabbmin.Y * (3 - position.Z)}");
-
+               
                 debugVerts = new float[] {
                     //Position           Texture coordinates
                     Aabbmax.X*(3 - position.Z)-rposition.X,  Aabbmax.Y*(3 - position.Z)-rposition.Y, 0.0f, 1.0f, 1.0f, // top right
@@ -176,10 +175,14 @@ namespace Crankshaft.Primitives
         {
             if (rigid != null)
                 Rigid.CollisionShape.GetAabb(comb, out aabbmin, out aabbmax);
+
+
         }
 
         public virtual void onRenderFrame()
         {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
             if (CurTranslation != Matrix4.Identity)
             {
                 TrueTranslation = CurTranslation;
@@ -204,34 +207,13 @@ namespace Crankshaft.Primitives
             }
             if (windowHandler.DebugDraw == true && rigid != null)
             {
-                GL.BindVertexArray(vertexArrayObject);
-
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-                GL.BufferData(BufferTarget.ArrayBuffer, debugVerts.Length * sizeof(float), debugVerts, BufferUsageHint.StaticDraw);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-                GL.DrawElements(PrimitiveType.LineLoop, indices.Length, DrawElementsType.UnsignedInt, 0);
+                renderingHandler.DrawScene(vertexArrayObject,vertexBufferObject,elementBufferObject,debugVerts,indices,PrimitiveType.LineLoop);
             } else if (windowHandler.DebugDraw == true && rigid == null)
             {
-                GL.BindVertexArray(vertexArrayObject);
-
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-                GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-                GL.DrawElements(PrimitiveType.LineLoop, indices.Length, DrawElementsType.UnsignedInt, 0);
+                renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.LineLoop);
             } else
             {
-                GL.BindVertexArray(vertexArrayObject);
-
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-                GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-                GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+                renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.Triangles);
             }
 
             CurTranslation = Matrix4.Identity;
@@ -241,7 +223,7 @@ namespace Crankshaft.Primitives
         public virtual void translateObject(Vector3 translation)
         {
             Position += (UniVector3)translation;
-            UniVector3 rotTranslation = Position - (UniVector3)translation;
+            UniVector3 rotTranslation = Position;
 
             rotTranslation.Xy *= Matrix2.Invert(Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotation)));
 

@@ -74,7 +74,6 @@ namespace Crankshaft.Physics
             UniVector3 wsMouse = ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
             float x = wsMouse.X;
             float y = wsMouse.Y;
-            Debug.WriteLine($"Click Position: X:{x} Y:{y}");
             for (int i = windowHandler.ActiveScene.objects.Count; i > 0; i--)
             {
                 gameObject o = windowHandler.ActiveScene.objects[i-1];
@@ -82,16 +81,10 @@ namespace Crankshaft.Physics
                 {
                     continue;
                 }
-                Debug.WriteLine($"{o.Name}:");
-                Debug.WriteLine($"Z:{o.Position.Z}");
-                Debug.WriteLine($"X: Max:{o.Aabbmax.X} Min:{o.Aabbmin.X}");
                 if(x >= o.Aabbmin.X && x <= o.Aabbmax.X)
                 {
-
-                    Debug.WriteLine($"Y: Max:{o.Aabbmax.Y} Min:{o.Aabbmin.Y}");
                     if (y >= o.Aabbmin.Y && y <= o.Aabbmax.Y)
                     {
-                        Debug.WriteLine("Clicked");
                         return o;
                     }
                 }
