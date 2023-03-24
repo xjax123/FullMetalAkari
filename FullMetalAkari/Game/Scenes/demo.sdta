@@ -1,11 +1,25 @@
 ﻿{
 	"sceneID": "demo",
+	"type":  "game",
 	"nextScene": "demo",
 	"sceneName": "Full Metal Akari - Test",
 	"objects": [
 		{
 			"instanceID": "1",
-			"type": "empty",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "-2",
+				"Y": "0",
+				"Z": "-5",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "2",
+			"type": "Bottle",
 			"mass": 1,
 			"position": {
 				"X": "-1",
@@ -13,11 +27,12 @@
 				"Z": "-5",
 				"scale": "1",
 				"rotation": "0"
-			}
+			},
+			"Variant": 2
 		},
 		{
-			"instanceID": "2",
-			"type": "barrel",
+			"instanceID": "3",
+			"type": "bottle",
 			"mass": 1,
 			"position": {
 				"X": "1",
@@ -25,20 +40,21 @@
 				"Z": "-5",
 				"scale": "1",
 				"rotation": "0"
-			}
+			},
+			"Variant": 3
 		},
 		{
 			"instanceID": "4",
-			"type": "scope",
-			"mass": 0,
+			"type": "bottle",
+			"mass": 1,
 			"position": {
-				"X": "0",
+				"X": "2",
 				"Y": "0",
-				"Z": "1",
+				"Z": "-5",
 				"scale": "1",
 				"rotation": "0"
 			},
-			"clickable": false
+			"Variant": 4
 		}
 	]
 }

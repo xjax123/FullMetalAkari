@@ -1,0 +1,37 @@
+﻿//Not For Game Use
+//Only here to load UI assets.
+
+{
+  "sceneID": "game asset library",
+  "type": "none",
+  "nextScene": "none",
+  "sceneName": "none",
+  "objects": [
+    {
+      "instanceID": 9998,
+      "type": "hud",
+      "mass": 0,
+      "position": {
+        "X": "0",
+        "Y": "0.15",
+        "Z": "0",
+        "scale": "1",
+        "rotation": "0"
+      },
+      "clickable": false
+    },
+    {
+      "instanceID": 9999,
+      "type": "scope",
+      "mass": 0,
+      "position": {
+        "X": "0",
+        "Y": "0",
+        "Z": "-0.01",
+        "scale": "1",
+        "rotation": "0"
+      },
+      "clickable": false
+    }
+  ]
+}

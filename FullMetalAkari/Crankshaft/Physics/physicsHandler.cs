@@ -48,7 +48,7 @@ namespace Crankshaft.Physics
             return WCposition;
         }
 
-        public static BoundRigidBody createRigidBody(UniMatrix transform, CollisionShape shape, gameObject obj, float mass = 0)
+        public static BoundRigidBody createRigidBody(UniMatrix transform, CollisionShape shape, gameObject obj, int iD, Matrix2 Col, float mass = 0)
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
@@ -61,14 +61,14 @@ namespace Crankshaft.Physics
             DefaultMotionState myMotionState = new DefaultMotionState(transform);
 
             RigidBodyConstructionInfo rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
-            BoundRigidBody body = new BoundRigidBody(rbInfo, obj);
+            BoundRigidBody body = new BoundRigidBody(rbInfo, obj, iD,Col);
             rbInfo.Dispose();
             return body;
         }
 
 
         #nullable enable
-        public static gameObject? CheckClicked()
+        public static void CheckClicked()
         {
             UniVector3 wsMouse = ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
 
@@ -81,15 +81,18 @@ namespace Crankshaft.Physics
                 {
                     continue;
                 }
-                if(x >= o.Aabbmin.X && x <= o.Aabbmax.X)
+                foreach (BoundRigidBody b in o.Rigid)
                 {
-                    if (y >= o.Aabbmin.Y && y <= o.Aabbmax.Y)
+                    if (x >= b.aabbmin.X && x <= b.aabbmax.X)
                     {
-                        return o;
+                        if (y >= b.aabbmin.Y && y <= b.aabbmax.Y)
+                        {
+                            o.onClick(b.ID);
+                            break;
+                        }
                     }
                 }
             }
-            return null;
         }
     }
 }

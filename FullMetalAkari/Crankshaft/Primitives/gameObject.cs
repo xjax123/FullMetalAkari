@@ -9,6 +9,7 @@ using Crankshaft.Physics;
 using Crankshaft.Data;
 using BulletSharp;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Crankshaft.Primitives
 {
@@ -34,11 +35,6 @@ namespace Crankshaft.Primitives
             1, 2, 3
         };
 
-        //Temp
-        private BulletSharp.Math.Vector3 aabbmin;
-        private BulletSharp.Math.Vector3 aabbmax;
-        UniMatrix comb;
-
 
         //Built in the Constructor, no need to Overwrite/Hide, Remember to set these in the constructor.
         protected int instanceID;
@@ -57,10 +53,12 @@ namespace Crankshaft.Primitives
         protected bool clickable;
 
         //Colider Variables
-        protected RigidBody rigid;
+        private List<BoundRigidBody> rigid = new List<BoundRigidBody>();
         protected float mass = 0;
-        protected float coliderX = 1;
-        protected float coliderY = 1;
+        /// <summary>
+        /// ScaleX, ScaleY, OffsetX, OffsetY
+        /// </summary>
+        private List<Matrix2> colider = new List<Matrix2>();
 
         //Empties
         protected textureHandler texture;
@@ -72,6 +70,7 @@ namespace Crankshaft.Primitives
         protected int vertexBufferObject;
         protected int vertexArrayObject;
         protected int elementBufferObject;
+        private objectData data;
 
         //bunch of auto-generated properties, to replace the old java style accessors.
         public int InstanceID { get => instanceID; set => instanceID = value; }
@@ -84,28 +83,27 @@ namespace Crankshaft.Primitives
         public UniMatrix TrueRot { get => trueRot; set => trueRot = value; }
         public textureHandler Texture { get => texture; set => texture = value; }
         public shaderHandler Shader { get => shader; set => shader = value; }
-        public RigidBody Rigid { get => rigid; set => rigid = value; }
         public int VertexBufferObject { get => vertexBufferObject; set => vertexBufferObject = value; }
         public int VertexArrayObject { get => vertexArrayObject; set => vertexArrayObject = value; }
         public int ElementBufferObject { get => elementBufferObject; set => elementBufferObject = value; }
         public UniVector3 Position { get => position; set => position = value; }
         public bool Clickable { get => clickable; set => clickable = value; }
-        public BulletSharp.Math.Vector3 Aabbmax { get => aabbmax; set => aabbmax = value; }
-        public BulletSharp.Math.Vector3 Aabbmin { get => aabbmin; set => aabbmin = value; }
         public string Name { get => name; set => name = value; }
         public float Mass { get => mass; set => mass = value; }
-        public float ColiderX { get => coliderX; set => coliderX = value; }
-        public float ColiderY { get => coliderY; set => coliderY = value; }
+        public List<BoundRigidBody> Rigid { get => rigid; set => rigid = value; }
+        public List<Matrix2> Colider { get => colider; set => colider = value; }
+        public objectData Data { get => data; set => data = value; }
 
         public gameObject(objectData d)
         {
+            Data = d;
             this.InstanceID = d.InstanceID;
             Scale = d.Position.Scale;
-            CurScale = Matrix4.CreateScale(d.Position.Scale);
+            CurScale = Matrix4.CreateScale(Scale);
             this.Position = new UniVector3(d.Position.X, d.Position.Y, d.Position.Z);
-            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X, d.Position.Y, d.Position.Z));
             Rotation = d.Position.Rotation;
             TrueRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(d.Position.Rotation));
+            TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X, d.Position.Y, d.Position.Z))*TrueRot*CurScale;
             clickable = d.Clickable;
             mass = d.Mass;
 
@@ -118,10 +116,11 @@ namespace Crankshaft.Primitives
             Dispose();
         }
 
-        public virtual void onClick()
+        public virtual void onClick(int ID)
         {
-            Debug.WriteLine($"Click Registered on: {name} ID:{InstanceID}");
+            Debug.WriteLine($"Click Registered on: {name} Hotbox ID:{ID}");
         }
+        //Not Implemented.
         public virtual void onHover()
         {
         }
@@ -137,46 +136,70 @@ namespace Crankshaft.Primitives
 
         public virtual void onLoad()
         {
+            Debug.WriteLine($"{name} (ID:{instanceID}) Loaded");
+            if (Colider.Count == 0)
+            {
+                Colider.Add(new Matrix2(1,1,0,0));
+            }
             renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
-
-            Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(position.X/(3 - position.Z), position.Y/(3 - position.Z), position.Z));
-            comb = RigidTranslation * CurScale * TrueRot;
-
-            if (Clickable != false)
+            Matrix4 combined;
+            int i = 0;
+            foreach (Matrix2 c in Colider)
             {
-                Rigid = physicsHandler.createRigidBody(comb, new BoxShape(coliderX/((3 - position.Z)*2), coliderY/((3 - position.Z)*2), 0.0f), this, Mass);
-                windowHandler.ActiveSim.addRigidToWorld(ref rigid);
-            }
-            else
-            {
-                Rigid = null;
-            }
+                Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3((position.X) / (3 - position.Z), (position.Y) / (3 - position.Z), position.Z));
+                combined = RigidTranslation * CurScale * TrueRot;
 
-            if (rigid != null)
-            {
-                Rigid.CollisionShape.GetAabb(comb, out aabbmin, out aabbmax);
-                UniVector3 rposition = Rigid.CenterOfMassPosition * (3 - position.Z);
-               
-                debugVerts = new float[] {
+                if (Clickable != false)
+                {
+                    Rigid.Add(physicsHandler.createRigidBody(combined, new BoxShape(scale * (c.M11 / ((3 - position.Z) * 2)), scale * (c.M12 / ((3 - position.Z) * 2)), 0.0f), this, i, c, Mass));
+                    RigidBody temp = Rigid[i];
+                    windowHandler.ActiveSim.addRigidToWorld(ref temp);
+                }
+
+                if (Rigid.Count != 0)
+                {
+                    Rigid[i].CollisionShape.GetAabb((UniMatrix)combined, out Rigid[i].aabbmin, out Rigid[i].aabbmax);
+                    
+                    Rigid[i].verts = new float[] {
                     //Position           Texture coordinates
-                    Aabbmax.X*(3 - position.Z)-rposition.X,  Aabbmax.Y*(3 - position.Z)-rposition.Y, 0.0f, 1.0f, 1.0f, // top right
-                    Aabbmax.X*(3 - position.Z)-rposition.X,  Aabbmin.Y*(3 - position.Z)-rposition.Y, 0.0f, 1.0f, 0.0f, // bottom right
-                    Aabbmin.X*(3 - position.Z)-rposition.X,  Aabbmin.Y*(3 - position.Z)-rposition.Y, 0.0f, 0.0f, 0.0f, // bottom left
-                    Aabbmin.X*(3 - position.Z)-rposition.X,  Aabbmax.Y*(3 - position.Z)-rposition.Y, 0.0f, 0.0f, 1.0f  // top left
+                    Rigid[i].aabbmax.X*(3 - position.Z)-position.X,  Rigid[i].aabbmax.Y*(3 - position.Z)-position.Y, 0.0f, 1.0f, 1.0f, // top right
+                    Rigid[i].aabbmax.X*(3 - position.Z)-position.X,  Rigid[i].aabbmin.Y*(3 - position.Z)-position.Y, 0.0f, 1.0f, 0.0f, // bottom right
+                    Rigid[i].aabbmin.X*(3 - position.Z)-position.X,  Rigid[i].aabbmin.Y*(3 - position.Z)-position.Y, 0.0f, 0.0f, 0.0f, // bottom left
+                    Rigid[i].aabbmin.X*(3 - position.Z)-position.X,  Rigid[i].aabbmax.Y*(3 - position.Z)-position.Y, 0.0f, 0.0f, 1.0f  // top left
                 };
-                debugIndices = new uint[]  {
+                    Rigid[i].ind = new uint[]  {
                     0, 1, 3,
                     1, 2, 3
                 };
+                }
+                i++;
             }
         }
 
         public virtual void onUpdateFrame()
         {
-            if (rigid != null)
-                Rigid.CollisionShape.GetAabb(comb, out aabbmin, out aabbmax);
+            if (Rigid != null || Rigid.Count != 0)
+            {
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    Matrix4 combined;
+                    Matrix4 RigidTranslation = Matrix4.CreateTranslation(new UniVector3(position.X / (3 - position.Z) + b.Colider.M21/(1 + -(Position.Z + 5) * 0.12f), position.Y / (3 - position.Z) + b.Colider.M22/(1+-(Position.Z+5)*0.12f), position.Z));
+                    combined = RigidTranslation * CurScale * TrueRot;
+                    b.CollisionShape.GetAabb((UniMatrix)combined, out b.aabbmin, out b.aabbmax);
 
-
+                    b.verts = new float[] {
+                    //Position           Texture coordinates
+                    b.aabbmax.X*(3 - position.Z)-position.X,  b.aabbmax.Y*(3 - position.Z)-position.Y, 0.0f, 1.0f, 1.0f, // top right
+                    b.aabbmax.X*(3 - position.Z)-position.X,  b.aabbmin.Y*(3 - position.Z)-position.Y, 0.0f, 1.0f, 0.0f, // bottom right
+                    b.aabbmin.X*(3 - position.Z)-position.X,  b.aabbmin.Y*(3 - position.Z)-position.Y, 0.0f, 0.0f, 0.0f, // bottom left
+                    b.aabbmin.X*(3 - position.Z)-position.X,  b.aabbmax.Y*(3 - position.Z)-position.Y, 0.0f, 0.0f, 1.0f  // top left
+                };
+                    b.ind = new uint[]  {
+                    0, 1, 3,
+                    1, 2, 3
+                };
+                }
+            }
         }
 
         public virtual void onRenderFrame()
@@ -185,7 +208,7 @@ namespace Crankshaft.Primitives
 
             if (CurTranslation != Matrix4.Identity)
             {
-                TrueTranslation = CurTranslation;
+                TrueTranslation = CurTranslation * curScale * curRot;
             }
             if (CurRot != Matrix4.Identity)
             {
@@ -205,10 +228,13 @@ namespace Crankshaft.Primitives
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, renderingHandler.debugHandle);
             }
-            if (windowHandler.DebugDraw == true && rigid != null)
+            if (windowHandler.DebugDraw == true && Rigid.Count != 0)
             {
-                renderingHandler.DrawScene(vertexArrayObject,vertexBufferObject,elementBufferObject,debugVerts,indices,PrimitiveType.LineLoop);
-            } else if (windowHandler.DebugDraw == true && rigid == null)
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, b.verts, b.ind, PrimitiveType.LineLoop);
+                }
+            } else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
             {
                 renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.LineLoop);
             } else
@@ -230,9 +256,12 @@ namespace Crankshaft.Primitives
             CurTranslation *= Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
             rotTranslation.Xy /= (3 - position.Z);
             Matrix4 rigidTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
-            if (rigid != null)
+            if (Rigid != null || Rigid.Count != 0)
             {
-                Rigid.MotionState.WorldTransform *= (UniMatrix)rigidTranslation;
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    b.MotionState.WorldTransform *= (UniMatrix)rigidTranslation;
+                }
             }
         }
         public virtual void setTranslation(Vector3 translation)
@@ -245,9 +274,12 @@ namespace Crankshaft.Primitives
             curTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
             rotTranslation.Xy /= (3 - position.Z);
             Matrix4 rigidTranslation = Matrix4.CreateTranslation(rotTranslation * (1 / Scale));
-            if (rigid != null)
+            if (Rigid != null || Rigid.Count != 0)
             {
-                Rigid.MotionState.WorldTransform = (UniMatrix)rigidTranslation;
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    b.MotionState.WorldTransform = (UniMatrix)rigidTranslation;
+                }
             }
         }
 
@@ -255,10 +287,13 @@ namespace Crankshaft.Primitives
         {
             this.Scale = scale;
             CurScale = Matrix4.CreateScale(scale);
-            Rigid.CollisionShape = new BoxShape(scale/16, scale/16, 0.1f);
-            if (rigid != null)
+            if (Rigid != null || Rigid.Count != 0)
             {
-                Rigid.MotionState.WorldTransform *= CurScale;
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    b.CollisionShape = new BoxShape((b.Colider.M11 / ((3 - position.Z) * 2)) * scale, (b.Colider.M12 / ((3 - position.Z) * 2)) * scale, 0.0f);
+                    b.MotionState.WorldTransform *= CurScale;
+                }
             }
         }
 
@@ -266,9 +301,12 @@ namespace Crankshaft.Primitives
         {
             this.Rotation = rotation;
             CurRot = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
-            if (rigid != null)
+            if (Rigid != null || Rigid.Count != 0)
             {
-                Rigid.MotionState.WorldTransform *= CurRot;
+                foreach (BoundRigidBody b in Rigid)
+                {
+                    b.MotionState.WorldTransform *= CurRot;
+                }
             }
         }
 
@@ -288,6 +326,11 @@ namespace Crankshaft.Primitives
             {
                 return this.CompareTo(compare);
             }
+        }
+
+        public virtual void onResize()
+        {
+
         }
     }
 }

@@ -24,8 +24,7 @@ namespace FullMetalAkari.Game.Objects.Game
                 -0.5f, -0.5f, 0.0f, -0.25f, 0.0f, // bottom left
                 -0.5f,  0.5f, 0.0f, -0.25f, 1.0f  // top left
             };
-            coliderX = 0.6f;
-            coliderY = 0.95f;
+            Colider.Add(new Matrix2(0.6f,0.95f,0,0));
         }
     }
 }

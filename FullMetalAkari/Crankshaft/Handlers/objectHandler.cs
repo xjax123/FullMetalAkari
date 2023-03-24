@@ -11,19 +11,29 @@ namespace Crankshaft.Handlers
 {
     public static class objectHandler
     {
-        public static gameObject buildObject(objectData o)
+        public static gameObject buildObject(objectData d)
         {
             gameObject intObject;
-            switch (o.Type)
+            String type = d.Type.ToLower();
+            switch (type)
             {
                 case "empty":
-                    intObject = new gameObject(o);
+                    intObject = new gameObject(d);
                     break;
                 case "scope":
-                    intObject = new sniperCrosshair(o);
+                    intObject = new sniperCrosshair(d);
                     break;
                 case "barrel":
-                    intObject = new Barrel(o);
+                    intObject = new Barrel(d);
+                    break;
+                case "bottle":
+                    intObject = new Bottle(d);
+                    break;
+                case "target":
+                    intObject = new Target(d);
+                    break;
+                case "hud":
+                    intObject = new HUD(d);
                     break;
                 default:
                     throw new ObjectNotFoundException();

@@ -8,6 +8,7 @@ using Crankshaft.Data;
 using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using FullMetalAkari.Game.Objects.Game;
 
 namespace Crankshaft.Handlers
 {
@@ -33,6 +34,22 @@ namespace Crankshaft.Handlers
                 foreach (objectData o in localScene.objects)
                 {
                     intList.Add(objectHandler.buildObject(o));
+                }
+                sceneData stockAssets;
+                if (localScene.type.ToLower() == "game")
+                {
+                    SceneLibrary.TryGetValue("game asset library", out stockAssets);
+
+                    foreach (objectData o in stockAssets.objects)
+                    {
+                        intList.Add(objectHandler.buildObject(o));
+                    }
+                } else if (localScene.type.ToLower() == "menu")
+                {
+                    //Not Implimented
+                } else
+                {
+                    //Not Implimented
                 }
                 Scene compScene = new Scene(localScene, intList);
                 windowHandler.ActiveScene = compScene;
@@ -68,6 +85,13 @@ namespace Crankshaft.Handlers
             Debug.WriteLine("All scenes loaded");
         }
 
+        public static void addObjectToActiveScene(gameObject obj)
+        {
+            windowHandler.ActiveScene.objects.Add(obj);
+            int index = windowHandler.ActiveScene.objects.IndexOf(obj);
+            windowHandler.ActiveScene.objects[index].onLoad();
+            windowHandler.ActiveScene.objects.Sort();
+        }
 
     }
 }

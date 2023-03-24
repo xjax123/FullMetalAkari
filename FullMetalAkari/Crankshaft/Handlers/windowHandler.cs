@@ -15,6 +15,7 @@ using Crankshaft.Primitives;
 using Crankshaft.Physics;
 using FullMetalAkari.Game.Objects.UI;
 using Crankshaft.Data;
+using System.Media;
 
 namespace Crankshaft.Handlers
 {
@@ -24,6 +25,7 @@ namespace Crankshaft.Handlers
         private GameWindowSettings gameWindowSettings;
         private NativeWindowSettings nativeWindowSettings;
         private string scenesFilePath;
+        private string soundsFilePath;
         private string intialScene;
 
         //Static Accessors
@@ -46,12 +48,13 @@ namespace Crankshaft.Handlers
         //     
         //   intialScene:
         //     
-        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID) : base(gameWindowSettings, nativeWindowSettings)
+        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID, string soundsFilePath) : base(gameWindowSettings, nativeWindowSettings)
         {
             this.gameWindowSettings = gameWindowSettings;
             this.nativeWindowSettings = nativeWindowSettings;
             this.scenesFilePath = scenesFilePath;
             this.intialScene = intialSceneID;
+            this.soundsFilePath = soundsFilePath;
         }
 
 
@@ -94,11 +97,11 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                gameObject indi = physicsHandler.CheckClicked();
-                if (indi != null)
-                {
-                    indi.onClick();
-                }
+                //TODO: make this not loud as shit.
+                SoundPlayer temp;
+                soundHandler.SoundLibrary.TryGetValue("Shoot", out temp);
+                temp.Play();
+                physicsHandler.CheckClicked();
             }
 
             ActiveSim.onUpdate();
@@ -119,6 +122,8 @@ namespace Crankshaft.Handlers
             {
                 g.onRenderFrame();
             }
+
+
             SwapBuffers();
         }
 
@@ -141,6 +146,7 @@ namespace Crankshaft.Handlers
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.Multisample);
             GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
+            GL.BlendEquation(BlendEquationMode.FuncAdd);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             //CursorState = CursorState.Hidden;
@@ -153,6 +159,9 @@ namespace Crankshaft.Handlers
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);
             sceneHandler.loadScene(intialScene);
+
+            //Compile user-defined sound effects
+            soundHandler.compileSounds(soundsFilePath);
 
             ActiveSim.onLoad();
         }
