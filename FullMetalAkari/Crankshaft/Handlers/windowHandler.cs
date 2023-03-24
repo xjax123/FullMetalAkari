@@ -145,6 +145,7 @@ namespace Crankshaft.Handlers
 
             //CursorState = CursorState.Hidden;
             renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+            renderingHandler.ViewPosition = new UniVector3(0.0f, 0.0f,-3.0f);
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);

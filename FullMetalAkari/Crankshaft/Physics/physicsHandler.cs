@@ -45,7 +45,6 @@ namespace Crankshaft.Physics
             CCposition.Zw = new Vector2(z, 0.0f);
 
             //Returning in 3D World Coordinates
-            //needs to be trippled to clamp default UI (scale 1, Z = 0) objects to the mouse.
             return WCposition;
         }
 
@@ -72,6 +71,7 @@ namespace Crankshaft.Physics
         public static gameObject? CheckClicked()
         {
             UniVector3 wsMouse = ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
+
             float x = wsMouse.X;
             float y = wsMouse.Y;
             for (int i = windowHandler.ActiveScene.objects.Count; i > 0; i--)

@@ -19,6 +19,7 @@ namespace Crankshaft.Handlers
         private static Matrix4 invertedProjection;
         private static Matrix4 viewMatrix;
         private static Matrix4 invertedView;
+        private static UniVector3 viewPosition;
         private static Matrix4 orthoProjection;
 
         public static int debugHandle;
@@ -28,6 +29,7 @@ namespace Crankshaft.Handlers
         public static Matrix4 InvertedProjection { get => invertedProjection; set => invertedProjection = value; }
         public static Matrix4 InvertedView { get => invertedView; set => invertedView = value; }
         public static Matrix4 OrthoProjection { get => orthoProjection; set => orthoProjection = value; }
+        public static UniVector3 ViewPosition { get => viewPosition; set => viewPosition = value; }
 
         public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
         {
@@ -72,7 +74,7 @@ namespace Crankshaft.Handlers
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-            GL.DrawElements(PrimitiveType.LineLoop, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(type, indices.Length, DrawElementsType.UnsignedInt, 0);
         }
     }
 }
