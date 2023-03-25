@@ -35,6 +35,7 @@ namespace Crankshaft.Handlers
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
         public static bool DebugDraw { get; set; }
+        public static List<gameObject> Cleanup { get; set; } = new List<gameObject>();
 
         //
         // Summary:
@@ -59,9 +60,11 @@ namespace Crankshaft.Handlers
         }
 
 
-        //Runs Every Frame
+        private double _time;
+        //Runs 30 Times A Second.
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
+            _time += args.Time;
             base.OnUpdateFrame(args);
 
             var input = KeyboardState;
@@ -108,14 +111,17 @@ namespace Crankshaft.Handlers
 
             foreach (gameObject g in ActiveScene.objects)
             {
-                g.onUpdateFrame();
+                g.onUpdateFrame(_time);
             }
+            foreach (gameObject g in Cleanup)
+            {
+                windowHandler.ActiveScene.objects.Remove(g);
+            }
+            Cleanup = new List<gameObject>();
         }
-        private double _time;
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
-            _time += args.Time;
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             foreach (gameObject g in ActiveScene.objects)

@@ -51,14 +51,19 @@ namespace Crankshaft.Primitives
         protected UniMatrix trueRot;
 
         protected bool clickable;
+        protected bool visible;
 
         //Colider Variables
-        private List<BoundRigidBody> rigid = new List<BoundRigidBody>();
+        protected List<BoundRigidBody> rigid = new List<BoundRigidBody>();
         protected float mass = 0;
         /// <summary>
         /// ScaleX, ScaleY, OffsetX, OffsetY
         /// </summary>
         private List<Matrix2> colider = new List<Matrix2>();
+
+        //Timing Objects
+        protected double appear;
+        protected double disappear;
 
         //Empties
         protected textureHandler texture;
@@ -93,6 +98,9 @@ namespace Crankshaft.Primitives
         public List<BoundRigidBody> Rigid { get => rigid; set => rigid = value; }
         public List<Matrix2> Colider { get => colider; set => colider = value; }
         public objectData Data { get => data; set => data = value; }
+        public bool Visible { get => visible; set => visible = value; }
+        public double Appear { get => appear; set => appear = value; }
+        public double Disappear { get => disappear; set => disappear = value; }
 
         public gameObject(objectData d)
         {
@@ -106,6 +114,14 @@ namespace Crankshaft.Primitives
             TrueTranslation = Matrix4.CreateTranslation(new UniVector3(d.Position.X, d.Position.Y, d.Position.Z))*TrueRot*CurScale;
             clickable = d.Clickable;
             mass = d.Mass;
+            if (d.Timing != null)
+            {
+                Appear = (double)d.Timing.AppearTime;
+                Disappear = (double)d.Timing.DisappearTime;
+            } else
+            {
+                visible = true;
+            }
 
             vertexArrayObject = GL.GenVertexArray();
             vertexBufferObject = GL.GenBuffer();
@@ -136,7 +152,6 @@ namespace Crankshaft.Primitives
 
         public virtual void onLoad()
         {
-            Debug.WriteLine($"{name} (ID:{instanceID}) Loaded");
             if (Colider.Count == 0)
             {
                 Colider.Add(new Matrix2(1,1,0,0));
@@ -176,8 +191,18 @@ namespace Crankshaft.Primitives
             }
         }
 
-        public virtual void onUpdateFrame()
+        public virtual void onUpdateFrame(double time)
         {
+            if (time > appear && visible != true && Data.Timing != null)
+            {
+                visible = true;
+            }
+
+            if (time > disappear && Data.Timing != null)
+            {
+                windowHandler.Cleanup.Add(this);
+            }
+
             if (Rigid != null || Rigid.Count != 0)
             {
                 foreach (BoundRigidBody b in Rigid)
@@ -204,6 +229,13 @@ namespace Crankshaft.Primitives
 
         public virtual void onRenderFrame()
         {
+            //stops rendering if the object is invisible
+            if (Visible == false)
+            {
+                return;
+            }
+
+            //rendering object, likely ineffcient to do it this way.
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
             if (CurTranslation != Matrix4.Identity)
@@ -214,10 +246,12 @@ namespace Crankshaft.Primitives
             {
                 TrueRot = CurRot;
             }
+            //setting shader uniforms
             Shader.Use();
             Shader.SetMatrix4("translation", TrueTranslation);
             Shader.SetMatrix4("projection", renderingHandler.ProjectionMatrix);
             Shader.SetMatrix4("view", renderingHandler.ViewMatrix);
+            //binding texture & ensuring debug mode draws black lines instead of a texture.
             if (textureHandler.ActiveHandle != texture.Handle && windowHandler.DebugDraw == false)
             {
                 texture.Use(TextureUnit.Texture0);
@@ -228,6 +262,7 @@ namespace Crankshaft.Primitives
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, renderingHandler.debugHandle);
             }
+            //draw calls
             if (windowHandler.DebugDraw == true && Rigid.Count != 0)
             {
                 foreach (BoundRigidBody b in Rigid)
@@ -242,6 +277,7 @@ namespace Crankshaft.Primitives
                 renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.Triangles);
             }
 
+            //resetting current translation to identity.
             CurTranslation = Matrix4.Identity;
             CurRot = Matrix4.Identity;
         }

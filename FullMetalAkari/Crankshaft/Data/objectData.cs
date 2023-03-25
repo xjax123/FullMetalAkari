@@ -10,6 +10,7 @@ namespace Crankshaft.Data
         public string Type { get; set; }
         public float Mass { get; set; }
         public positionData Position { get; set; }
+        public timingData? Timing { get; set; }
 
         //Optional Data
         public int? Variant { get; set; }
@@ -28,7 +29,7 @@ namespace Crankshaft.Data
         }
         public override string ToString()
         {
-            return "[ID:" + InstanceID + ", objType:" + Type + ", " + Position.ToString() + "]";
+            return $"[ID:{InstanceID}, objType: {Type} {Position.ToString()}]";
         }
     }
 }
