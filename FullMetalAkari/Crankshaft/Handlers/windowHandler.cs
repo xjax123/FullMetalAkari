@@ -16,6 +16,7 @@ using Crankshaft.Physics;
 using FullMetalAkari.Game.Objects.UI;
 using Crankshaft.Data;
 using System.Media;
+using FullMetalAkari.Crankshaft.Primitives;
 
 namespace Crankshaft.Handlers
 {
@@ -97,11 +98,10 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                //TODO: make this not loud as shit.
-                SoundPlayer temp;
+                Sound temp;
                 soundHandler.SoundLibrary.TryGetValue("Shoot", out temp);
                 temp.Play();
-                physicsHandler.CheckClicked();
+                physicsHandler.CheckClicked();  
             }
 
             ActiveSim.onUpdate();
@@ -156,12 +156,12 @@ namespace Crankshaft.Handlers
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
+            //Compile user-defined sound effects
+            soundHandler.compileSounds(soundsFilePath);
+
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);
             sceneHandler.loadScene(intialScene);
-
-            //Compile user-defined sound effects
-            soundHandler.compileSounds(soundsFilePath);
 
             ActiveSim.onLoad();
         }

@@ -1,8 +1,9 @@
 ﻿{
 	"sceneID": "demo",
-	"type":  "game",
+	"type": "game",
 	"nextScene": "demo",
 	"sceneName": "Full Metal Akari - Test",
+	"StartingMusic": "Game lvl music - Draft 1",
 	"objects": [
 		{
 			"instanceID": "1",

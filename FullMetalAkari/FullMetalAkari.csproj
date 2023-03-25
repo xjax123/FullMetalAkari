@@ -19,6 +19,12 @@
     <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.vert" />
     <None Remove="Crankshaft\Resources\Textures\error_texture.png" />
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
+    <None Remove="Game\Resources\SFX\exhale 1.mp3" />
+    <None Remove="Game\Resources\SFX\exhale 2.mp3" />
+    <None Remove="Game\Resources\SFX\exhale 3.mp3" />
+    <None Remove="Game\Resources\SFX\exhale 4.mp3" />
+    <None Remove="Game\Resources\SFX\exhale1.mp3" />
+    <None Remove="Game\Resources\SFX\Game lvl music - Draft 1.wav" />
     <None Remove="Game\Resources\SFX\Shoot.wav" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
     <None Remove="Game\Resources\Shaders\invertedShader.frag" />
@@ -39,6 +45,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <COMReference Include="WMPLib">
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>6bf52a50-394a-11d3-b153-00c04f79faa6</Guid>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Crankshaft\Resources\Shaders\basicShader\basicShader.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -47,6 +65,21 @@
     </Content>
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\exhale 1.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\exhale 2.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\exhale 3.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\exhale 4.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\Game lvl music - Draft 1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\SFX\Shoot.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -113,5 +146,9 @@
     <Reference Include="BulletSharp">
       <HintPath>References\BulletSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Game\Resources\SFX\exhale1.mp3" />
   </ItemGroup>
 </Project>
