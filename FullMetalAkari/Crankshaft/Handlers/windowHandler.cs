@@ -28,6 +28,20 @@ namespace Crankshaft.Handlers
         private string scenesFilePath;
         private string soundsFilePath;
         private string intialScene;
+        private string backgroundimage;
+
+        //background image
+        private textureHandler texture;
+        private shaderHandler shader;
+        private float[] backgroundvertices;
+        private uint[] backgroundindices =
+        {
+            0, 1, 3,
+            1, 2, 3
+        };
+        private int vao;
+        private int vbo;
+        private int ebo;
 
         //Static Accessors
         public static NativeWindow ActiveWindow { get; private set; }
@@ -50,13 +64,14 @@ namespace Crankshaft.Handlers
         //     
         //   intialScene:
         //     
-        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID, string soundsFilePath) : base(gameWindowSettings, nativeWindowSettings)
+        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID, string soundsFilePath, string backgroundImage) : base(gameWindowSettings, nativeWindowSettings)
         {
             this.gameWindowSettings = gameWindowSettings;
             this.nativeWindowSettings = nativeWindowSettings;
             this.scenesFilePath = scenesFilePath;
             this.intialScene = intialSceneID;
             this.soundsFilePath = soundsFilePath;
+            this.backgroundimage = backgroundImage;
         }
 
 
@@ -124,6 +139,8 @@ namespace Crankshaft.Handlers
             base.OnRenderFrame(args);
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            //Invoke objects to render themsevles
             foreach (gameObject g in ActiveScene.objects)
             {
                 g.onRenderFrame();

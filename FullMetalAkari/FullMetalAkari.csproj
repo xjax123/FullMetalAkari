@@ -39,6 +39,9 @@
     <None Remove="Game\Resources\Texture\Scope_Duplex.png" />
     <None Remove="Game\Resources\Texture\target1.png" />
     <None Remove="Game\Resources\Texture\target2.png" />
+    <None Remove="Game\Resources\UI\bg1.png" />
+    <None Remove="Game\Resources\UI\bg2.png" />
+    <None Remove="Game\Resources\UI\bg3.png" />
     <None Remove="Game\Resources\UI\FadingSteel_HUD_top_layer.png" />
     <None Remove="Game\Scenes\demo.sdta" />
     <None Remove="Game\Scenes\Game_UI.sdta" />
@@ -110,6 +113,15 @@
     </Content>
     <Content Include="Game\Resources\Texture\bullet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\bg1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\bg2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\bg3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\UI\FadingSteel_HUD_top_layer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
