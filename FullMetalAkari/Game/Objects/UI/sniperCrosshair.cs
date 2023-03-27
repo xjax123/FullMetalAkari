@@ -34,12 +34,16 @@ namespace FullMetalAkari.Game.Objects.UI
             base.onLoad();
         }
 
-        //TODO: This still leaks alot of memory
+        public override void Animate(double time)
+        {
+            base.Animate(time);
+
+            UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);
+            setTranslation(new UniVector3(worldspaceMouse.X * (3 - Position.Z), worldspaceMouse.Y * (3 - Position.Z), Position.Z));
+        }
+
         public override void onRenderFrame()
         {
-            UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);
-            setTranslation(new UniVector3(worldspaceMouse.X * (3 - Position.Z), worldspaceMouse.Y * (3- Position.Z), Position.Z));
-
             /*
             //calculating view matrix for the scope picture
             UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);

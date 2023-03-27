@@ -16,7 +16,8 @@ using Crankshaft.Physics;
 using FullMetalAkari.Game.Objects.UI;
 using Crankshaft.Data;
 using System.Media;
-using FullMetalAkari.Crankshaft.Primitives;
+using FullMetalAkari.Game.Objects.Sounds;
+using Crankshaft.Events;
 
 namespace Crankshaft.Handlers
 {
@@ -28,20 +29,6 @@ namespace Crankshaft.Handlers
         private string scenesFilePath;
         private string soundsFilePath;
         private string intialScene;
-        private string backgroundimage;
-
-        //background image
-        private textureHandler texture;
-        private shaderHandler shader;
-        private float[] backgroundvertices;
-        private uint[] backgroundindices =
-        {
-            0, 1, 3,
-            1, 2, 3
-        };
-        private int vao;
-        private int vbo;
-        private int ebo;
 
         //Static Accessors
         public static NativeWindow ActiveWindow { get; private set; }
@@ -50,6 +37,7 @@ namespace Crankshaft.Handlers
         public static Simulation ActiveSim { get; set; }
         public static bool DebugDraw { get; set; }
         public static List<gameObject> Cleanup { get; set; } = new List<gameObject>();
+        public static gameMusic ActiveMusic { get; set; }
 
         //
         // Summary:
@@ -64,14 +52,13 @@ namespace Crankshaft.Handlers
         //     
         //   intialScene:
         //     
-        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID, string soundsFilePath, string backgroundImage) : base(gameWindowSettings, nativeWindowSettings)
+        public windowHandler(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, string scenesFilePath, string intialSceneID, string soundsFilePath) : base(gameWindowSettings, nativeWindowSettings)
         {
             this.gameWindowSettings = gameWindowSettings;
             this.nativeWindowSettings = nativeWindowSettings;
             this.scenesFilePath = scenesFilePath;
             this.intialScene = intialSceneID;
             this.soundsFilePath = soundsFilePath;
-            this.backgroundimage = backgroundImage;
         }
 
 
@@ -82,8 +69,8 @@ namespace Crankshaft.Handlers
             _time += args.Time;
             base.OnUpdateFrame(args);
 
+            //Input Handling
             var input = KeyboardState;
-
             if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
@@ -116,22 +103,27 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                Sound temp;
-                soundHandler.SoundLibrary.TryGetValue("Shoot", out temp);
-                temp.Play();
                 physicsHandler.CheckClicked();  
             }
 
+            //Simulation Updates
             ActiveSim.onUpdate();
 
+            //Object Updates
             foreach (gameObject g in ActiveScene.objects)
             {
                 g.onUpdateFrame(_time);
             }
+
+            //Cleanup Deleted Objects.
             foreach (gameObject g in Cleanup)
             {
                 windowHandler.ActiveScene.objects.Remove(g);
             }
+
+            //Call Music Onupdate Functions for active song
+            ActiveMusic.onUpdate();
+
             Cleanup = new List<gameObject>();
         }
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -143,6 +135,7 @@ namespace Crankshaft.Handlers
             //Invoke objects to render themsevles
             foreach (gameObject g in ActiveScene.objects)
             {
+                g.Animate(args.Time);
                 g.onRenderFrame();
             }
 
@@ -181,6 +174,8 @@ namespace Crankshaft.Handlers
 
             //Compile user-defined sound effects
             soundHandler.compileSounds(soundsFilePath);
+            ActiveMusic = new gameMusic(@"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\Music\Loopable - Game lvl music.wav", @"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
+            ActiveMusic.startSong();
 
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);

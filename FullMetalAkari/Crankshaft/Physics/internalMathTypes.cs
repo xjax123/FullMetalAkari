@@ -6,8 +6,6 @@ namespace Crankshaft.Physics
     //named for being universally compatable with Bulletsharp & OpenTK
     public struct UniVector3
     {
-        //TODO: add more functionality to the various math types to make conversions smoother.
-
         public UniVector3(float x, float y, float z)
         {
             X = x;

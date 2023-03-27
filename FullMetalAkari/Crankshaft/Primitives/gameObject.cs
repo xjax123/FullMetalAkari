@@ -226,6 +226,11 @@ namespace Crankshaft.Primitives
                 }
             }
         }
+        
+        public virtual void Animate(double time)
+        {
+
+        }
 
         public virtual void onRenderFrame()
         {

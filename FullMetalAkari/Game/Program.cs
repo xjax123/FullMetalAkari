@@ -32,7 +32,7 @@ namespace FullMetalAkari
             };
 
             //Create The Game Window
-            using (var window = new windowHandler(gameWindowSettings, nativeWindowSettings, "/Game/Scenes", "demo", "/Game/Resources/SFX", @"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\UI\bg1.png"))
+            using (var window = new windowHandler(gameWindowSettings, nativeWindowSettings, "/Game/Scenes", "demo", "/Game/Resources/SFX"))
             {
                 window.Run();
             }

@@ -9,7 +9,6 @@ using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using FullMetalAkari.Game.Objects.Game;
-using FullMetalAkari.Crankshaft.Primitives;
 
 namespace Crankshaft.Handlers
 {
@@ -54,9 +53,6 @@ namespace Crankshaft.Handlers
                 }
                 Scene compScene = new Scene(localScene, intList);
                 windowHandler.ActiveScene = compScene;
-                Sound temp;
-                soundHandler.SoundLibrary.TryGetValue("Game lvl music - Draft 1", out temp);
-                temp.PlayLoop();
 
                 foreach (gameObject g in windowHandler.ActiveScene.objects)
                 {

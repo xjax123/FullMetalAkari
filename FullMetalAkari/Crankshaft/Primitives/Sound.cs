@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using WMPLib;
 
-namespace FullMetalAkari.Crankshaft.Primitives
+namespace Crankshaft.Primitives
 {
-    class Sound
+    public class Sound
     {
         protected string path;
         protected string name;
         private byte volume;
-        WindowsMediaPlayer player = new WindowsMediaPlayer();
+        private WindowsMediaPlayer player = new WindowsMediaPlayer();
         public string Path { get => path; set => path = value; }
         public string Name { get => name; set => name = value; }
         public byte Volume { get => volume; set => volume = value; }
+        public WindowsMediaPlayer Player { get => player; set => player = value; }
 
         /// <summary>
         /// Empty Constructor
@@ -42,32 +44,45 @@ namespace FullMetalAkari.Crankshaft.Primitives
             setVolume(volume);
         }
 
-        public void Play()
+        public virtual void Play()
         {
-            player = new WindowsMediaPlayer();
-            player.settings.volume = volume;
-            player.URL = Path;
+            try
+            {
+                Player = new WindowsMediaPlayer();
+                Player.settings.volume = volume;
+                Player.URL = Path;
+            } catch
+            {
+                Debug.WriteLine("Thready Busy, Action Skipped");
+            }
         }
 
-        public void PlayLoop()
+        public virtual void PlayLoop()
         {
-            player = new WindowsMediaPlayer();
-            player.settings.volume = volume;
-            player.URL = Path;
-            player.settings.setMode("loop", true);
+            try
+            {
+                Player = new WindowsMediaPlayer();
+                Player.settings.volume = volume;
+                Player.URL = Path;
+                Player.settings.setMode("loop", true);
+            } catch
+            {
+                Debug.WriteLine("Thready Busy, Action Skipped");
+            }
         }
 
-        public void setVolume(byte v)
+        public virtual void setVolume(byte v)
         {
             if (v < 100)
             {
                 Volume = v;
-            } else
+            }
+            else
             {
 
                 Volume = 100;
             }
-            player.settings.volume = (int) Volume;
+            Player.settings.volume = Volume;
         }
     }
 }
