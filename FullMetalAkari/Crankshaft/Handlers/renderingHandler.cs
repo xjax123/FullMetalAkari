@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using BulletSharp;
 using Crankshaft.Physics;
 using Crankshaft.Primitives;
+using System.Diagnostics;
 
 namespace Crankshaft.Handlers
 {
@@ -31,37 +32,44 @@ namespace Crankshaft.Handlers
         public static Matrix4 OrthoProjection { get => orthoProjection; set => orthoProjection = value; }
         public static UniVector3 ViewPosition { get => viewPosition; set => viewPosition = value; }
 
-        public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, float[] vertices, uint[] indices, ref shaderHandler shader, string shaderVert, string shaderFrag, ref textureHandler texture, string texPath)
+        public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, List<float[]> vertices, List<uint[]> indices, ref List<shaderHandler> shader, string shaderVert, string shaderFrag, ref List<textureHandler> texture, string texPath)
         {
+            for (int i=0; i < vertices.Count;i++) {
+                string output = "";
+                foreach (float f in vertices[i])
+                {
+                    output += $"{f}, ";
+                }
+                Debug.WriteLine(output);
+                GL.BindVertexArray(vertexArrayObject);
 
-            GL.BindVertexArray(vertexArrayObject);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
+                GL.BufferData(BufferTarget.ArrayBuffer, vertices[i].Length * sizeof(float), vertices[i], BufferUsageHint.StaticDraw);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, indices[i].Length * sizeof(uint), indices[i], BufferUsageHint.StaticDraw);
 
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+                shader.Add(new shaderHandler(shaderVert, shaderFrag));
+                shader[i].Use();
 
-            shader = new shaderHandler(shaderVert, shaderFrag);
-            shader.Use();
+                var vertexLoc = shader[i].GetAttribLocation("aPosition");
+                GL.EnableVertexAttribArray(vertexLoc);
+                GL.VertexAttribPointer(vertexLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var vertexLoc = shader.GetAttribLocation("aPosition");
-            GL.EnableVertexAttribArray(vertexLoc);
-            GL.VertexAttribPointer(vertexLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+                var texCoordLoc = shader[i].GetAttribLocation("aTexCoord");
+                GL.EnableVertexAttribArray(texCoordLoc);
+                GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            var texCoordLoc = shader.GetAttribLocation("aTexCoord");
-            GL.EnableVertexAttribArray(texCoordLoc);
-            GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
-            texture = textureHandler.LoadFromFile(texPath, TextureUnit.Texture0);
-            texture.Use(TextureUnit.Texture0);
+                texture.Add(textureHandler.LoadFromFile(texPath, TextureUnit.Texture0));
+                texture[i].Use(TextureUnit.Texture0);
+            }
         }
 
 

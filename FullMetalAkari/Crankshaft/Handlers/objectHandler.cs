@@ -35,6 +35,15 @@ namespace Crankshaft.Handlers
                 case "hud":
                     intObject = new HUD(d);
                     break;
+                case "background":
+                    intObject = new Background(d);
+                    break;
+                case "tallhill":
+                    intObject = new Backhill(d);
+                    break;
+                case "shorthill":
+                    intObject = new Fronthill(d);
+                    break;
                 default:
                     throw new ObjectNotFoundException();
             }

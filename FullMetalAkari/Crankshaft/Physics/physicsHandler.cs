@@ -68,10 +68,8 @@ namespace Crankshaft.Physics
 
 
         #nullable enable
-        public static void CheckClicked()
+        public static void CheckClicked(UniVector3 wsMouse)
         {
-            UniVector3 wsMouse = ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
-
             float x = wsMouse.X;
             float y = wsMouse.Y;
             for (int i = windowHandler.ActiveScene.objects.Count; i > 0; i--)

@@ -7,29 +7,68 @@
 	"objects": [
 		{
 			"instanceID": "1",
+			"type": "background",
+			"mass": 1,
+			"position": {
+				"X": "0",
+				"Y": "0",
+				"Z": "-100",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"clickable": false
+		},
+		{
+			"instanceID": "2",
+			"type": "tallhill",
+			"mass": 1,
+			"position": {
+				"X": "0",
+				"Y": "0",
+				"Z": "-10",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"clickable": false
+		},
+		{
+			"instanceID": "3",
 			"type": "target",
 			"mass": 1,
 			"position": {
 				"X": "-1",
 				"Y": "0",
-				"Z": "-5",
+				"Z": "-3",
 				"scale": "1",
 				"rotation": "0"
 			},
 			"Variant": 1
 		},
 		{
-			"instanceID": "2",
+			"instanceID": "4",
 			"type": "target",
 			"mass": 1,
 			"position": {
 				"X": "1",
 				"Y": "0",
-				"Z": "-5",
+				"Z": "-3",
 				"scale": "1",
 				"rotation": "0"
 			},
-			"Variant": 2
+			"Variant": 1
+		},
+		{
+			"instanceID": "5",
+			"type": "shorthill",
+			"mass": 1,
+			"position": {
+				"X": "0",
+				"Y": "0",
+				"Z": "-1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"clickable": false
 		}
 	]
 }

@@ -10,6 +10,8 @@ using Crankshaft.Data;
 using BulletSharp;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Crankshaft.Events;
+using Crankshaft.Animation;
 
 namespace Crankshaft.Primitives
 {
@@ -35,8 +37,35 @@ namespace Crankshaft.Primitives
             1, 2, 3
         };
 
+        //Colider Variables
+        protected List<BoundRigidBody> rigid = new List<BoundRigidBody>();
+        protected float mass = 0;
+        /// <summary>
+        /// ScaleX, ScaleY, OffsetX, OffsetY
+        /// </summary>
+        private List<Matrix2> colider = new List<Matrix2>();
 
-        //Built in the Constructor, no need to Overwrite/Hide, Remember to set these in the constructor.
+        //Timing Objects
+        protected double appear;
+        protected double disappear;
+
+        //Empties
+        protected TextureUnit tex;
+        protected float[] debugVerts;
+        protected uint[] debugIndices;
+
+        protected int vertexBufferObject;
+        protected int vertexArrayObject;
+        protected int elementBufferObject;
+        private objectData data;
+        public subscriptionData subscription;
+        protected List<Animations> animations = new List<Animations>();
+        public List<float[]> meshes = new List<float[]>();
+        public List<Matrix4> offsets = new List<Matrix4>();
+        public List<uint[]> indexes = new List<uint[]>();
+        public List<textureHandler> textures = new List<textureHandler>();
+        public List<shaderHandler> shaders = new List<shaderHandler>();
+
         protected int instanceID;
 
         protected UniVector3 position;
@@ -53,30 +82,6 @@ namespace Crankshaft.Primitives
         protected bool clickable;
         protected bool visible;
 
-        //Colider Variables
-        protected List<BoundRigidBody> rigid = new List<BoundRigidBody>();
-        protected float mass = 0;
-        /// <summary>
-        /// ScaleX, ScaleY, OffsetX, OffsetY
-        /// </summary>
-        private List<Matrix2> colider = new List<Matrix2>();
-
-        //Timing Objects
-        protected double appear;
-        protected double disappear;
-
-        //Empties
-        protected textureHandler texture;
-        protected shaderHandler shader;
-        protected TextureUnit tex;
-        protected float[] debugVerts;
-        protected uint[] debugIndices;
-
-        protected int vertexBufferObject;
-        protected int vertexArrayObject;
-        protected int elementBufferObject;
-        private objectData data;
-
         //bunch of auto-generated properties, to replace the old java style accessors.
         public int InstanceID { get => instanceID; set => instanceID = value; }
         public UniMatrix CurTranslation { get => curTranslation; set => curTranslation = value; }
@@ -86,8 +91,6 @@ namespace Crankshaft.Primitives
         public float Rotation { get => rotation; set => rotation = value; }
         public UniMatrix CurRot { get => curRot; set => curRot = value; }
         public UniMatrix TrueRot { get => trueRot; set => trueRot = value; }
-        public textureHandler Texture { get => texture; set => texture = value; }
-        public shaderHandler Shader { get => shader; set => shader = value; }
         public int VertexBufferObject { get => vertexBufferObject; set => vertexBufferObject = value; }
         public int VertexArrayObject { get => vertexArrayObject; set => vertexArrayObject = value; }
         public int ElementBufferObject { get => elementBufferObject; set => elementBufferObject = value; }
@@ -105,6 +108,7 @@ namespace Crankshaft.Primitives
         public gameObject(objectData d)
         {
             Data = d;
+            subscription = new subscriptionData();
             this.InstanceID = d.InstanceID;
             Scale = d.Position.Scale;
             CurScale = Matrix4.CreateScale(Scale);
@@ -145,8 +149,13 @@ namespace Crankshaft.Primitives
         {
             GL.DeleteBuffer(VertexBufferObject);
             GL.DeleteVertexArray(VertexArrayObject);
-            GL.DeleteProgram(Shader.Handle);
-            GL.DeleteProgram(Texture.Handle);
+            int i = 0;
+            foreach (shaderHandler s in shaders)
+            {
+                GL.DeleteProgram(shaders[i].Handle);
+                GL.DeleteProgram(textures[i].Handle);
+                i++;
+            }
             Debug.WriteLine($"{objectID} {InstanceID} Disposed");
         }
 
@@ -156,7 +165,20 @@ namespace Crankshaft.Primitives
             {
                 Colider.Add(new Matrix2(1,1,0,0));
             }
-            renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, ref shader, shaderVert, shaderFrag, ref texture, texPath);
+            if (meshes.Count == 0)
+            {
+                meshes.Add(vertices);
+            }
+            for (int x = indexes.Count; x < meshes.Count; x++)
+            {
+                indexes.Add(indices);
+            }
+            for (int x = offsets.Count; x < meshes.Count; x++)
+            {
+                offsets.Add(Matrix4.Identity);
+            }
+            Debug.WriteLine(name);
+            renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes, indexes, ref shaders, shaderVert, shaderFrag, ref textures, texPath);
             Matrix4 combined;
             int i = 0;
             foreach (Matrix2 c in Colider)
@@ -229,7 +251,10 @@ namespace Crankshaft.Primitives
         
         public virtual void Animate(double time)
         {
-
+            foreach (Animations a in animations)
+            {
+                a.stepAnimation(time);
+            }
         }
 
         public virtual void onRenderFrame()
@@ -251,37 +276,40 @@ namespace Crankshaft.Primitives
             {
                 TrueRot = CurRot;
             }
-            //setting shader uniforms
-            Shader.Use();
-            Shader.SetMatrix4("translation", TrueTranslation);
-            Shader.SetMatrix4("projection", renderingHandler.ProjectionMatrix);
-            Shader.SetMatrix4("view", renderingHandler.ViewMatrix);
-            //binding texture & ensuring debug mode draws black lines instead of a texture.
-            if (textureHandler.ActiveHandle != texture.Handle && windowHandler.DebugDraw == false)
-            {
-                texture.Use(TextureUnit.Texture0);
-                Shader.SetBool("debug", false);
-            } else if (windowHandler.DebugDraw == true)
-            {
-                Shader.SetBool("debug", true);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, renderingHandler.debugHandle);
-            }
-            //draw calls
-            if (windowHandler.DebugDraw == true && Rigid.Count != 0)
-            {
-                foreach (BoundRigidBody b in Rigid)
+            int i = 0;
+            foreach (float[] f in meshes) {
+                //setting shader uniforms
+                shaders[i].Use();
+                shaders[i].SetMatrix4("translation", TrueTranslation * offsets[i]);
+                shaders[i].SetMatrix4("projection", renderingHandler.ProjectionMatrix);
+                shaders[i].SetMatrix4("view", renderingHandler.ViewMatrix);
+                //binding texture & ensuring debug mode draws black lines instead of a texture.
+                if (textureHandler.ActiveHandle != textures[i].Handle && windowHandler.DebugDraw == false)
                 {
-                    renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, b.verts, b.ind, PrimitiveType.LineLoop);
+                    textures[i].Use(TextureUnit.Texture0);
+                    shaders[i].SetBool("debug", false);
+                } else if (windowHandler.DebugDraw == true)
+                {
+                    shaders[i].SetBool("debug", true);
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, renderingHandler.debugHandle);
                 }
-            } else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
-            {
-                renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.LineLoop);
-            } else
-            {
-                renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.Triangles);
+                //draw calls
+                if (windowHandler.DebugDraw == true && Rigid.Count != 0)
+                {
+                    foreach (BoundRigidBody b in Rigid)
+                    {
+                        renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, b.verts, b.ind, PrimitiveType.LineLoop);
+                    }
+                } else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
+                {
+                    renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes[i], indexes[i], PrimitiveType.LineLoop);
+                } else
+                {
+                    renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes[i], indexes[i], PrimitiveType.Triangles);
+                }
+                i++;
             }
-
             //resetting current translation to identity.
             CurTranslation = Matrix4.Identity;
             CurRot = Matrix4.Identity;
@@ -372,6 +400,16 @@ namespace Crankshaft.Primitives
         public virtual void onResize()
         {
 
+        }
+
+        public virtual void c_MouseEvents(object sender, MouseEventArgs e)
+        {
+        }
+        public virtual void c_PressEvents(object sender, KeyboardEventArgs e)
+        {
+        }
+        public virtual void c_ReleaseEvents(object sender, KeyboardEventArgs e)
+        {
         }
     }
 }

@@ -10,31 +10,36 @@ namespace FullMetalAkari.Game.Objects.UI
 {
     class HUD : uiObject
     {
+        float[] oldverts;
         public HUD(objectData d) : base(d)
         {
             objectID = "hud";
             name = "HUD";
             texPath = "Game/Resources/UI/FadingSteel_HUD_top_layer.png";
             UniVector3 screenpos = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveWindow.Size.X,windowHandler.ActiveWindow.Size.Y,0.0f);
-            vertices = new float[] {
+            oldverts = new float[] {
                 //Position         Texture coordinates
                 screenpos.X*3f,  1.4f, 0.0f, 1f, 1.0f, // top right
                 screenpos.X*3f, -1.4f, 0.0f, 1f, 0.0f, // bottom right
                 -(screenpos.X)*3f, -1.4f, 0.0f, -0f, 0.0f, // bottom left
                 -(screenpos.X)*3f,  1.4f, 0.0f, -0f, 1.0f  // top left
             };
+            meshes.Add(oldverts);
         }
 
         public override void onResize()
         {
             UniVector3 screenpos = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y, 0.0f);
-            vertices = new float[] {
+            int index = meshes.IndexOf(oldverts);
+            meshes.Remove(oldverts);
+            meshes.Insert(index,
+            new float[] {
                 //Position         Texture coordinates
                 screenpos.X*3,  0.5f, 0.0f, 1.25f, 1.0f, // top right
                 screenpos.X*3, -0.5f, 0.0f, 1.25f, 0.0f, // bottom right
                 -(screenpos.X)*3, -0.5f, 0.0f, -0.25f, 0.0f, // bottom left
                 -(screenpos.X)*3,  0.5f, 0.0f, -0.25f, 1.0f  // top left
-            };
+            });
         }
     }
 }

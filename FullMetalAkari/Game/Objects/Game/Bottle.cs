@@ -22,13 +22,13 @@ namespace FullMetalAkari.Game.Objects.Game
             {
                 case 1:
                     texPath = "Game/Resources/Texture/bottle1.png";
-                    vertices = new float[] {
+                    meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.0f, // top right
                          0.5f, -0.5f, 0.0f, 2.0f, 0.0f, // bottom right
                          -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // bottom left
                          -0.5f,  0.5f, 0.0f, -1.0f, 1.0f  // top left
-                    };
+                    });
                     //Stand Bottom
                     Colider.Add(new Matrix2(0.07f, 0.45f, 0.001f, -0.03f));
                     //Stand Top
@@ -41,13 +41,13 @@ namespace FullMetalAkari.Game.Objects.Game
                     break;
                 case 4:
                     texPath = "Game/Resources/Texture/bottle2.png";
-                    vertices = new float[] {
+                    meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.25f, // top right
                          0.5f, -0.5f, 0.0f, 2.0f, 0.0f, // bottom right
                          -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // bottom left
                          -0.5f,  0.5f, 0.0f, -1.0f, 1.25f  // top left
-                    };
+                    });
                     //Bottle Body
                     Colider.Add(new Matrix2(0.25f,0.5f,0.0f,-0.028f));
                     //Bottle Neck
@@ -56,13 +56,13 @@ namespace FullMetalAkari.Game.Objects.Game
                 case 3:
                     texPath = "Game/Resources/Texture/bottle3.png";
 
-                    vertices = new float[] {
+                    meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.0f, // top right
                          0.5f, -0.5f, 0.0f, 2.0f, 0.0f, // bottom right
                          -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // bottom left
                          -0.5f,  0.5f, 0.0f, -1.0f, 1.0f  // top left
-                    };
+                    });
                     //Stand Bottom
                     Colider.Add(new Matrix2(0.07f, 0.75f, 0.001f, -0.011f));
                     //Stand Top
@@ -71,13 +71,13 @@ namespace FullMetalAkari.Game.Objects.Game
                 case 2:
                     texPath = "Game/Resources/Texture/bottle4.png";
 
-                    vertices = new float[] {
+                    meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.0f, // top right
                          0.5f, -0.5f, 0.0f, 2.0f, 0.0f, // bottom right
                          -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // bottom left
                          -0.5f,  0.5f, 0.0f, -1.0f, 1.0f  // top left
-                    };
+                    });
                     //Stand Bottom
                     Colider.Add(new Matrix2(0.07f, 0.45f, 0.001f, -0.03f));
                     //Stand Top
@@ -85,13 +85,13 @@ namespace FullMetalAkari.Game.Objects.Game
                     break;
                 default:
                     texPath = "Game/Resources/Texture/bottle2.png";
-                    vertices = new float[] {
+                    meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.25f, // top right
                          0.5f, -0.5f, 0.0f, 2.0f, 0.0f, // bottom right
                          -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // bottom left
                          -0.5f,  0.5f, 0.0f, -1.0f, 1.25f  // top left
-                    };
+                    });
                     Colider.Add(new Matrix2(0.25f, 0.5f, 0.0f, -0.028f));
                     Colider.Add(new Matrix2(0.15f, 0.23f, 0.0f, 0.018f));
                     Variant = 2;

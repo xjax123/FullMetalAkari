@@ -4,6 +4,7 @@ using Crankshaft.Primitives;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace FullMetalAkari.Game.Objects.Game
@@ -45,13 +46,13 @@ namespace FullMetalAkari.Game.Objects.Game
                     Colider.Add(new Matrix2(0.35f, 0.08f, 0.0f, -0.025f));
                     break;
             }
-            vertices = new float[] {
+            meshes.Add(new float[] {
                 //Position         Texture coordinates
                 0.5f,  0.5f, 0.0f, 1.25f, 1.0f, // top right
                 0.5f, -0.5f, 0.0f, 1.25f, 0.0f, // bottom right
                 -0.5f, -0.5f, 0.0f, -0.25f, 0.0f, // bottom left
                 -0.5f,  0.5f, 0.0f, -0.25f, 1.0f  // top left
-            };
+            });
         }
 
         public override void onClick(int ID)
@@ -98,14 +99,17 @@ namespace FullMetalAkari.Game.Objects.Game
 
         private void bullseyeHit()
         {
+            Debug.WriteLine("Bullseye");
         }
 
         private void targetHit()
         {
+            Debug.WriteLine("Target");
         }
 
         private void metalHit()
         {
+            Debug.WriteLine("Metal");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
+#pragma warning disable
 namespace Crankshaft.Physics
 {
     //UniVector & UniMatrix types
@@ -92,6 +93,29 @@ namespace Crankshaft.Physics
         public static UniVector3 operator *(UniVector3 v, UniVector3 s)
         {
             return new UniVector3(v.X * s.X, v.Y * s.Y, v.Z * s.Z);
+        }
+
+        //Equivilency Operations
+        public static bool operator !=(UniVector3 v, UniVector3 s)
+        {
+            if (v.X != s.X || v.Y != s.Y || v.Z != s.Z)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+        public static bool operator ==(UniVector3 v, UniVector3 s)
+        {
+            if (v.X == s.X && v.Y == s.Y && v.Z == s.Z)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

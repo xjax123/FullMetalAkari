@@ -103,16 +103,26 @@ namespace Crankshaft.Handlers
             }
             if (ActiveMouse.IsButtonPressed(MouseButton.Left))
             {
-                physicsHandler.CheckClicked();  
+                MouseButton button = MouseButton.Left;
+                InputEvents.invokeClick(this, button);
             }
-
+            if(input.IsKeyPressed(Keys.Space))
+            {
+                Keys key = Keys.Space;
+                InputEvents.invokeInput(this, key);
+            }
+            if (input.IsKeyReleased(Keys.Space))
+            {
+                Keys key = Keys.Space;
+                InputEvents.invokeRelease(this, key);
+            }
             //Simulation Updates
             ActiveSim.onUpdate();
 
             //Object Updates
             foreach (gameObject g in ActiveScene.objects)
             {
-                g.onUpdateFrame(_time);
+                g.onUpdateFrame(args.Time);
             }
 
             //Cleanup Deleted Objects.
@@ -153,7 +163,7 @@ namespace Crankshaft.Handlers
             ActiveSim = new Simulation();
 
             //loading a debug texture
-            renderingHandler.debugHandle = new Error(new objectData()).Texture.Handle;
+            renderingHandler.debugHandle = new Error(new objectData()).textures[0].Handle;
 
             //Enabling a bunch of openGL nonsense
             GL.Viewport(0, 0, Size.X, Size.Y);
@@ -181,7 +191,23 @@ namespace Crankshaft.Handlers
             sceneHandler.compileScenes(scenesFilePath);
             sceneHandler.loadScene(intialScene);
 
+            //Load the Simulation
             ActiveSim.onLoad();
+
+            //Subscribe to events
+            foreach (gameObject g in ActiveScene.objects)
+            {
+                if (g.subscription.MouseEvents == true)
+                {
+                    InputEvents.mouseClick += g.c_MouseEvents;
+                }
+                if (g.subscription.InputEvents == true)
+                {
+                    InputEvents.keyboardInput += g.c_PressEvents;
+                    InputEvents.keyboardRelease += g.c_ReleaseEvents;
+                }
+            }
+
         }
 
         protected override void OnUnload()

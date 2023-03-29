@@ -147,6 +147,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="OpenTK" Version="4.7.5" />
+    <PackageReference Include="SpriterDotNet" Version="1.6.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
   </ItemGroup>
