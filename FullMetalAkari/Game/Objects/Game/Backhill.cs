@@ -12,16 +12,16 @@ namespace FullMetalAkari.Game.Objects.Game
         float[] oldverts;
         public Backhill(objectData d) : base(d)
         {
-            objectID = "tallhill";
+            ObjectID = "tallhill";
             name = "Tall Hill";
-            texPath = "Game/Resources/UI/bg2.png";
+            texPaths.Add("Game/Resources/UI/bg2.png");
             UniVector3 screenpos = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y, 0.0f);
             oldverts = new float[] {
                 //Position         Texture coordinates
-                   screenpos.X*(3 - position.Z),   screenpos.Y*(3 - position.Z), 0.0f, 1f, 1.0f, // top right
-                   screenpos.X*(3 - position.Z),  -screenpos.Y*(3 - position.Z), 0.0f, 1f, 0.0f, // bottom right
-                -(screenpos.X)*(3 - position.Z),  -screenpos.Y*(3 - position.Z), 0.0f, -0f, 0.0f, // bottom left
-                -(screenpos.X)*(3 - position.Z),   screenpos.Y*(3 - position.Z), 0.0f, -0f, 1.0f  // top left
+                   screenpos.X*(3 - position.Z),   screenpos.Y*(3 - position.Z), 0.0f, 0f, 0f, // top right
+                   screenpos.X*(3 - position.Z),  -screenpos.Y*(3 - position.Z), 0.0f, 0f, 1f, // bottom right
+                -(screenpos.X)*(3 - position.Z),  -screenpos.Y*(3 - position.Z), 0.0f, 1f, 1f, // bottom left
+                -(screenpos.X)*(3 - position.Z),   screenpos.Y*(3 - position.Z), 0.0f, 1f, 0f  // top left
             };
             meshes.Add(oldverts);
         }

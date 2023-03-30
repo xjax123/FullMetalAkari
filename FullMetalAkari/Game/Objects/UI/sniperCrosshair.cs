@@ -11,13 +11,16 @@ using BulletSharp;
 using Crankshaft.Events;
 using System.Diagnostics;
 using Crankshaft.Animation;
+using FullMetalAkari.Game.Objects.Game;
+using System.Threading;
 
 namespace FullMetalAkari.Game.Objects.UI
 {
     class sniperCrosshair : uiObject
     {
-        public static int bullets = 12;
         public static int bulletMax = 12;
+        public static int bullets = bulletMax;
+        UniVector3 offset = new UniVector3(0, 0, 0);
 
         /*
         protected int scopeFBO;
@@ -28,6 +31,7 @@ namespace FullMetalAkari.Game.Objects.UI
         protected UniMatrix scopeView;
         */
         Sound shot;
+        Sound load;
         Animations recoil;
         Animations sway;
         double lastShot = 1;
@@ -35,15 +39,16 @@ namespace FullMetalAkari.Game.Objects.UI
 
         public sniperCrosshair(objectData d) : base(d)
         {
-            objectID = "scope";
+            ObjectID = "scope";
             name = "Sniper Scope";
-            texPath = "Game/Resources/UI/Scope_Duplex.png";
+            texPaths.Add("Game/Resources/UI/Scope_Duplex.png");
             //Subscribing to Events
             subscription.MouseEvents = true;
             subscription.InputEvents = true;
 
             //Setting Sounds
-            shot = new Sound(@"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\SFX\Shoot.wav", "Shoot", 60);
+            shot = new Sound(@"\Game\Resources\SFX\Shoot.wav", "Shoot", 60);
+            load = new Sound(@"\Game\Resources\SFX\Loading.wav", "Load", 60);
 
             //Setting Animations
             Keyframe[] r = { new Keyframe(0.1f,new UniVector3(0,1,0)), new Keyframe(0.3f, new UniVector3(0, 0, 0)) };
@@ -91,7 +96,7 @@ namespace FullMetalAkari.Game.Objects.UI
             base.Animate(time);
             lastShot += (float)time;
 
-            UniVector3 offset = new UniVector3(0, 0, 0);
+            offset = new UniVector3(0, 0, 0);
             UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);
             UniVector3 temp = new UniVector3(worldspaceMouse.X * (3 - Position.Z), worldspaceMouse.Y * (3 - Position.Z), Position.Z);
             offset += temp;
@@ -160,16 +165,39 @@ namespace FullMetalAkari.Game.Objects.UI
         {
             if (e.Button == OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left)
             {
-                if (lastShot > 1)
+                if (lastShot > 1 && bullets > 0)
                 {
-                    shot.Play();
-                    recoil.playAnimation();
+                    bullets -= 1;
+                    Thread s = new Thread(new ThreadStart(shot.Play));
+                    s.Start();
+                    Thread r = new Thread(new ThreadStart(recoil.playAnimation));
+                    r.Start();
                     lastShot = 0;
-                    UniVector3 wsMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y+sway.Position.Y);
-                    wsMouse.X += sway.Position.X;
-                    wsMouse.Y += sway.Position.Y;
-                    physicsHandler.CheckClicked(wsMouse);
+                    UniVector3 temp = offset;
+                    temp.Xy /= (3-position.Z);
+                    physicsHandler.CheckClicked(temp);
                 }
+                if (bullets >= 0)
+                {
+                    windowHandler.ActiveHUD.hide[bullets+1] = true;
+                }
+                if (bullets <= 0)
+                {
+                    Thread t = new Thread(new ThreadStart(reload));
+                    t.Start();
+                }
+            }
+        }
+
+        private void reload()
+        {
+            Thread.Sleep(1000);
+            load.Play();
+            Thread.Sleep(1000);
+            bullets = bulletMax;
+            for (int i = 0; i < bulletMax; i++)
+            {
+                windowHandler.ActiveHUD.hide[i+1] = false;
             }
         }
 

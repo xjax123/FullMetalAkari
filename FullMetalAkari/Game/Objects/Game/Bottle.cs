@@ -15,13 +15,13 @@ namespace FullMetalAkari.Game.Objects.Game
 
         public Bottle(objectData d) : base(d)
         {
-            objectID = "bottle";
+            ObjectID = "bottle";
             name = "Bottle";
             Variant = d.Variant;
             switch (d.Variant)
             {
                 case 1:
-                    texPath = "Game/Resources/Texture/bottle1.png";
+                    texPaths.Add("Game/Resources/Texture/bottle1.png");
                     meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.0f, // top right
@@ -40,7 +40,7 @@ namespace FullMetalAkari.Game.Objects.Game
 
                     break;
                 case 4:
-                    texPath = "Game/Resources/Texture/bottle2.png";
+                    texPaths.Add("Game/Resources/Texture/bottle2.png");
                     meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.25f, // top right
@@ -54,7 +54,7 @@ namespace FullMetalAkari.Game.Objects.Game
                     Colider.Add(new Matrix2(0.15f, 0.23f, 0.0f, 0.018f));
                     break;
                 case 3:
-                    texPath = "Game/Resources/Texture/bottle3.png";
+                    texPaths.Add("Game/Resources/Texture/bottle3.png");
 
                     meshes.Add(new float[] {
                          //Position         Texture coordinates
@@ -69,7 +69,7 @@ namespace FullMetalAkari.Game.Objects.Game
                     Colider.Add(new Matrix2(0.25f, 0.1f, 0.0f, 0.042f));
                     break;
                 case 2:
-                    texPath = "Game/Resources/Texture/bottle4.png";
+                    texPaths.Add("Game/Resources/Texture/bottle4.png");
 
                     meshes.Add(new float[] {
                          //Position         Texture coordinates
@@ -84,7 +84,7 @@ namespace FullMetalAkari.Game.Objects.Game
                     Colider.Add(new Matrix2(0.25f, 0.06f, 0.0f, 0.003f));
                     break;
                 default:
-                    texPath = "Game/Resources/Texture/bottle2.png";
+                    texPaths.Add("Game/Resources/Texture/bottle2.png");
                     meshes.Add(new float[] {
                          //Position         Texture coordinates
                          0.5f,  0.5f, 0.0f, 2.0f, 1.25f, // top right

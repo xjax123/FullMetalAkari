@@ -14,9 +14,9 @@ namespace FullMetalAkari.Game.Objects.Game
     {
         public Barrel(objectData d) : base(d)
         {
-            objectID = "barrel";
+            ObjectID = "barrel";
             name = "Barrel";
-            texPath = "Game/Resources/Texture/barrel.png";
+            texPaths.Add("Game/Resources/Texture/barrel.png");
             meshes.Add(new float[] {
                 //Position         Texture coordinates
                 0.5f,  0.5f, 0.0f, 1.25f, 1.0f, // top right

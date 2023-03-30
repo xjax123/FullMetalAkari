@@ -18,6 +18,7 @@ using Crankshaft.Data;
 using System.Media;
 using FullMetalAkari.Game.Objects.Sounds;
 using Crankshaft.Events;
+using System.Threading;
 
 namespace Crankshaft.Handlers
 {
@@ -35,6 +36,7 @@ namespace Crankshaft.Handlers
         public static MouseState ActiveMouse { get; private set; }
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
+        public static gameObject ActiveHUD { get; set; }
         public static bool DebugDraw { get; set; }
         public static List<gameObject> Cleanup { get; set; } = new List<gameObject>();
         public static gameMusic ActiveMusic { get; set; }
@@ -140,7 +142,7 @@ namespace Crankshaft.Handlers
         {
             base.OnRenderFrame(args);
             
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //Invoke objects to render themsevles
             foreach (gameObject g in ActiveScene.objects)
@@ -161,6 +163,7 @@ namespace Crankshaft.Handlers
             ActiveWindow = this;
             ActiveMouse = this.MouseState;
             ActiveSim = new Simulation();
+            CursorState = CursorState.Hidden;
 
             //loading a debug texture
             renderingHandler.debugHandle = new Error(new objectData()).textures[0].Handle;
@@ -168,9 +171,9 @@ namespace Crankshaft.Handlers
             //Enabling a bunch of openGL nonsense
             GL.Viewport(0, 0, Size.X, Size.Y);
             GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
-            GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.Multisample);
+            GL.Enable(EnableCap.LineSmooth);
             GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
             GL.BlendEquation(BlendEquationMode.FuncAdd);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -184,12 +187,22 @@ namespace Crankshaft.Handlers
 
             //Compile user-defined sound effects
             soundHandler.compileSounds(soundsFilePath);
-            ActiveMusic = new gameMusic(@"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\Music\Loopable - Game lvl music.wav", @"C:\Users\JMGam\source\repos\FullMetalAkari\FullMetalAkari\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
-            ActiveMusic.startSong();
-
+            ActiveMusic = new gameMusic(@"\Game\Resources\Music\Loopable Game lvl music v2.wav", @"\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
+            Thread m = new Thread(new ThreadStart(ActiveMusic.startSong));
+            m.Start();
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);
             sceneHandler.loadScene(intialScene);
+
+            //Load the HUD
+            foreach (gameObject g in windowHandler.ActiveScene.objects)
+            {
+                if (g.ObjectID == "hud")
+                {
+                    ActiveHUD = g;
+                    break;
+                }
+            }
 
             //Load the Simulation
             ActiveSim.onLoad();
@@ -208,6 +221,7 @@ namespace Crankshaft.Handlers
                 }
             }
 
+            
         }
 
         protected override void OnUnload()

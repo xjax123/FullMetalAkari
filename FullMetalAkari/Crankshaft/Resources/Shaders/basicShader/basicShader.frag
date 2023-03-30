@@ -13,8 +13,6 @@ uniform int debug;
 void main()
 {
     vec4 texel = texture(texture0, texCoord);
-    if (texel.a == 0.0)
-        discard;
 
     if (debug == 1)
     {

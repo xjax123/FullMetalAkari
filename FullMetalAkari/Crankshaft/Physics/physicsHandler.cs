@@ -86,7 +86,7 @@ namespace Crankshaft.Physics
                         if (y >= b.aabbmin.Y && y <= b.aabbmax.Y)
                         {
                             o.onClick(b.ID);
-                            break;
+                            return;
                         }
                     }
                 }

@@ -32,7 +32,7 @@ namespace Crankshaft.Handlers
         public static Matrix4 OrthoProjection { get => orthoProjection; set => orthoProjection = value; }
         public static UniVector3 ViewPosition { get => viewPosition; set => viewPosition = value; }
 
-        public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, List<float[]> vertices, List<uint[]> indices, ref List<shaderHandler> shader, string shaderVert, string shaderFrag, ref List<textureHandler> texture, string texPath)
+        public static void basicRender(int vertexArrayObject, int vertexBufferObject, int elementBufferObject, List<float[]> vertices, List<uint[]> indices, ref List<shaderHandler> shader, string shaderVert, string shaderFrag, ref List<textureHandler> texture, List<string> texPath)
         {
             for (int i=0; i < vertices.Count;i++) {
                 string output = "";
@@ -67,7 +67,7 @@ namespace Crankshaft.Handlers
 
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-                texture.Add(textureHandler.LoadFromFile(texPath, TextureUnit.Texture0));
+                texture.Add(textureHandler.LoadFromFile(texPath[i], TextureUnit.Texture0));
                 texture[i].Use(TextureUnit.Texture0);
             }
         }

@@ -22,7 +22,6 @@ namespace Crankshaft.Primitives
         protected string name = "Empty Game Object";
         protected string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
         protected string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
-        protected string texPath = "Crankshaft/Resources/Textures/error_texture.png";
         protected float[] vertices =
         {
            //Position           Texture coordinates
@@ -65,6 +64,9 @@ namespace Crankshaft.Primitives
         public List<uint[]> indexes = new List<uint[]>();
         public List<textureHandler> textures = new List<textureHandler>();
         public List<shaderHandler> shaders = new List<shaderHandler>();
+        public List<bool?> hide = new List<bool?>();
+        public List<string> texPaths = new List<string>();
+        public List<Matrix4> visualScale = new List<Matrix4>();
 
         protected int instanceID;
 
@@ -104,6 +106,7 @@ namespace Crankshaft.Primitives
         public bool Visible { get => visible; set => visible = value; }
         public double Appear { get => appear; set => appear = value; }
         public double Disappear { get => disappear; set => disappear = value; }
+        public string ObjectID { get => objectID; set => objectID = value; }
 
         public gameObject(objectData d)
         {
@@ -138,7 +141,7 @@ namespace Crankshaft.Primitives
 
         public virtual void onClick(int ID)
         {
-            Debug.WriteLine($"Click Registered on: {name} Hotbox ID:{ID}");
+
         }
         //Not Implemented.
         public virtual void onHover()
@@ -156,7 +159,7 @@ namespace Crankshaft.Primitives
                 GL.DeleteProgram(textures[i].Handle);
                 i++;
             }
-            Debug.WriteLine($"{objectID} {InstanceID} Disposed");
+            Debug.WriteLine($"{ObjectID} {InstanceID} Disposed");
         }
 
         public virtual void onLoad()
@@ -173,12 +176,24 @@ namespace Crankshaft.Primitives
             {
                 indexes.Add(indices);
             }
+            for (int x = hide.Count; x < meshes.Count; x++)
+            {
+                hide.Add(false);
+            }
             for (int x = offsets.Count; x < meshes.Count; x++)
             {
                 offsets.Add(Matrix4.Identity);
             }
+            for (int x = texPaths.Count; x < meshes.Count; x++)
+            {
+                texPaths.Add(@"\Crankshaft\Resources\Textures\error_texture.png");
+            }
+            for (int x = visualScale.Count; x < meshes.Count; x++)
+            {
+                visualScale.Add(Matrix4.CreateScale(1));
+            }
             Debug.WriteLine(name);
-            renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes, indexes, ref shaders, shaderVert, shaderFrag, ref textures, texPath);
+            renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes, indexes, ref shaders, shaderVert, shaderFrag, ref textures, texPaths);
             Matrix4 combined;
             int i = 0;
             foreach (Matrix2 c in Colider)
@@ -267,20 +282,25 @@ namespace Crankshaft.Primitives
 
             //rendering object, likely ineffcient to do it this way.
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-
-            if (CurTranslation != Matrix4.Identity)
-            {
-                TrueTranslation = CurTranslation * curScale * curRot;
-            }
-            if (CurRot != Matrix4.Identity)
-            {
-                TrueRot = CurRot;
-            }
             int i = 0;
             foreach (float[] f in meshes) {
+
+                if (CurTranslation != Matrix4.Identity)
+                {
+                    TrueTranslation = CurTranslation * curScale * curRot;
+                }
+                if (CurRot != Matrix4.Identity)
+                {
+                    TrueRot = CurRot;
+                }
+
+                if (hide[i] == true)
+                {
+                    continue;
+                }
                 //setting shader uniforms
                 shaders[i].Use();
-                shaders[i].SetMatrix4("translation", TrueTranslation * offsets[i]);
+                shaders[i].SetMatrix4("translation", TrueTranslation * offsets[i] * visualScale[i]);
                 shaders[i].SetMatrix4("projection", renderingHandler.ProjectionMatrix);
                 shaders[i].SetMatrix4("view", renderingHandler.ViewMatrix);
                 //binding texture & ensuring debug mode draws black lines instead of a texture.
@@ -380,6 +400,7 @@ namespace Crankshaft.Primitives
         }
 
         //important for rendering, otherwise things render all out of order depending on their instanceID, rather than their z cord.
+        //still doesnt seem to completely work, but its an improvement
         public int CompareTo(gameObject compare)
         {
             if (position.Z > compare.position.Z)

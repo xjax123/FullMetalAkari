@@ -36,8 +36,8 @@ namespace FullMetalAkari.Game.Objects.Sounds
 
         public gameMusic(string songPath, string? introPath, string name, loopState loop, byte volume = 50)
         {
-            Path = songPath;
-            Intro = introPath;
+            Path = AppDomain.CurrentDomain.BaseDirectory+ songPath;
+            Intro = AppDomain.CurrentDomain.BaseDirectory+ introPath;
             Name = name;
             Volume = volume;
             Loop = loop;

@@ -23,7 +23,8 @@ namespace FullMetalAkari
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
                 //Multisampling
-                NumberOfSamples = 8
+                NumberOfSamples = 8,
+                SrgbCapable = true
             };
 
             var gameWindowSettings = new GameWindowSettings()

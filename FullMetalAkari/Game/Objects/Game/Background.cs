@@ -13,9 +13,9 @@ namespace FullMetalAkari.Game.Objects.Game
         float[] oldverts;
         public Background(objectData d) : base(d)
         {
-            objectID = "background";
+            ObjectID = "background";
             name = "Background";
-            texPath = "Game/Resources/UI/bg1.png";
+            texPaths.Add("Game/Resources/UI/bg1.png");
             UniVector3 screenpos = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y, 0.0f);
             oldverts = new float[] {
                 //Position         Texture coordinates

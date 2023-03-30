@@ -40,7 +40,7 @@ namespace Crankshaft.Primitives
         public Sound(string path, string name, byte volume = 50)
         {
             player = new WindowsMediaPlayer();
-            Path = path;
+            Path = AppDomain.CurrentDomain.BaseDirectory + path;
             Name = name;
             setVolume(volume);
         }

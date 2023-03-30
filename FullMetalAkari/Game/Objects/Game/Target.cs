@@ -13,12 +13,12 @@ namespace FullMetalAkari.Game.Objects.Game
     {
         public Target(objectData d) : base(d)
         {
-            objectID = "target";
+            ObjectID = "target";
             name = "Target";
             switch (d.Variant)
             {
                 case 1:
-                    texPath = "Game/Resources/Texture/target1.png";
+                    texPaths.Add("Game/Resources/Texture/target1.png");
                     //Bullseye
                     Colider.Add(new Matrix2(0.05f, 0.05f, 0.0f, 0.022f));
                     //Outer Target
@@ -33,7 +33,7 @@ namespace FullMetalAkari.Game.Objects.Game
                     Colider.Add(new Matrix2(0.35f, 0.08f, 0.0f, -0.025f));
                     break;
                 case 2:
-                    texPath = "Game/Resources/Texture/target2.png";
+                    texPaths.Add("Game/Resources/Texture/target2.png");
                     //Outer Target
                     Colider.Add(new Matrix2(0.5f, 0.5f, 0.0f, 0.022f));
                     //Metal Edge

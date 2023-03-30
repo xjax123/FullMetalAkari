@@ -20,7 +20,7 @@ namespace Crankshaft.Data
             X = 0;
             Y = 0;
             Z = 0;
-            Scale = 0;
+            Scale = 1;
             Rotation = 0;
         }
         public override string ToString()

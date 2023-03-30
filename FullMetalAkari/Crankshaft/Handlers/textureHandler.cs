@@ -2,6 +2,7 @@
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using StbImageSharp;
 using System.IO;
+using System;
 
 namespace Crankshaft.Handlers
 {
@@ -21,7 +22,7 @@ namespace Crankshaft.Handlers
 
             StbImage.stbi_set_flip_vertically_on_load(1);
 
-            using (Stream stream = File.OpenRead(path))
+            using (Stream stream = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + path))
             {
                 ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);

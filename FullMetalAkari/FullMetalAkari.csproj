@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -19,12 +18,17 @@
     <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.vert" />
     <None Remove="Crankshaft\Resources\Textures\error_texture.png" />
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
+    <None Remove="Game\Resources\Fonts\GenEiMGothic2-Regular.ttf" />
+    <None Remove="Game\Resources\Music\Fade intro Game lvl music.wav" />
+    <None Remove="Game\Resources\Music\Loopable - Game lvl music.wav" />
+    <None Remove="Game\Resources\Music\Loopable Game lvl music v2.wav" />
     <None Remove="Game\Resources\SFX\exhale 1.mp3" />
     <None Remove="Game\Resources\SFX\exhale 2.mp3" />
     <None Remove="Game\Resources\SFX\exhale 3.mp3" />
     <None Remove="Game\Resources\SFX\exhale 4.mp3" />
     <None Remove="Game\Resources\SFX\exhale1.mp3" />
     <None Remove="Game\Resources\SFX\Game lvl music - Draft 1.wav" />
+    <None Remove="Game\Resources\SFX\Loading.wav" />
     <None Remove="Game\Resources\SFX\Shoot.wav" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
     <None Remove="Game\Resources\Shaders\invertedShader.frag" />
@@ -36,12 +40,14 @@
     <None Remove="Game\Resources\Texture\bottle4.png" />
     <None Remove="Game\Resources\Texture\bullet hole.png" />
     <None Remove="Game\Resources\Texture\bullet.png" />
+    <None Remove="Game\Resources\Texture\gunshot.png" />
     <None Remove="Game\Resources\Texture\Scope_Duplex.png" />
     <None Remove="Game\Resources\Texture\target1.png" />
     <None Remove="Game\Resources\Texture\target2.png" />
     <None Remove="Game\Resources\UI\bg1.png" />
     <None Remove="Game\Resources\UI\bg2.png" />
     <None Remove="Game\Resources\UI\bg3.png" />
+    <None Remove="Game\Resources\UI\bullet1.png" />
     <None Remove="Game\Resources\UI\FadingSteel_HUD_top_layer.png" />
     <None Remove="Game\Scenes\demo.sdta" />
     <None Remove="Game\Scenes\Game_UI.sdta" />
@@ -69,6 +75,15 @@
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Resources\Fonts\GenEiMGothic2-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Music\Fade intro Game lvl music.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Music\Loopable Game lvl music v2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game\Resources\SFX\exhale 1.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -79,6 +94,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\SFX\exhale 4.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\SFX\Loading.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\SFX\Shoot.wav">
@@ -111,6 +129,9 @@
     <Content Include="Game\Resources\Texture\bullet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Resources\Texture\gunshot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game\Resources\UI\bg1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -118,6 +139,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\UI\bg3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\bullet1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\UI\FadingSteel_HUD_top_layer.png">
@@ -146,19 +170,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="OpenTK" Version="4.7.5" />
+    <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="SpriterDotNet" Version="1.6.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BulletSharp">
-      <HintPath>References\BulletSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Resource Include="Game\Resources\Music\Loopable - Game lvl music.wav" />
     <Resource Include="Game\Resources\SFX\exhale1.mp3" />
   </ItemGroup>
 </Project>

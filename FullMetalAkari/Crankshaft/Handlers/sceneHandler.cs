@@ -53,7 +53,6 @@ namespace Crankshaft.Handlers
                 }
                 Scene compScene = new Scene(localScene, intList);
                 windowHandler.ActiveScene = compScene;
-                windowHandler.ActiveScene.objects.Sort();
 
                 foreach (gameObject g in windowHandler.ActiveScene.objects)
                 {
