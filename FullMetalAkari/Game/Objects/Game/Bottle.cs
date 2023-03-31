@@ -119,6 +119,7 @@ namespace FullMetalAkari.Game.Objects.Game
                             temp = Data;
                             temp.Variant = 2;
                             sceneHandler.addObjectToActiveScene(new Bottle(temp));
+                            windowHandler.Score += 1;
                             break;
                         case 3:
                             glassBreak();
@@ -126,6 +127,7 @@ namespace FullMetalAkari.Game.Objects.Game
                             temp = Data;
                             temp.Variant = 2;
                             sceneHandler.addObjectToActiveScene(new Bottle(temp));
+                            windowHandler.Score += 1;
                             break;
                     }
                     break;

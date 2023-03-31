@@ -87,10 +87,7 @@ namespace Crankshaft.Handlers
 
         public static void addObjectToActiveScene(gameObject obj)
         {
-            windowHandler.ActiveScene.objects.Add(obj);
-            int index = windowHandler.ActiveScene.objects.IndexOf(obj);
-            windowHandler.ActiveScene.objects[index].onLoad();
-            windowHandler.ActiveScene.objects.Sort();
+            windowHandler.SafeAdd.Add(obj);
         }
 
     }

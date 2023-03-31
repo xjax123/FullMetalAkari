@@ -19,6 +19,7 @@ using System.Media;
 using FullMetalAkari.Game.Objects.Sounds;
 using Crankshaft.Events;
 using System.Threading;
+using Crankshaft.Animation;
 
 namespace Crankshaft.Handlers
 {
@@ -36,10 +37,14 @@ namespace Crankshaft.Handlers
         public static MouseState ActiveMouse { get; private set; }
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
-        public static gameObject ActiveHUD { get; set; }
+        public static HUD ActiveHUD { get; set; }
         public static bool DebugDraw { get; set; }
         public static List<gameObject> Cleanup { get; set; } = new List<gameObject>();
+        public static List<gameObject> SafeAdd { get; set; } = new List<gameObject>();
         public static gameMusic ActiveMusic { get; set; }
+        public static double Time { get; set; }
+        public static int Score { get; set; } = 0;
+        public static int MaxScore { get; set; } = 27;
 
         //
         // Summary:
@@ -136,12 +141,21 @@ namespace Crankshaft.Handlers
             //Call Music Onupdate Functions for active song
             ActiveMusic.onUpdate();
 
+            foreach (gameObject g in SafeAdd)
+            {
+                windowHandler.ActiveScene.objects.Add(g);
+                int index = windowHandler.ActiveScene.objects.IndexOf(g);
+                windowHandler.ActiveScene.objects[index].onLoad();
+                windowHandler.ActiveScene.objects.Sort();
+            }
+
+            SafeAdd = new List<gameObject>();
             Cleanup = new List<gameObject>();
         }
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
-            
+            Time += args.Time;
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //Invoke objects to render themsevles
@@ -151,6 +165,7 @@ namespace Crankshaft.Handlers
                 g.onRenderFrame();
             }
 
+            textCreator.renderText();
 
             SwapBuffers();
         }
@@ -178,18 +193,22 @@ namespace Crankshaft.Handlers
             GL.BlendEquation(BlendEquationMode.FuncAdd);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-            //CursorState = CursorState.Hidden;
+            //Setting Matricies
             renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             renderingHandler.ViewPosition = new UniVector3(0.0f, 0.0f,-3.0f);
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
 
+            //Load The Text Dictionary
+            textCreator.loadDictionary();
+
             //Compile user-defined sound effects
             soundHandler.compileSounds(soundsFilePath);
             ActiveMusic = new gameMusic(@"\Game\Resources\Music\Loopable Game lvl music v2.wav", @"\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
             Thread m = new Thread(new ThreadStart(ActiveMusic.startSong));
             m.Start();
+
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);
             sceneHandler.loadScene(intialScene);
@@ -199,7 +218,7 @@ namespace Crankshaft.Handlers
             {
                 if (g.ObjectID == "hud")
                 {
-                    ActiveHUD = g;
+                    ActiveHUD = (HUD) g;
                     break;
                 }
             }
@@ -220,8 +239,6 @@ namespace Crankshaft.Handlers
                     InputEvents.keyboardRelease += g.c_ReleaseEvents;
                 }
             }
-
-            
         }
 
         protected override void OnUnload()

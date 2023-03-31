@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <ApplicationIcon />
     <StartupObject>FullMetalAkari.Program</StartupObject>
     <SignAssembly>false</SignAssembly>
@@ -18,7 +19,20 @@
     <None Remove="Crankshaft\Resources\Shaders\basicShader\basicShader.vert" />
     <None Remove="Crankshaft\Resources\Textures\error_texture.png" />
     <None Remove="Crankshaft\Resources\Textures\Minecraft_missing_texture_block.svg.png" />
+    <None Remove="Game\Resources\Fonts\%25-Text.png" />
+    <None Remove="Game\Resources\Fonts\0-Text.png" />
+    <None Remove="Game\Resources\Fonts\1-Text.png" />
+    <None Remove="Game\Resources\Fonts\2-Text.png" />
+    <None Remove="Game\Resources\Fonts\3-Text.png" />
+    <None Remove="Game\Resources\Fonts\4-Text.png" />
+    <None Remove="Game\Resources\Fonts\5-Text.png" />
+    <None Remove="Game\Resources\Fonts\6-Text.png" />
+    <None Remove="Game\Resources\Fonts\7-Text.png" />
+    <None Remove="Game\Resources\Fonts\8-Text.png" />
+    <None Remove="Game\Resources\Fonts\9-Text.png" />
     <None Remove="Game\Resources\Fonts\GenEiMGothic2-Regular.ttf" />
+    <None Remove="Game\Resources\Fonts\No Wind-Text.png" />
+    <None Remove="Game\Resources\Fonts\Slash-Text.png" />
     <None Remove="Game\Resources\Music\Fade intro Game lvl music.wav" />
     <None Remove="Game\Resources\Music\Loopable - Game lvl music.wav" />
     <None Remove="Game\Resources\Music\Loopable Game lvl music v2.wav" />
@@ -44,9 +58,12 @@
     <None Remove="Game\Resources\Texture\Scope_Duplex.png" />
     <None Remove="Game\Resources\Texture\target1.png" />
     <None Remove="Game\Resources\Texture\target2.png" />
+    <None Remove="Game\Resources\UI\akari-rig-setup_new.png" />
     <None Remove="Game\Resources\UI\bg1.png" />
     <None Remove="Game\Resources\UI\bg2.png" />
     <None Remove="Game\Resources\UI\bg3.png" />
+    <None Remove="Game\Resources\UI\breath100.png" />
+    <None Remove="Game\Resources\UI\breathback.png" />
     <None Remove="Game\Resources\UI\bullet1.png" />
     <None Remove="Game\Resources\UI\FadingSteel_HUD_top_layer.png" />
     <None Remove="Game\Scenes\demo.sdta" />
@@ -75,7 +92,46 @@
     <Content Include="Crankshaft\Resources\Textures\error_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Resources\Fonts\%-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\0-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\1-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\2-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\3-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\4-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\5-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\6-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\7-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\8-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\9-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game\Resources\Fonts\GenEiMGothic2-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\No Wind-Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\Fonts\Slash-Text.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\Music\Fade intro Game lvl music.wav">
@@ -132,6 +188,9 @@
     <Content Include="Game\Resources\Texture\gunshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Game\Resources\UI\akari-rig-setup_new.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game\Resources\UI\bg1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -139,6 +198,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\UI\bg3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\breath100.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game\Resources\UI\breathback.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\UI\bullet1.png">

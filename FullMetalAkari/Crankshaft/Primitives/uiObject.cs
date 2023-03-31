@@ -8,7 +8,7 @@ using Crankshaft.Data;
 
 namespace Crankshaft.Primitives
 {
-    class uiObject : gameObject
+    public class uiObject : gameObject
     {
         //UI specific variables
         public uiObject(objectData d) : base(d)

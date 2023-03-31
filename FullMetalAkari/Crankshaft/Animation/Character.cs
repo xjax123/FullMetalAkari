@@ -1,15 +1,17 @@
-﻿using OpenTK.Mathematics;
+﻿using Crankshaft.Handlers;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Crankshaft.Animation
 {
-    struct Character
+    public struct Character
     {
-        uint TextureHandle { get; set; }
-        Vector2 Size { get; set; }
-        Vector2 Bearing { get; set; }
-        uint Advance { get; set; }
+        public textureHandler Texture { get; set; }
+        public shaderHandler Shader { get; set; }
+        public Vector3 Position { get; set; }
+        public float Scale { get; set; }
+        public float Rotation { get; set; }
     }
 }

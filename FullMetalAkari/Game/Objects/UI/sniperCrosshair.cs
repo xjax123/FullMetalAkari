@@ -22,6 +22,18 @@ namespace FullMetalAkari.Game.Objects.UI
         public static int bullets = bulletMax;
         UniVector3 offset = new UniVector3(0, 0, 0);
 
+        private enum BreathStatus
+        {
+            Holding,
+            Released,
+            Choking
+        };
+
+        BreathStatus holdingBreath = BreathStatus.Released;
+        float breath = 100;
+        float breathMax = 2f;
+        Phrase breathPercent;
+
         /*
         protected int scopeFBO;
         protected string scopeFrag = "Game/Resources/Shaders/invertedShader.frag";
@@ -36,6 +48,7 @@ namespace FullMetalAkari.Game.Objects.UI
         Animations sway;
         double lastShot = 1;
         float swayScale = 0.2f;
+        private bool reloading;
 
         public sniperCrosshair(objectData d) : base(d)
         {
@@ -83,6 +96,10 @@ namespace FullMetalAkari.Game.Objects.UI
             sway.Loop = true;
             animations.Add(sway);
             sway.Scale = swayScale;
+
+            breathPercent = new Phrase();
+            breathPercent.changePhrase("100%", new Vector3(-8.8f,-11.13f,0), 0.1f,0);
+            textCreator.renderTargets.Add(breathPercent);
         }
 
         public override void onLoad()
@@ -109,7 +126,7 @@ namespace FullMetalAkari.Game.Objects.UI
 
         public override void onRenderFrame()
         {
-
+            //Scope Zoom (Not Working)
             /*
             //calculating view matrix for the scope picture
             UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);
@@ -159,6 +176,51 @@ namespace FullMetalAkari.Game.Objects.UI
 
         public override void onUpdateFrame(double time)
         {
+            if ( holdingBreath == BreathStatus.Holding)
+            {
+                if ((breath - (time / breathMax) * 100) > 0)
+                {
+                    breath -= (float)(time / breathMax) * 100;
+                } else
+                {
+                    breath = 0;
+                    holdingBreath = BreathStatus.Choking;
+                    sway.Scale = swayScale*3;
+                    sway.Speed = 1.75f;
+                }
+            } else
+            {
+                 if ( breath < 100)
+                {
+                    if (holdingBreath != BreathStatus.Choking)
+                    {
+                        breath += (float)(time/(breathMax)) * 100;
+                    } else
+                    {
+                        breath += (float)(time/(breathMax*1.5)) * 100;
+                    }
+                } else if ( breath > 100)
+                {
+                    breath = 100;
+                }
+                if (holdingBreath == BreathStatus.Choking && breath == 100)
+                {
+                    holdingBreath = BreathStatus.Released;
+                    sway.Scale = swayScale;
+                    sway.Speed = 1;
+                }
+            }
+            if (breath == 100)
+            {
+                breathPercent.changePhrase($"{Math.Ceiling(breath)}%", new Vector3(-8.8f, -11.13f, 0), 0.1f, 0);
+            } else if (breath < 100 && breath > 9)
+            {
+                breathPercent.changePhrase($"{Math.Ceiling(breath)}%", new Vector3(-8.6f, -11.13f, 0), 0.1f, 0);
+            } else if ( breath <= 9)
+            {
+                breathPercent.changePhrase($"{Math.Ceiling(breath)}%", new Vector3(-8.4f, -11.13f, 0), 0.1f, 0);
+            }
+            windowHandler.ActiveHUD.meterChange(breath);
         }
 
         public override void c_MouseEvents(object sender, MouseEventArgs e)
@@ -179,9 +241,9 @@ namespace FullMetalAkari.Game.Objects.UI
                 }
                 if (bullets >= 0)
                 {
-                    windowHandler.ActiveHUD.hide[bullets+1] = true;
+                    windowHandler.ActiveHUD.hide[bullets+5] = true;
                 }
-                if (bullets <= 0)
+                if (bullets <= 0 && reloading == false)
                 {
                     Thread t = new Thread(new ThreadStart(reload));
                     t.Start();
@@ -191,28 +253,38 @@ namespace FullMetalAkari.Game.Objects.UI
 
         private void reload()
         {
+            reloading = true;
             Thread.Sleep(1000);
             load.Play();
             Thread.Sleep(1000);
             bullets = bulletMax;
             for (int i = 0; i < bulletMax; i++)
             {
-                windowHandler.ActiveHUD.hide[i+1] = false;
+                windowHandler.ActiveHUD.hide[i+5] = false;
             }
+            reloading = false;
         }
 
         public override void c_PressEvents(object sender, KeyboardEventArgs e)
         {
             if (e.key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space)
             {
-                sway.Scale = 0.05f;
+                if (holdingBreath != BreathStatus.Choking)
+                {
+                    sway.Scale = 0.02f;
+                    holdingBreath = BreathStatus.Holding;
+                }
             }
         }
         public override void c_ReleaseEvents(object sender, KeyboardEventArgs e)
         {
             if (e.key == OpenTK.Windowing.GraphicsLibraryFramework.Keys.Space)
             {
-                sway.Scale = swayScale;
+                if (holdingBreath != BreathStatus.Choking)
+                {
+                    sway.Scale = swayScale;
+                    holdingBreath = BreathStatus.Released;
+                }
             }
         }
     }

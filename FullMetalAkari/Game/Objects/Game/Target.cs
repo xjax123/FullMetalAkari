@@ -67,6 +67,7 @@ namespace FullMetalAkari.Game.Objects.Game
                         objectData temp = Data;
                         temp.Variant = 2;
                         sceneHandler.addObjectToActiveScene(new Target(temp));
+                        windowHandler.Score += 1;
                     }
                     else
                     {

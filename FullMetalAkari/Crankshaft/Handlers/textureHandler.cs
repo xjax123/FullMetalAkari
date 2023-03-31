@@ -6,7 +6,7 @@ using System;
 
 namespace Crankshaft.Handlers
 {
-    public class textureHandler
+    public class textureHandler : IDisposable
     {
         private static int activeHandle;
         public readonly int Handle;
@@ -49,6 +49,11 @@ namespace Crankshaft.Handlers
             ActiveHandle = Handle;
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Handle);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteTexture(ActiveHandle);
         }
     }
 }

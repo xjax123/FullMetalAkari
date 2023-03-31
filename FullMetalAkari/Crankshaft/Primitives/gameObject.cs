@@ -30,7 +30,7 @@ namespace Crankshaft.Primitives
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
         };
-        protected static readonly uint[] indices =
+        protected readonly uint[] indices =
         {
             0, 1, 3,
             1, 2, 3
@@ -126,6 +126,11 @@ namespace Crankshaft.Primitives
                 Appear = (double)d.Timing.AppearTime;
                 Disappear = (double)d.Timing.DisappearTime;
             } else
+            {
+                visible = true;
+            }
+
+            if (windowHandler.Time > appear && windowHandler.Time < disappear)
             {
                 visible = true;
             }
@@ -227,10 +232,9 @@ namespace Crankshaft.Primitives
                 i++;
             }
         }
-
         public virtual void onUpdateFrame(double time)
         {
-            if (time > appear && visible != true && Data.Timing != null)
+            if (windowHandler.Time > appear && visible != true && Data.Timing != null)
             {
                 visible = true;
             }
@@ -323,7 +327,6 @@ namespace Crankshaft.Primitives
                     }
                 } else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
                 {
-                    renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes[i], indexes[i], PrimitiveType.LineLoop);
                 } else
                 {
                     renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes[i], indexes[i], PrimitiveType.Triangles);

@@ -60,13 +60,6 @@ namespace Crankshaft.Handlers
                 GL.EnableVertexAttribArray(texCoordLoc);
                 GL.VertexAttribPointer(texCoordLoc, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
                 texture.Add(textureHandler.LoadFromFile(texPath[i], TextureUnit.Texture0));
                 texture[i].Use(TextureUnit.Texture0);
             }

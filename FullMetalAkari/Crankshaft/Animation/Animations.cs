@@ -17,10 +17,12 @@ namespace Crankshaft.Animation
         protected bool loop;
         protected bool playing;
         private float scale = 1;
+        private float speed = 1;
         public UniVector3 Position { get => position; set => position = value; }
         public bool Loop { get => loop; set => loop = value; }
         public bool Playing { get => playing; set => playing = value; }
         public float Scale { get => scale; set => scale = value; }
+        public float Speed { get => speed; set => speed = value; }
 
         public Animations(Keyframe[] keyframes)
         {
@@ -55,7 +57,7 @@ namespace Crankshaft.Animation
                 return;
             }
 
-            duration += (float) time;
+            duration += (float) time*speed;
             if (duration > keys[currentKey].Time)
             {
                 if (keys.Count-1 < currentKey+1 && loop != true)

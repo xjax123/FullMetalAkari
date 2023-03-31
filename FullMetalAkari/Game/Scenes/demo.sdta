@@ -2,7 +2,7 @@
 	"sceneID": "demo",
 	"type": "game",
 	"nextScene": "demo",
-	"sceneName": "Full Metal Akari - Test",
+	"sceneName": "Full Metal Akari - Demo",
 	"StartingMusic": "Game lvl music - Draft 1",
 	"objects": [
 		{
@@ -20,27 +20,35 @@
 		},
 		{
 			"instanceID": "2",
-			"type": "tallhill",
+			"type": "bottle",
 			"mass": 1,
 			"position": {
-				"X": "0",
-				"Y": "0",
-				"Z": "-10",
+				"X": "-5.7",
+				"Y": "1.3",
+				"Z": "-5.1",
 				"scale": "1",
 				"rotation": "0"
 			},
-			"clickable": false
+			"Timing": {
+				"AppearTime": 45,
+				"DisappearTime": 65
+			},
+			"Variant": 1
 		},
 		{
 			"instanceID": "3",
 			"type": "target",
 			"mass": 1,
 			"position": {
-				"X": "-1",
-				"Y": "-0.6",
-				"Z": "-3",
+				"X": "-5",
+				"Y": "1.4",
+				"Z": "-5.1",
 				"scale": "1",
 				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 120,
+				"DisappearTime": 140
 			},
 			"Variant": 1
 		},
@@ -49,16 +57,271 @@
 			"type": "target",
 			"mass": 1,
 			"position": {
-				"X": "0.8",
-				"Y": "-0.55",
-				"Z": "-3",
+				"X": "-4",
+				"Y": "1.1",
+				"Z": "-5.1",
 				"scale": "1",
 				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 140,
+				"DisappearTime": 160
 			},
 			"Variant": 1
 		},
 		{
-			"instanceID": "3",
+			"instanceID": "5",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "-3",
+				"Y": "0.9",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 10,
+				"DisappearTime": 30
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "6",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "-2",
+				"Y": "1.2",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 50,
+				"DisappearTime": 70
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "7",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "-2",
+				"Y": "1.5",
+				"Z": "-8.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 135,
+				"DisappearTime": 155
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "8",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "-0.9",
+				"Y": "0.9",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 70,
+				"DisappearTime": 90
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "9",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "0.1",
+				"Y": "0.85",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 115,
+				"DisappearTime": 135
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "10",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "1",
+				"Y": "0.8",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 20,
+				"DisappearTime": 40
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "11",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "1.5",
+				"Y": "0.7",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 60,
+				"DisappearTime": 80
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "12",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "2",
+				"Y": "0.8",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 75,
+				"DisappearTime": 95
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "13",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "2.5",
+				"Y": "1",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 130,
+				"DisappearTime": 150
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "14",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "3",
+				"Y": "1",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 55,
+				"DisappearTime": 75
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "15",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "4",
+				"Y": "0.9",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 40,
+				"DisappearTime": 60
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "16",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "4.7",
+				"Y": "0.8",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 110,
+				"DisappearTime": 130
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "17",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "5.8",
+				"Y": "0.5",
+				"Z": "-5.1",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 35,
+				"DisappearTime": 55
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "18",
+			"type": "tallhill",
+			"mass": 1,
+			"position": {
+				"X": "0",
+				"Y": "0",
+				"Z": "-5",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"clickable": false
+		},
+		{
+			"instanceID": "19",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "-3",
+				"Y": "-0.3",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 65,
+				"DisappearTime": 85
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "20",
 			"type": "target",
 			"mass": 1,
 			"position": {
@@ -68,23 +331,167 @@
 				"scale": "1",
 				"rotation": "0"
 			},
+			"Timing": {
+				"AppearTime": 125,
+				"DisappearTime": 145
+			},
 			"Variant": 1
 		},
 		{
-			"instanceID": "4",
+			"instanceID": "21",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "-1.5",
+				"Y": "-0.6",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 105,
+				"DisappearTime": 125
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "22",
 			"type": "target",
 			"mass": 1,
 			"position": {
-				"X": "2",
+				"X": "-1",
+				"Y": "-0.6",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 95,
+				"DisappearTime": 115
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "23",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "-0.7",
+				"Y": "-0.8",
+				"Z": "-4.9",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 25,
+				"DisappearTime": 45
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "24",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "0",
+				"Y": "-0.7",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 15,
+				"DisappearTime": 35
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "25",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "0.8",
+				"Y": "-0.55",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 85,
+				"DisappearTime": 105
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "26",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "1.5",
 				"Y": "-0.4",
 				"Z": "-3",
 				"scale": "1",
 				"rotation": "0"
 			},
+			"Timing": {
+				"AppearTime": 100,
+				"DisappearTime": 120
+			},
 			"Variant": 1
 		},
 		{
-			"instanceID": "5",
+			"instanceID": "27",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "2.3",
+				"Y": "-0.2",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 90,
+				"DisappearTime": 110
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "28",
+			"type": "bottle",
+			"mass": 1,
+			"position": {
+				"X": "3",
+				"Y": "-0.2",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 30,
+				"DisappearTime": 50
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "29",
+			"type": "target",
+			"mass": 1,
+			"position": {
+				"X": "4",
+				"Y": "-0.5",
+				"Z": "-3",
+				"scale": "1",
+				"rotation": "0"
+			},
+			"Timing": {
+				"AppearTime": 80,
+				"DisappearTime": 100
+			},
+			"Variant": 1
+		},
+		{
+			"instanceID": "30",
 			"type": "shorthill",
 			"mass": 1,
 			"position": {

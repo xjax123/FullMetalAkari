@@ -11,7 +11,7 @@ using OpenTK.Mathematics;
 
 namespace Crankshaft.Handlers
 {
-    public class shaderHandler
+    public class shaderHandler : IDisposable
     {
         public readonly int Handle;
 
@@ -122,6 +122,11 @@ namespace Crankshaft.Handlers
             }
             GL.UseProgram(Handle);
             GL.Uniform1(uniformLocations[name], fakeBool);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteShader(Handle);
         }
     }
 }
