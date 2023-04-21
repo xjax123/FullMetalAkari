@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using System.Threading.Channels;
+using Crankshaft.Handlers;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Graphics.OpenGL;
@@ -75,7 +77,7 @@ namespace Crankshaft.Primitives
         /// <param name="volume">Volume of the sound</param>
         /// <param name="loopState">Whether the sound should loop or not</param>
         public Sound(string path, string name, int volume, bool loopState)
-        {
+        {   
             buffer = AL.GenBuffer();
             source = AL.GenSource();
             this.path = path;
@@ -88,9 +90,14 @@ namespace Crankshaft.Primitives
 
         public virtual void Play()
         {
-            AL.BufferData(buffer,GetSoundFormat(channels, bytes), buffer, soundData.Length, samples);
-        }
+            Debug.WriteLine("Playing sound: " + name);
+            Debug.WriteLine($"{buffer}, {soundData.Length}, {GetSoundFormat(channels, bytes)}, {samples}");
+            AL.BufferData<byte>(buffer, GetSoundFormat(channels, bytes), soundData, samples);
+            soundHandler.CheckALError($"{name} Bufferdata Set");
 
+            AL.Source(source, ALSourcei.Buffer, buffer);
+            AL.SourcePlay(source);
+        }
         public virtual void Pause()
         {
         }
@@ -123,9 +130,32 @@ namespace Crankshaft.Primitives
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
-
+            Debug.WriteLine($"Loading Sound: {name}");
             using (BinaryReader reader = new BinaryReader(stream))
             {
+                // RIFF header
+                string signature = new string(reader.ReadChars(4));
+                if (signature != "RIFF")
+                    throw new NotSupportedException("Specified stream is not a wave file.");
+
+                int riff_chunck_size = reader.ReadInt32();
+
+                string format = new string(reader.ReadChars(4));
+                if (format != "WAVE")
+                    throw new NotSupportedException("Specified stream is not a wave file.");
+
+                // WAVE header
+                string format_signature = new string(reader.ReadChars(4));
+                if (format_signature == "JUNK")
+                {
+                    while (format_signature != "fmt ")
+                    {
+                        format_signature = new string(reader.ReadChars(4));
+                    }
+                }
+                if (format_signature != "fmt ")
+                    throw new NotSupportedException("Specified wave file is not supported.");
+
                 int format_chunk_size = reader.ReadInt32();
                 int audio_format = reader.ReadInt16();
                 int num_channels = reader.ReadInt16();
@@ -144,7 +174,7 @@ namespace Crankshaft.Primitives
                 bytesPerSample = bits_per_sample;
                 sampleRate = sample_rate;
 
-                return reader.ReadBytes((int)reader.BaseStream.Length);
+                return reader.ReadBytes((int)reader.BaseStream.Length -2);
             }
         }
     }

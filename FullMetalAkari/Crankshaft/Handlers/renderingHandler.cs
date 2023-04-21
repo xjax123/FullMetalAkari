@@ -40,7 +40,6 @@ namespace Crankshaft.Handlers
                 {
                     output += $"{f}, ";
                 }
-                Debug.WriteLine(output);
                 GL.BindVertexArray(vertexArrayObject);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
@@ -49,7 +48,7 @@ namespace Crankshaft.Handlers
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, elementBufferObject);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, indices[i].Length * sizeof(uint), indices[i], BufferUsageHint.StaticDraw);
 
-                shader.Add(new shaderHandler(shaderVert, shaderFrag));
+                shader.Add(new shaderHandler(AppDomain.CurrentDomain.BaseDirectory + shaderVert, AppDomain.CurrentDomain.BaseDirectory + shaderFrag));
                 shader[i].Use();
 
                 var vertexLoc = shader[i].GetAttribLocation("aPosition");

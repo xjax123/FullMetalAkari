@@ -1,4 +1,5 @@
 ﻿using Crankshaft.Primitives;
+using OpenTK.Audio.OpenAL;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,29 +19,35 @@ namespace Crankshaft.Handlers
             SoundLibrary = new Dictionary<string, Sound>();
             string[] wavFiles = Directory.GetFiles(
             AppDomain.CurrentDomain.BaseDirectory + dirPath, "*.wav");
-            string[] mp3Files = Directory.GetFiles(
-            AppDomain.CurrentDomain.BaseDirectory + dirPath, "*.mp3");
-
             foreach (string s in wavFiles)
             {
                 int index = s.LastIndexOf("\\");
                 string name = s.Substring(index+1);
                 index = name.LastIndexOf(".");
                 name = name.Substring(0,index);
-                Debug.WriteLine(name);
-                SoundLibrary.Add(name, new Sound(s, name));
+                Debug.WriteLine(name.ToLower());
+                SoundLibrary.Add(name.ToLower(), new Sound(s, name.ToLower()));
             }
-            foreach (string s in mp3Files)
+
+        }
+
+        public static Sound retrieveSound(string name)
+        {
+            bool attempt = soundLibrary.TryGetValue(name.ToLower(), out Sound sound);
+            if (!attempt)
             {
-                int index = s.LastIndexOf("\\");
-                string name = s.Substring(index + 1);
-                index = name.LastIndexOf(".");
-                name = name.Substring(0, index);
-                Debug.WriteLine(name);
-                SoundLibrary.Add(name, new Sound(s, name));
+                throw new FileNotFoundException(name);
             }
+            return sound;
+        }
 
-
+        public static void CheckALError(string str)
+        {
+            ALError error = AL.GetError();
+            if (error != ALError.NoError)
+            {
+                Debug.WriteLine($"ALError at '{str}': {AL.GetErrorString(error)}");
+            }
         }
     }
 }

@@ -48,6 +48,36 @@ namespace Crankshaft.Physics
             return WCposition;
         }
 
+        //TODO: Fix This
+        /*
+        public Vector3 Unproject(Vector3 source, Matrix4 world)
+        {
+            Matrix4 projection, view;
+            projection = renderingHandler.ProjectionMatrix;
+            view = renderingHandler.ViewMatrix;
+
+
+            Matrix4 matrix = Matrix4.Invert(world * view * projection);
+            source.X = (((source.X - this.X) / ((float)this.Width)) * 2f) - 1f;
+            source.Y = -((((source.Y - this.Y) / ((float)this.Height)) * 2f) - 1f);
+            source.Z = (source.Z - this.MinDepth) / (this.MaxDepth - this.MinDepth);
+            Vector4 source4 = new Vector4(source, 1f);
+            Vector4 vector = source4 * matrix;
+            float a = (((source4.X * matrix.M14) + (source4.Y * matrix.M24)) + (source4.Z * matrix.M34)) + matrix.M44;
+            if (!WithinEpsilon(a, 1f))
+            {
+                vector = (Vector4)(vector / a);
+            }
+            return vector.Xyz;
+        }
+        */
+
+        private static bool WithinEpsilon(float a, float b)
+        {
+            float num = a - b;
+            return ((-1.401298E-45f <= num) && (num <= float.Epsilon));
+        }
+
         public static BoundRigidBody createRigidBody(UniMatrix transform, CollisionShape shape, gameObject obj, int iD, Matrix2 Col, float mass = 0)
         {
             //rigidbody is dynamic if and only if mass is non zero, otherwise static

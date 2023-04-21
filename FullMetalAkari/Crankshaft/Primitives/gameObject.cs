@@ -20,8 +20,8 @@ namespace Crankshaft.Primitives
         //Overwrite/Hide this Data as needed, preferably in the constructor.
         protected string objectID = "empty";
         protected string name = "Empty Game Object";
-        protected string shaderVert = "Crankshaft/Resources/Shaders/basicShader/basicShader.vert";
-        protected string shaderFrag = "Crankshaft/Resources/Shaders/basicShader/basicShader.frag";
+        protected string shaderVert = @"Game\Resources\Shaders\ScopeShader.vert";
+        protected string shaderFrag = @"Game\Resources\Shaders\ScopeShader.frag";
         protected float[] vertices =
         {
            //Position           Texture coordinates
@@ -197,7 +197,6 @@ namespace Crankshaft.Primitives
             {
                 visualScale.Add(Matrix4.CreateScale(1));
             }
-            Debug.WriteLine(name);
             renderingHandler.basicRender(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes, indexes, ref shaders, shaderVert, shaderFrag, ref textures, texPaths);
             Matrix4 combined;
             int i = 0;
@@ -231,6 +230,7 @@ namespace Crankshaft.Primitives
                 }
                 i++;
             }
+            Debug.WriteLine($"{name} : {instanceID} loaded");
         }
         public virtual void onUpdateFrame(double time)
         {
@@ -283,11 +283,24 @@ namespace Crankshaft.Primitives
             {
                 return;
             }
+            //Pass 1
+            renderFrame(1);
+            //Pass 2
+            renderFrame(2);
 
-            //rendering object, likely ineffcient to do it this way.
+            //resetting current translation to identity.
+            CurTranslation = Matrix4.Identity;
+            CurRot = Matrix4.Identity;
+        }
+
+        protected virtual void renderFrame(int pass)
+        {
+
+            //rendering object, likely wildly ineffcient to do it this way.
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             int i = 0;
-            foreach (float[] f in meshes) {
+            foreach (float[] f in meshes)
+            {
 
                 if (CurTranslation != Matrix4.Identity)
                 {
@@ -307,12 +320,30 @@ namespace Crankshaft.Primitives
                 shaders[i].SetMatrix4("translation", TrueTranslation * offsets[i] * visualScale[i]);
                 shaders[i].SetMatrix4("projection", renderingHandler.ProjectionMatrix);
                 shaders[i].SetMatrix4("view", renderingHandler.ViewMatrix);
+                shaders[i].SetInt("pass", pass);
+                shaders[i].SetMatrix4("zoomedView", windowHandler.ActiveScope.zoomView);
+                Vector2 mousePos = new Vector2(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y);
+                shaders[i].SetVector2("mousePos", mousePos);
+                Vector2 viewportDims = new Vector2(windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y);
+                shaders[i].SetVector2("viewportDims", viewportDims);
+                shaders[i].SetFloat("scopeRadius",0.1f);
+
+                if (this is uiObject)
+                {
+                    shaders[i].SetBool("UI", true);
+                }
+                else
+                {
+                    shaders[i].SetBool("UI", false);
+                }
+
                 //binding texture & ensuring debug mode draws black lines instead of a texture.
                 if (textureHandler.ActiveHandle != textures[i].Handle && windowHandler.DebugDraw == false)
                 {
                     textures[i].Use(TextureUnit.Texture0);
                     shaders[i].SetBool("debug", false);
-                } else if (windowHandler.DebugDraw == true)
+                }
+                else if (windowHandler.DebugDraw == true)
                 {
                     shaders[i].SetBool("debug", true);
                     GL.ActiveTexture(TextureUnit.Texture0);
@@ -325,17 +356,16 @@ namespace Crankshaft.Primitives
                     {
                         renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, b.verts, b.ind, PrimitiveType.LineLoop);
                     }
-                } else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
+                }
+                else if (windowHandler.DebugDraw == true && Rigid.Count == 0)
                 {
-                } else
+                }
+                else
                 {
                     renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, meshes[i], indexes[i], PrimitiveType.Triangles);
                 }
                 i++;
             }
-            //resetting current translation to identity.
-            CurTranslation = Matrix4.Identity;
-            CurRot = Matrix4.Identity;
         }
 
         public virtual void translateObject(Vector3 translation)

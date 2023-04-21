@@ -16,11 +16,14 @@ using System.Threading;
 
 namespace FullMetalAkari.Game.Objects.UI
 {
-    class sniperCrosshair : uiObject
+    public class sniperCrosshair : uiObject
     {
         public static int bulletMax = 12;
         public static int bullets = bulletMax;
-        UniVector3 offset = new UniVector3(0, 0, 0);
+        public UniVector3 offset = new UniVector3(0, 0, 0);
+        public float zoom = 0;
+        public Matrix4 zoomView;
+        public UniVector3 normOffset;
 
         private enum BreathStatus
         {
@@ -60,8 +63,8 @@ namespace FullMetalAkari.Game.Objects.UI
             subscription.InputEvents = true;
 
             //Setting Sounds
-            shot = new Sound(@"\Game\Resources\SFX\Shoot.wav", "Shoot", 60);
-            load = new Sound(@"\Game\Resources\SFX\Loading.wav", "Load", 60);
+            shot = soundHandler.retrieveSound("Shoot");
+            load = soundHandler.retrieveSound("Loading");
 
             //Setting Animations
             Keyframe[] r = { new Keyframe(0.1f,new UniVector3(0,1,0)), new Keyframe(0.3f, new UniVector3(0, 0, 0)) };
@@ -104,6 +107,11 @@ namespace FullMetalAkari.Game.Objects.UI
 
         public override void onLoad()
         {
+            UniVector3 v = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, 0);
+            v.Z = zoom;
+            v.Xy *= (3 + v.Z) * -1;
+            zoomView = Matrix4.CreateTranslation(v);
+
             base.onLoad();
             sway.playAnimation();
         }
@@ -121,55 +129,16 @@ namespace FullMetalAkari.Game.Objects.UI
             {
                 offset += a.Position;
             }
+            normOffset = offset - position;
             setTranslation(offset);
         }
 
         public override void onRenderFrame()
         {
-            //Scope Zoom (Not Working)
-            /*
-            //calculating view matrix for the scope picture
-            UniVector3 worldspaceMouse = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, -1.0f);
-            scopeView = Matrix4.CreateTranslation(worldspaceMouse.X * (3 - position.Z), worldspaceMouse.Y * (3 - position.Z), -0.0f);
-            renderingHandler.ViewPosition = new UniVector3(worldspaceMouse.X * (3 - position.Z), worldspaceMouse.Y * (3 - position.Z), -3.0f);
-            renderingHandler.ViewMatrix = Matrix4.CreateTranslation(renderingHandler.ViewPosition);
-
-            //setting up frame buffers
-            scopeFBO = GL.GenFramebuffer();
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, scopeFBO);
-
-            frameTex = new textureHandler(GL.GenTexture());
-            frameTex.Use(TextureUnit.Texture0);
-
-            //Creating Empty texture to write to
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            //binding current frame buffer image to texture.
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.Color, TextureTarget.Texture2D, frameTex.Handle, 0);
-
-            //Setting Uniforms
-            Shader.Use();
-            Shader.SetMatrix4("translation", TrueTranslation);
-            Shader.SetMatrix4("projection", renderingHandler.ProjectionMatrix);
-            Shader.SetMatrix4("view", scopeView);
-
-            //Rendering scope picture to frame buffer
-            renderingHandler.DrawScene(vertexArrayObject, vertexBufferObject, elementBufferObject, vertices, indices, PrimitiveType.Triangles);
-
-            //Displaying texture to screen
-            GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer,0);
-            GL.BlitFramebuffer(0,0, windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y,0, 0, windowHandler.ActiveWindow.Size.X, windowHandler.ActiveWindow.Size.Y,ClearBufferMask.ColorBufferBit,BlitFramebufferFilter.Nearest);
-
-            //deleting frame buffer and rebinding to the default buffer
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Clear(ClearBufferMask.DepthBufferBit);
-            GL.Clear(ClearBufferMask.StencilBufferBit);
-            GL.DeleteTexture(frameTex.Handle);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.DeleteFramebuffer(scopeFBO);
-            */
+            UniVector3 v = physicsHandler.ConvertScreenToWorldSpaceVec3(windowHandler.ActiveMouse.X, windowHandler.ActiveMouse.Y, 0);
+            v.Z = zoom;
+            v.Xy *= (3 + v.Z) * -1;
+            zoomView = Matrix4.CreateTranslation(v);
 
             base.onRenderFrame();
         }

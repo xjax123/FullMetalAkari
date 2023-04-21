@@ -10,6 +10,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Audio;
 //Internal
 using Crankshaft.Primitives;
 using Crankshaft.Physics;
@@ -20,6 +21,7 @@ using FullMetalAkari.Game.Objects.Sounds;
 using Crankshaft.Events;
 using System.Threading;
 using Crankshaft.Animation;
+using OpenTK.Audio.OpenAL;
 
 namespace Crankshaft.Handlers
 {
@@ -38,6 +40,7 @@ namespace Crankshaft.Handlers
         public static Scene ActiveScene { get; set; }
         public static Simulation ActiveSim { get; set; }
         public static HUD ActiveHUD { get; set; }
+        public static sniperCrosshair ActiveScope { get; set; }
         public static bool DebugDraw { get; set; }
         public static List<gameObject> Cleanup { get; set; } = new List<gameObject>();
         public static List<gameObject> SafeAdd { get; set; } = new List<gameObject>();
@@ -139,7 +142,7 @@ namespace Crankshaft.Handlers
             }
 
             //Call Music Onupdate Functions for active song
-            ActiveMusic.onUpdate();
+            //ActiveMusic.onUpdate();
 
             foreach (gameObject g in SafeAdd)
             {
@@ -194,8 +197,8 @@ namespace Crankshaft.Handlers
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             //Setting Matricies
-            renderingHandler.ViewMatrix = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
-            renderingHandler.ViewPosition = new UniVector3(0.0f, 0.0f,-3.0f);
+            renderingHandler.ViewPosition = new UniVector3(0.0f, 0.0f, -3.0f);
+            renderingHandler.ViewMatrix = Matrix4.CreateTranslation(renderingHandler.ViewPosition);
             renderingHandler.InvertedView = Matrix4.Invert(renderingHandler.ViewMatrix);
             renderingHandler.ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float)Size.Y, 0.1f, 100.0f);
             renderingHandler.InvertedProjection = Matrix4.Invert(renderingHandler.ProjectionMatrix);
@@ -203,11 +206,21 @@ namespace Crankshaft.Handlers
             //Load The Text Dictionary
             textCreator.loadDictionary();
 
-            //Compile user-defined sound effects
+            //Create the current sound context
+            var deviceName = ALC.GetString(ALDevice.Null, AlcGetString.DefaultDeviceSpecifier);
+            var deivce = ALC.OpenDevice(deviceName);
+            var context = ALC.CreateContext(deivce, (int[])null);
+            ALC.MakeContextCurrent(context);
+            soundHandler.CheckALError("Context Created");
+
+            //Compile user-defined sound effects in the directory given by the user.
             soundHandler.compileSounds(soundsFilePath);
-            ActiveMusic = new gameMusic(@"\Game\Resources\Music\Loopable Game lvl music v2.wav", @"\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
-            Thread m = new Thread(new ThreadStart(ActiveMusic.startSong));
-            m.Start();
+            soundHandler.CheckALError("Sounds Compiled");
+
+            //Load the music (Temp)
+            //ActiveMusic = new gameMusic(@"\Game\Resources\Music\Loopable Game lvl music v2.wav", @"\Game\Resources\Music\Fade intro Game lvl music.wav", "Game Music", gameMusic.loopState.Loop);
+            //Thread m = new Thread(new ThreadStart(ActiveMusic.startSong));
+            //m.Start();
 
             //Compile user-defined scenes in the directory given by the user.
             sceneHandler.compileScenes(scenesFilePath);
@@ -219,7 +232,12 @@ namespace Crankshaft.Handlers
                 if (g.ObjectID == "hud")
                 {
                     ActiveHUD = (HUD) g;
-                    break;
+                    continue;
+                }
+                if (g.ObjectID == "scope")
+                {
+                    ActiveScope = (sniperCrosshair)g;
+                    continue;
                 }
             }
 

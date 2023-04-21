@@ -34,19 +34,14 @@
     <None Remove="Game\Resources\Fonts\No Wind-Text.png" />
     <None Remove="Game\Resources\Fonts\Slash-Text.png" />
     <None Remove="Game\Resources\Music\Fade intro Game lvl music.wav" />
-    <None Remove="Game\Resources\Music\Loopable - Game lvl music.wav" />
     <None Remove="Game\Resources\Music\Loopable Game lvl music v2.wav" />
-    <None Remove="Game\Resources\SFX\exhale 1.mp3" />
-    <None Remove="Game\Resources\SFX\exhale 2.mp3" />
-    <None Remove="Game\Resources\SFX\exhale 3.mp3" />
-    <None Remove="Game\Resources\SFX\exhale 4.mp3" />
     <None Remove="Game\Resources\SFX\exhale1.mp3" />
     <None Remove="Game\Resources\SFX\Game lvl music - Draft 1.wav" />
     <None Remove="Game\Resources\SFX\Loading.wav" />
     <None Remove="Game\Resources\SFX\Shoot.wav" />
     <None Remove="Game\Resources\Shaders\basicShader.vert" />
-    <None Remove="Game\Resources\Shaders\invertedShader.frag" />
-    <None Remove="Game\Resources\Shaders\invertedShader.vert" />
+    <None Remove="Game\Resources\Shaders\ScopeShader.frag" />
+    <None Remove="Game\Resources\Shaders\ScopeShader.vert" />
     <None Remove="Game\Resources\Texture\barrel.png" />
     <None Remove="Game\Resources\Texture\bottle1.png" />
     <None Remove="Game\Resources\Texture\bottle2.png" />
@@ -138,18 +133,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\Music\Loopable Game lvl music v2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Game\Resources\SFX\exhale 1.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Game\Resources\SFX\exhale 2.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Game\Resources\SFX\exhale 3.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Game\Resources\SFX\exhale 4.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\SFX\Loading.wav">
@@ -158,11 +141,11 @@
     <Content Include="Game\Resources\SFX\Shoot.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Game\Resources\Shaders\invertedShader.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Game\Resources\Shaders\ScopeShader.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Game\Resources\Shaders\invertedShader.vert">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Game\Resources\Shaders\ScopeShader.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Game\Resources\Texture\barrel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -239,10 +222,5 @@
     <PackageReference Include="SpriterDotNet" Version="1.6.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Game\Resources\Music\Loopable - Game lvl music.wav" />
-    <Resource Include="Game\Resources\SFX\exhale1.mp3" />
   </ItemGroup>
 </Project>
